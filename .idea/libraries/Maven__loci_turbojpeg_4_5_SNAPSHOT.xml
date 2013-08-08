@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="Maven: loci:turbojpeg:4.5-SNAPSHOT">
+    <CLASSES>
+      <root url="jar://$MAVEN_REPOSITORY$/loci/turbojpeg/4.5-SNAPSHOT/turbojpeg-4.5-20130805.180533-85.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$MAVEN_REPOSITORY$/loci/turbojpeg/4.5-SNAPSHOT/turbojpeg-4.5-20130805.180533-85-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$MAVEN_REPOSITORY$/loci/turbojpeg/4.5-SNAPSHOT/turbojpeg-4.5-20130805.180533-85-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

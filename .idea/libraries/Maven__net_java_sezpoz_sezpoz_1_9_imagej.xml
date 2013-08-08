@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="Maven: net.java.sezpoz:sezpoz:1.9-imagej">
+    <CLASSES>
+      <root url="jar://$MAVEN_REPOSITORY$/net/java/sezpoz/sezpoz/1.9-imagej/sezpoz-1.9-imagej.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$MAVEN_REPOSITORY$/net/java/sezpoz/sezpoz/1.9-imagej/sezpoz-1.9-imagej-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$MAVEN_REPOSITORY$/net/java/sezpoz/sezpoz/1.9-imagej/sezpoz-1.9-imagej-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

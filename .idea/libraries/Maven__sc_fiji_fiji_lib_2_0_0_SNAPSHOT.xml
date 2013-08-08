@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="Maven: sc.fiji:fiji-lib:2.0.0-SNAPSHOT">
+    <CLASSES>
+      <root url="jar://$MAVEN_REPOSITORY$/sc/fiji/fiji-lib/2.0.0-SNAPSHOT/fiji-lib-2.0.0-20130724.213646-6.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$MAVEN_REPOSITORY$/sc/fiji/fiji-lib/2.0.0-SNAPSHOT/fiji-lib-2.0.0-20130724.213646-6-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$MAVEN_REPOSITORY$/sc/fiji/fiji-lib/2.0.0-SNAPSHOT/fiji-lib-2.0.0-20130724.213646-6-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

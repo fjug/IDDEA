@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CompilerConfiguration">
+    <option name="DEFAULT_COMPILER" value="Javac" />
+    <resourceExtensions />
+    <wildcardResourcePatterns>
+      <entry name="?*.properties" />
+      <entry name="?*.xml" />
+      <entry name="?*.gif" />
+      <entry name="?*.png" />
+      <entry name="?*.jpeg" />
+      <entry name="?*.jpg" />
+      <entry name="?*.html" />
+      <entry name="?*.dtd" />
+      <entry name="?*.tld" />
+      <entry name="?*.ftl" />
+    </wildcardResourcePatterns>
+    <annotationProcessing>
+      <profile default="true" name="Default" enabled="false">
+        <processorPath useClasspath="true" />
+      </profile>
+      <profile default="false" name="Maven default annotation processors profile" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <processorPath useClasspath="true" />
+        <module name="imglib2" />
+        <module name="imglib2-algorithms" />
+        <module name="imglib2-algorithms-gpl" />
+        <module name="imglib2-algorithms-legacy" />
+        <module name="imglib2-examples" />
+        <module name="imglib2-ij" />
+        <module name="imglib2-io" />
+        <module name="imglib2-ops" />
+        <module name="imglib2-realtransform" />
+        <module name="imglib2-scripting" />
+        <module name="imglib2-tests" />
+        <module name="imglib2-ui" />
+        <module name="InteractiveDisplay" />
+        <module name="jhotdraw" />
+        <module name="spim_viewer" />
+      </profile>
+    </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="imglib2" target="1.6" />
+      <module name="imglib2-algorithms" target="1.6" />
+      <module name="imglib2-algorithms-gpl" target="1.6" />
+      <module name="imglib2-algorithms-legacy" target="1.6" />
+      <module name="imglib2-examples" target="1.6" />
+      <module name="imglib2-ij" target="1.6" />
+      <module name="imglib2-io" target="1.6" />
+      <module name="imglib2-ops" target="1.6" />
+      <module name="imglib2-realtransform" target="1.6" />
+      <module name="imglib2-scripting" target="1.6" />
+      <module name="imglib2-tests" target="1.6" />
+      <module name="imglib2-ui" target="1.6" />
+      <module name="jhotdraw" target="1.6" />
+      <module name="pom-imglib2" target="1.6" />
+      <module name="pom-imglib2-algorithms" target="1.6" />
+      <module name="spim_viewer" target="1.6" />
+    </bytecodeTargetLevel>
+  </component>
+</project>
+
