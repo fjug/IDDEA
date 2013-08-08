@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="Maven: loci:bio-formats:4.5-SNAPSHOT">
+    <CLASSES>
+      <root url="jar://$MAVEN_REPOSITORY$/loci/bio-formats/4.5-SNAPSHOT/bio-formats-4.5-20130805.180702-204.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$MAVEN_REPOSITORY$/loci/bio-formats/4.5-SNAPSHOT/bio-formats-4.5-20130805.180702-204-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$MAVEN_REPOSITORY$/loci/bio-formats/4.5-SNAPSHOT/bio-formats-4.5-20130805.180702-204-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

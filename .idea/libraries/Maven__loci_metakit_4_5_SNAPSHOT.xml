@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="Maven: loci:metakit:4.5-SNAPSHOT">
+    <CLASSES>
+      <root url="jar://$MAVEN_REPOSITORY$/loci/metakit/4.5-SNAPSHOT/metakit-4.5-20130805.180647-204.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$MAVEN_REPOSITORY$/loci/metakit/4.5-SNAPSHOT/metakit-4.5-20130805.180647-204-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$MAVEN_REPOSITORY$/loci/metakit/4.5-SNAPSHOT/metakit-4.5-20130805.180647-204-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>
