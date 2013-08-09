@@ -8,10 +8,7 @@
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/3"/>
-	<classpathentry kind="lib" path="/Users/moon/Projects/ScientificPlatform/JHotDraw/jhotdraw-svn/tags/jhotdraw-7.2/jhotdraw7/lib/MRJAdapter.jar"/>
 	<classpathentry kind="lib" path="lib/quaqua.jar"/>
-	<classpathentry kind="lib" path="/Users/moon/Projects/ScientificPlatform/JHotDraw/jhotdraw-svn/tags/jhotdraw-7.2/jhotdraw7/lib/swing-layout.jar"/>
-	<classpathentry kind="lib" path="/Users/moon/Projects/ScientificPlatform/JHotDraw/jhotdraw-svn/tags/jhotdraw-7.2/jhotdraw7/lib/swing-worker.jar"/>
 	<classpathentry kind="src" output="target/test-classes" path="src/test/java">
 		<attributes>
 			<attribute name="optional" value="true"/>
