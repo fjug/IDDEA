@@ -3,6 +3,16 @@
 	<name>InteractiveDisplay</name>
 	<comment></comment>
 	<projects>
+		<project>imglib2</project>
+		<project>imglib2-algorithms</project>
+		<project>imglib2-algorithms-gpl</project>
+		<project>imglib2-algorithms-legacy</project>
+		<project>imglib2-ij</project>
+		<project>imglib2-io</project>
+		<project>imglib2-ops</project>
+		<project>imglib2-realtransform</project>
+		<project>imglib2-ui</project>
+		<project>JHotDraw7</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>

@@ -8,5 +8,12 @@
     <artifactId>InteractiveDisplay</artifactId>
     <version>1.0-SNAPSHOT</version>
 
+  <dependencies>
+    <dependency>
+      <groupId>com.google.code.findbugs</groupId>
+      <artifactId>findbugs</artifactId>
+      <version>1.3.9</version>
+    </dependency>
+  </dependencies>
     
 </project>
