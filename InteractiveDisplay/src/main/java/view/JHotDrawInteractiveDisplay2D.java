@@ -288,7 +288,7 @@ public class JHotDrawInteractiveDisplay2D<T> extends DefaultDrawingView implemen
      * Set the {@link TransformEventHandler} that handles mouse and key events
      * to update our view transform.
      *
-     * @param handles mouse and key events to update the view transform
+     * @param transformEventHandler mouse and key events to update the view transform
      */
     public synchronized void setTransformEventHandler( final TransformEventHandler< T > transformEventHandler )
     {
@@ -310,4 +310,6 @@ public class JHotDrawInteractiveDisplay2D<T> extends DefaultDrawingView implemen
         for ( final TransformListener< T > l : transformListeners )
             l.transformChanged( transform );
     }
+
+
 }
