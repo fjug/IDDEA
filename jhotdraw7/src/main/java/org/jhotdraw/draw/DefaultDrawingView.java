@@ -52,7 +52,7 @@ public class DefaultDrawingView
      */
     private final static boolean DEBUG = false;
     @Nullable
-    private Drawing drawing;
+    protected Drawing drawing;
     /**
      * Holds the selected figures in an ordered put. The ordering reflects
      * the sequence that was used to select the figures.
@@ -68,12 +68,12 @@ public class DefaultDrawingView
     private boolean handlesAreValid = true;
     @Nullable
     private transient Dimension cachedPreferredSize;
-    private double scaleFactor = 1;
-    private Point translation = new Point(0, 0);
+    protected double scaleFactor = 1;
+    protected Point translation = new Point(0, 0);
     private int detailLevel;
     @Nullable
-    private DrawingEditor editor;
-    private JLabel emptyDrawingLabel;
+    protected DrawingEditor editor;
+    protected JLabel emptyDrawingLabel;
     protected BufferedImage backgroundTile;
     private FigureListener handleInvalidator = new FigureAdapter() {
 
@@ -208,8 +208,8 @@ public class DefaultDrawingView
 
         @Override
         public void areaInvalidated(HandleEvent evt) {
-            repaint(evt.getInvalidatedArea());
-            invalidateDimension();
+            //repaint(evt.getInvalidatedArea());
+            //invalidateDimension();
         }
 
         @Override
@@ -297,7 +297,8 @@ public class DefaultDrawingView
         setFocusable(true);
         addFocusListener(eventHandler);
         setTransferHandler(new DefaultDrawingViewTransferHandler());
-        setBackground(new Color(0xb0b0b0));
+        //setBackground(new Color(0xb0b0b0));
+        setBackground(new Color(0xFF000000));
         setOpaque(true);
     }
 
@@ -942,7 +943,7 @@ public class DefaultDrawingView
     /**
      * Gets the currently active selection handles.
      */
-    private java.util.List<Handle> getSelectionHandles() {
+    protected java.util.List<Handle> getSelectionHandles() {
         validateHandles();
         return Collections.unmodifiableList(selectionHandles);
     }
@@ -950,7 +951,7 @@ public class DefaultDrawingView
     /**
      * Gets the currently active secondary handles.
      */
-    private java.util.List<Handle> getSecondaryHandles() {
+    protected java.util.List<Handle> getSecondaryHandles() {
         validateHandles();
         return Collections.unmodifiableList(secondaryHandles);
     }
@@ -958,7 +959,7 @@ public class DefaultDrawingView
     /**
      * Invalidates the handles.
      */
-    private void invalidateHandles() {
+    protected void invalidateHandles() {
         if (handlesAreValid) {
             handlesAreValid = false;
 
@@ -998,7 +999,7 @@ public class DefaultDrawingView
     /**
      * Validates the handles.
      */
-    private void validateHandles() {
+    protected void validateHandles() {
         // Validate handles only, if they are invalid, and if
         // the DrawingView has a DrawingEditor.
         if (!handlesAreValid && getEditor() != null) {
@@ -1203,7 +1204,7 @@ public class DefaultDrawingView
      * Updates the view translation taking into account the current dimension
      * of the view JComponent, the size of the drawing, and the scale factor.
      */
-    private void validateViewTranslation() {
+    protected void validateViewTranslation() {
         if (getDrawing() == null) {
             translation.x = translation.y = 0;
             return;

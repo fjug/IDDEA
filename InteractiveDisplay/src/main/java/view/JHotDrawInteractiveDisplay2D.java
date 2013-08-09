@@ -1,21 +1,28 @@
 package view;
 
+import static org.jhotdraw.draw.AttributeKeys.CANVAS_HEIGHT;
+import static org.jhotdraw.draw.AttributeKeys.CANVAS_WIDTH;
 import net.imglib2.display.ARGBScreenImage;
 import net.imglib2.realtransform.AffineTransform2D;
 import net.imglib2.ui.OverlayRenderer;
 import net.imglib2.ui.TransformEventHandler;
 import net.imglib2.ui.TransformEventHandlerFactory;
 import net.imglib2.ui.TransformListener;
+
 import org.jhotdraw.draw.DefaultDrawingView;
 import org.jhotdraw.draw.Figure;
 import org.jhotdraw.draw.event.TransformEdit;
+import org.jhotdraw.draw.handle.Handle;
 
 import javax.swing.*;
 import javax.swing.undo.UndoableEdit;
+
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.NoninvertibleTransformException;
+import java.awt.geom.Point2D;
+import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import java.awt.image.ColorModel;
 import java.util.HashSet;
@@ -48,7 +55,7 @@ public class JHotDrawInteractiveDisplay2D<T> extends DefaultDrawingView implemen
     /**
      * The {@link AffineTransform} stores the previous transform to restore in the next transformation.
      */
-    private AffineTransform preTransform = null;
+    private AffineTransform preTransform = new AffineTransform(0.7775, 0.0, 0.0, 0.7775, 0.0, 66.75);
 
     /**
      * The {@link BufferedImage} that is actually drawn on the canvas. Depending
@@ -58,40 +65,48 @@ public class JHotDrawInteractiveDisplay2D<T> extends DefaultDrawingView implemen
      */
     protected BufferedImage bufferedImage;
 
-    public JHotDrawInteractiveDisplay2D( final int width, final int height, final TransformEventHandlerFactory< T > factory )
+    public JHotDrawInteractiveDisplay2D( final int width, final int height, final TransformEventHandlerFactory< T > factory)
     {
         super();
+        
         setPreferredSize( new Dimension( width, height ) );
         setFocusable( true );
 
         this.bufferedImage = null;
         this.overlayRenderers = new CopyOnWriteArrayList< OverlayRenderer >();
         this.transformListeners = new CopyOnWriteArrayList< TransformListener< T > >();
-
+        
         addTransformListener(new TransformListener<T>(){
             @Override
             public void transformChanged(T transform) {
+
                 if(AffineTransform2D.class.isInstance(transform))
                 {
                     // Convert AffineTransform2D to java.awt.geo.AffineTransform object
                     AffineTransform2D trsf = (AffineTransform2D)transform;
                     // array design is different
                     double[] tr = trsf.getRowPackedCopy();
-                    AffineTransform trans = new AffineTransform(tr[0], tr[3], tr[1], tr[4], tr[2], tr[5]);
-
-                    getDrawing().willChange();
-                    if(preTransform != null)
-                    {
-                        try{
-                            preTransform.invert();
-                        } catch (NoninvertibleTransformException ex)
-                        {
-                        }
-                        getDrawing().transform(preTransform);
-                    }
-                    getDrawing().transform(trans);
-                    preTransform = trans;
-                    getDrawing().changed();
+                    preTransform = new AffineTransform(tr[0], tr[3], tr[1], tr[4], tr[2], tr[5]);
+                    
+                    translation.x = (int) -tr[2];
+                    translation.y = (int) -tr[5];
+                    scaleFactor = tr[0];
+                    invalidateHandles();                  
+//                    AffineTransform trans = new AffineTransform(tr[0], tr[3], tr[1], tr[4], tr[2], tr[5]);
+//
+//                    getDrawing().willChange();
+//                    if(preTransform != null)
+//                    {
+//                        try{
+//                            preTransform.invert();
+//                        } catch (NoninvertibleTransformException ex)
+//                        {
+//                        }
+//                        getDrawing().transform(preTransform);
+//                    }
+//                    getDrawing().transform(trans);
+//                    preTransform = trans;
+//                    getDrawing().changed();
 
                 }
             }
@@ -145,9 +160,7 @@ public class JHotDrawInteractiveDisplay2D<T> extends DefaultDrawingView implemen
         Graphics2D g = (Graphics2D) gr;
 
         setViewRenderingHints(g);
-        drawBackground(g);
-        drawCanvas(g);
-
+       
         final BufferedImage bi;
         synchronized ( this )
         {
@@ -161,17 +174,20 @@ public class JHotDrawInteractiveDisplay2D<T> extends DefaultDrawingView implemen
 
         for ( final OverlayRenderer or : overlayRenderers )
             or.drawOverlays( g );
-
+        
+        //drawBackground(g);
+        drawCanvas(g);
         drawConstrainer(g);
-//        if (isDrawingDoubleBuffered()) {
-//            if (DefaultDrawingView.isWindows) {
-//                drawDrawingNonvolatileBuffered(g);
-//            } else {
-//                drawDrawingVolatileBuffered(g);
-//            }
-//        } else {
-//            drawDrawing(g);
-//        }
+//		if (isDrawingDoubleBuffered()) {
+//			if (DefaultDrawingView.isWindows) {
+//				drawDrawingNonvolatileBuffered(g);
+//			} else {
+//				drawDrawingVolatileBuffered(g);
+//			}
+//		} else {
+//			drawDrawing(g);
+//		}
+
         drawDrawing(g);
         drawHandles(g);
         drawTool(g);
@@ -311,5 +327,86 @@ public class JHotDrawInteractiveDisplay2D<T> extends DefaultDrawingView implemen
             l.transformChanged( transform );
     }
 
+    /** Draws the canvas. If the {@code AttributeKeys.CANVAS_FILL_OPACITY} is
+     * not fully opaque, the canvas area is filled with the background paint
+     * before the {@code AttributeKeys.CANVAS_FILL_COLOR} is drawn.
+     */
+    @Override
+    protected void drawCanvas(Graphics2D gr) {
+        if (drawing != null) {
+            Graphics2D g = (Graphics2D) gr.create();                
+            g.setTransform(preTransform);
 
+            drawing.setFontRenderContext(g.getFontRenderContext());
+            drawing.drawCanvas(g);
+            g.dispose();
+        }
+    }
+    
+    @Override
+    protected void drawDrawing(Graphics2D gr) {
+
+        if (drawing != null) {
+            if (drawing.getChildCount() == 0 && emptyDrawingLabel != null) {
+                emptyDrawingLabel.setBounds(0, 0, getWidth(), getHeight());
+                emptyDrawingLabel.paint(gr);
+            } else {
+                Graphics2D g = (Graphics2D) gr.create();                
+                g.setTransform(preTransform);
+                
+                drawing.setFontRenderContext(g.getFontRenderContext());
+                drawing.draw(g);
+
+                g.dispose();
+            }
+
+        }
+    }
+    
+    @Override
+    public AffineTransform getDrawingToViewTransform() {
+        AffineTransform t = new AffineTransform();
+        t.setTransform(preTransform);
+        return t;
+    }
+    
+    @Override
+    protected void drawHandles(java.awt.Graphics2D g) {
+        if (editor != null && editor.getActiveView() == this) {
+            validateHandles();
+            for (Handle h : getSelectionHandles()) {
+                h.draw(g);
+            }
+
+            for (Handle h : getSecondaryHandles()) {
+                h.draw(g);
+            }
+
+        }
+    }
+    
+    @Override
+    protected void drawTool(Graphics2D g) {
+        if (editor != null && editor.getActiveView() == this && editor.getTool() != null) {
+            editor.getTool().draw(g);
+        }
+    }
+    
+    /**
+     * All the scale factor and translating factor are decided by the given transformation.
+     * We don't need this for in this context.
+     */
+    @Override
+    protected void validateViewTranslation() {
+    }
+    
+    @Override
+    protected void repaintDrawingArea(Rectangle2D.Double r) {
+        Rectangle vr = drawingToView(r);
+        repaint(vr);
+    }
+
+    @Override
+    public void invalidate() {
+    }
 }

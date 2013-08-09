@@ -92,7 +92,7 @@ public class InteractiveViewer2D< T > implements TransformListener< AffineTransf
         this.source = source;
         viewerTransform = new AffineTransform2D();
 
-        display = new JHotDrawInteractiveDisplay2D<AffineTransform2D>( width, height, TransformEventHandler2D.factory() );
+        display = new JHotDrawInteractiveDisplay2D<AffineTransform2D>( width, height, TransformEventHandler2D.factory());
         display.addTransformListener( this );
 
         painterThread = new PainterThread( this );
