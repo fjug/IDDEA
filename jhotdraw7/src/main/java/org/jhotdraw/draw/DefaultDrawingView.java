@@ -208,8 +208,8 @@ public class DefaultDrawingView
 
         @Override
         public void areaInvalidated(HandleEvent evt) {
-            //repaint(evt.getInvalidatedArea());
-            //invalidateDimension();
+            repaint(evt.getInvalidatedArea());
+            invalidateDimension();
         }
 
         @Override

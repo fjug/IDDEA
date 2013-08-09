@@ -430,7 +430,6 @@ public abstract class AbstractTool extends AbstractBean implements Tool {
      * notification on this event type.
      */
     protected void fireBoundsInvalidated(Rectangle invalidatedArea) {
-
         ToolEvent event = null;
         // Notify all listeners that have registered interest for
         // Guaranteed to return a non-null array

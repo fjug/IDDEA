@@ -363,35 +363,99 @@ public class JHotDrawInteractiveDisplay2D<T> extends DefaultDrawingView implemen
         }
     }
     
+    /**
+     * Converts drawing coordinates to view coordinates.
+     */
+    @Override
+    public Point drawingToView(
+            Point2D.Double p) {
+    	 Point2D po = preTransform.transform(p, null);
+    	return new Point((int) po.getX(), (int) po.getY());
+    }
+
+    @Override
+    public Rectangle drawingToView(
+            Rectangle2D.Double r) {
+    	double[] drawing = {r.x, r.y, r.x + r.width, r.y, r.x + r.width, r.y + r.height, r.x, r.y + r.height};
+    	double[] view = new double[8];
+    	preTransform.transform(drawing, 0, view, 0, 4);
+
+    	int x1 = Math.min((int)view[0], (int)view[2]);
+    	x1 = Math.min(x1, (int)view[4]);
+    	x1 = Math.min(x1, (int)view[6]);
+    
+    	int x2 = Math.max((int)view[0], (int)view[2]);
+    	x2 = Math.max(x2, (int)view[4]);
+    	x2 = Math.max(x2, (int)view[6]);
+
+    	int y1 = Math.min((int)view[1], (int)view[3]);
+    	y1 = Math.min(y1, (int)view[5]);
+    	y1 = Math.min(y1, (int)view[7]);
+    	
+    	int y2 = Math.max((int)view[1], (int)view[3]);
+    	y2 = Math.max(y2, (int)view[5]);
+    	y2 = Math.max(y2, (int)view[7]);
+
+    	return new Rectangle(x1, y1, x2 - x1, y2 - y1);
+    }
+
+    /**
+     * Converts view coordinates to drawing coordinates.
+     */
+    @Override
+    public Point2D.Double viewToDrawing(Point p) {
+    	Point2D point = null;
+
+    	try {
+			point = preTransform.inverseTransform(new Point2D.Double((double)p.x, (double)p.y), null);
+		} catch (NoninvertibleTransformException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+    	
+    	return (Point2D.Double) point;
+    }
+
+    @Override
+    public Rectangle2D.Double viewToDrawing(Rectangle r) {
+    	double[] drawing = {r.x, r.y, r.x + r.width, r.y, r.x + r.width, r.y + r.height, r.x, r.y + r.height};
+    	double[] view = new double[8];
+    	preTransform.transform(drawing, 0, view, 0, 4);
+
+    	try {
+        	preTransform.inverseTransform(drawing, 0, view, 0, 4);
+		} catch (NoninvertibleTransformException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+    	
+    	double x1 = Math.min(view[0], view[2]);
+    	x1 = Math.min(x1, view[4]);
+    	x1 = Math.min(x1, view[6]);
+    
+    	double x2 = Math.max(view[0], view[2]);
+    	x2 = Math.max(x2, view[4]);
+    	x2 = Math.max(x2, view[6]);
+
+    	double y1 = Math.min(view[1], view[3]);
+    	y1 = Math.min(y1, view[5]);
+    	y1 = Math.min(y1, view[7]);
+    	
+    	double y2 = Math.max(view[1], view[3]);
+    	y2 = Math.max(y2, view[5]);
+    	y2 = Math.max(y2, view[7]);
+    	
+    	return new Rectangle2D.Double(x1, y1, x2 - x1, y2 - y1);
+    }
+
+    
     @Override
     public AffineTransform getDrawingToViewTransform() {
         AffineTransform t = new AffineTransform();
         t.setTransform(preTransform);
         return t;
     }
-    
-    @Override
-    protected void drawHandles(java.awt.Graphics2D g) {
-        if (editor != null && editor.getActiveView() == this) {
-            validateHandles();
-            for (Handle h : getSelectionHandles()) {
-                h.draw(g);
-            }
-
-            for (Handle h : getSecondaryHandles()) {
-                h.draw(g);
-            }
-
-        }
-    }
-    
-    @Override
-    protected void drawTool(Graphics2D g) {
-        if (editor != null && editor.getActiveView() == this && editor.getTool() != null) {
-            editor.getTool().draw(g);
-        }
-    }
-    
+       
     /**
      * All the scale factor and translating factor are decided by the given transformation.
      * We don't need this for in this context.
