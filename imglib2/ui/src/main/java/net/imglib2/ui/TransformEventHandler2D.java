@@ -256,16 +256,16 @@ public class TransformEventHandler2D extends MouseAdapter implements TransformEv
 	 */
 	private void rotate( final double d )
 	{
-//		// center shift
-//		affine.set( affine.get( 0, 2 ) - centerX, 0, 2 );
-//		affine.set( affine.get( 1, 2 ) - centerY, 1, 2 );
-//
-//		// rotate
-//		affine.rotate( d );
-//
-//		// center un-shift
-//		affine.set( affine.get( 0, 2 ) + centerX, 0, 2 );
-//		affine.set( affine.get( 1, 2 ) + centerY, 1, 2 );
+		// center shift
+		affine.set( affine.get( 0, 2 ) - centerX, 0, 2 );
+		affine.set( affine.get( 1, 2 ) - centerY, 1, 2 );
+
+		// rotate
+		affine.rotate( d );
+
+		// center un-shift
+		affine.set( affine.get( 0, 2 ) + centerX, 0, 2 );
+		affine.set( affine.get( 1, 2 ) + centerY, 1, 2 );
 	}
 
 	@Override
