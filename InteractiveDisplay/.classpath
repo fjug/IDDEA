@@ -17,15 +17,8 @@
 		</attributes>
 	</classpathentry>
 	<classpathentry combineaccessrules="false" kind="src" path="/JHotDraw7"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/imglib2"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/imglib2-algorithms"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/imglib2-algorithms-gpl"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/imglib2-algorithms-legacy"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/imglib2-ij"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/imglib2-io"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/imglib2-ops"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/imglib2-realtransform"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/imglib2-scripting"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/imglib2-ui"/>
+	<classpathentry kind="lib" path="/pom-imglib2/core/target/imglib2-2.0.0-SNAPSHOT.jar"/>
+	<classpathentry kind="lib" path="/pom-imglib2/realtransform/target/imglib2-realtransform-2.0.0-SNAPSHOT.jar"/>
+	<classpathentry kind="lib" path="/pom-imglib2/ui/target/imglib2-ui-2.0.0-SNAPSHOT.jar"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>

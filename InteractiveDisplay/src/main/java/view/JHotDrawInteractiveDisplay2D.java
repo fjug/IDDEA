@@ -334,7 +334,10 @@ public class JHotDrawInteractiveDisplay2D<T> extends DefaultDrawingView implemen
     @Override
     protected void drawCanvas(Graphics2D gr) {
         if (drawing != null) {
-            Graphics2D g = (Graphics2D) gr.create();                
+            Graphics2D g = (Graphics2D) gr.create();
+            
+            AffineTransform tx = g.getTransform();
+            tx.concatenate(preTransform);
             g.setTransform(preTransform);
 
             drawing.setFontRenderContext(g.getFontRenderContext());
@@ -351,8 +354,11 @@ public class JHotDrawInteractiveDisplay2D<T> extends DefaultDrawingView implemen
                 emptyDrawingLabel.setBounds(0, 0, getWidth(), getHeight());
                 emptyDrawingLabel.paint(gr);
             } else {
-                Graphics2D g = (Graphics2D) gr.create();                
-                g.setTransform(preTransform);
+                Graphics2D g = (Graphics2D) gr.create();
+                
+                AffineTransform tx = g.getTransform();
+                tx.concatenate(preTransform);
+                g.setTransform(tx);
                 
                 drawing.setFontRenderContext(g.getFontRenderContext());
                 drawing.draw(g);
@@ -472,5 +478,6 @@ public class JHotDrawInteractiveDisplay2D<T> extends DefaultDrawingView implemen
 
     @Override
     public void invalidate() {
+    	//super.invalidate();
     }
 }

@@ -34,6 +34,6 @@
 	<classpathentry kind="lib" path="lib/MRJAdapter.jar"/>
 	<classpathentry kind="lib" path="lib/swing-layout.jar"/>
 	<classpathentry kind="lib" path="lib/swing-worker.jar"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/imglib2"/>
+	<classpathentry kind="lib" path="/pom-imglib2/core/target/imglib2-2.0.0-SNAPSHOT.jar"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>
