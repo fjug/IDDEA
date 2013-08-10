@@ -257,7 +257,7 @@ public class InteractiveDisplayView extends AbstractView {
         return new File(file).getName().endsWith(".xml");
     }
 
-    public DefaultDrawingView getInteractiveDrawingView()
+    public InteractiveDrawingView getInteractiveDrawingView()
     {
         final int width = 800;
         final int height = 600;
@@ -301,7 +301,7 @@ public class InteractiveDisplayView extends AbstractView {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JScrollPane scrollPane;
-    private DefaultDrawingView view;
+    private InteractiveDrawingView view;
     // End of variables declaration//GEN-END:variables
 
 }

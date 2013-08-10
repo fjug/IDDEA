@@ -113,6 +113,7 @@ public class InteractiveDisplayApplicationModel extends DefaultApplicationModel 
 
         tb.addSeparator();
 
+        labels = ResourceBundleUtil.getBundle("model.Labels");
         ButtonFactory.addToolTo(tb, editor, new SpimTool(),  "edit.createSpim", labels);
     }
 

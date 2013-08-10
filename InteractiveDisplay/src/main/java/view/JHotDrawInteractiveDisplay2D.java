@@ -35,7 +35,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
  * Time: 11:14 AM
  * To change this template use File | Settings | File Templates.
  */
-public class JHotDrawInteractiveDisplay2D<T> extends DefaultDrawingView implements TransformListener<T>
+public class JHotDrawInteractiveDisplay2D<T> extends InteractiveDrawingView implements TransformListener<T>
 {
     /**
      * Mouse/Keyboard handler that manipulates the view transformation.
@@ -55,7 +55,7 @@ public class JHotDrawInteractiveDisplay2D<T> extends DefaultDrawingView implemen
     /**
      * The {@link AffineTransform} stores the previous transform to restore in the next transformation.
      */
-    private AffineTransform preTransform = new AffineTransform(0.7775, 0.0, 0.0, 0.7775, 0.0, 66.75);
+    //private AffineTransform preTransform = new AffineTransform(0.7775, 0.0, 0.0, 0.7775, 0.0, 66.75);
 
     /**
      * The {@link BufferedImage} that is actually drawn on the canvas. Depending
@@ -87,27 +87,7 @@ public class JHotDrawInteractiveDisplay2D<T> extends DefaultDrawingView implemen
                     // array design is different
                     double[] tr = trsf.getRowPackedCopy();
                     preTransform = new AffineTransform(tr[0], tr[3], tr[1], tr[4], tr[2], tr[5]);
-                    
-                    translation.x = (int) -tr[2];
-                    translation.y = (int) -tr[5];
-                    scaleFactor = tr[0];
                     invalidateHandles();                  
-//                    AffineTransform trans = new AffineTransform(tr[0], tr[3], tr[1], tr[4], tr[2], tr[5]);
-//
-//                    getDrawing().willChange();
-//                    if(preTransform != null)
-//                    {
-//                        try{
-//                            preTransform.invert();
-//                        } catch (NoninvertibleTransformException ex)
-//                        {
-//                        }
-//                        getDrawing().transform(preTransform);
-//                    }
-//                    getDrawing().transform(trans);
-//                    preTransform = trans;
-//                    getDrawing().changed();
-
                 }
             }
         });
@@ -154,13 +134,8 @@ public class JHotDrawInteractiveDisplay2D<T> extends DefaultDrawingView implemen
         removeHandler( handler );
     }
 
-
     @Override
-    public void paintComponent(Graphics gr) {
-        Graphics2D g = (Graphics2D) gr;
-
-        setViewRenderingHints(g);
-       
+    public void drawImage(Graphics2D g) {
         final BufferedImage bi;
         synchronized ( this )
         {
@@ -174,23 +149,6 @@ public class JHotDrawInteractiveDisplay2D<T> extends DefaultDrawingView implemen
 
         for ( final OverlayRenderer or : overlayRenderers )
             or.drawOverlays( g );
-        
-        //drawBackground(g);
-        drawCanvas(g);
-        drawConstrainer(g);
-//		if (isDrawingDoubleBuffered()) {
-//			if (DefaultDrawingView.isWindows) {
-//				drawDrawingNonvolatileBuffered(g);
-//			} else {
-//				drawDrawingVolatileBuffered(g);
-//			}
-//		} else {
-//			drawDrawing(g);
-//		}
-
-        drawDrawing(g);
-        drawHandles(g);
-        drawTool(g);
     }
 
     /**
@@ -325,159 +283,5 @@ public class JHotDrawInteractiveDisplay2D<T> extends DefaultDrawingView implemen
     {
         for ( final TransformListener< T > l : transformListeners )
             l.transformChanged( transform );
-    }
-
-    /** Draws the canvas. If the {@code AttributeKeys.CANVAS_FILL_OPACITY} is
-     * not fully opaque, the canvas area is filled with the background paint
-     * before the {@code AttributeKeys.CANVAS_FILL_COLOR} is drawn.
-     */
-    @Override
-    protected void drawCanvas(Graphics2D gr) {
-        if (drawing != null) {
-            Graphics2D g = (Graphics2D) gr.create();
-            
-            AffineTransform tx = g.getTransform();
-            tx.concatenate(preTransform);
-            g.setTransform(preTransform);
-
-            drawing.setFontRenderContext(g.getFontRenderContext());
-            drawing.drawCanvas(g);
-            g.dispose();
-        }
-    }
-    
-    @Override
-    protected void drawDrawing(Graphics2D gr) {
-
-        if (drawing != null) {
-            if (drawing.getChildCount() == 0 && emptyDrawingLabel != null) {
-                emptyDrawingLabel.setBounds(0, 0, getWidth(), getHeight());
-                emptyDrawingLabel.paint(gr);
-            } else {
-                Graphics2D g = (Graphics2D) gr.create();
-                
-                AffineTransform tx = g.getTransform();
-                tx.concatenate(preTransform);
-                g.setTransform(tx);
-                
-                drawing.setFontRenderContext(g.getFontRenderContext());
-                drawing.draw(g);
-
-                g.dispose();
-            }
-
-        }
-    }
-    
-    /**
-     * Converts drawing coordinates to view coordinates.
-     */
-    @Override
-    public Point drawingToView(
-            Point2D.Double p) {
-    	 Point2D po = preTransform.transform(p, null);
-    	return new Point((int) po.getX(), (int) po.getY());
-    }
-
-    @Override
-    public Rectangle drawingToView(
-            Rectangle2D.Double r) {
-    	double[] drawing = {r.x, r.y, r.x + r.width, r.y, r.x + r.width, r.y + r.height, r.x, r.y + r.height};
-    	double[] view = new double[8];
-    	preTransform.transform(drawing, 0, view, 0, 4);
-
-    	int x1 = Math.min((int)view[0], (int)view[2]);
-    	x1 = Math.min(x1, (int)view[4]);
-    	x1 = Math.min(x1, (int)view[6]);
-    
-    	int x2 = Math.max((int)view[0], (int)view[2]);
-    	x2 = Math.max(x2, (int)view[4]);
-    	x2 = Math.max(x2, (int)view[6]);
-
-    	int y1 = Math.min((int)view[1], (int)view[3]);
-    	y1 = Math.min(y1, (int)view[5]);
-    	y1 = Math.min(y1, (int)view[7]);
-    	
-    	int y2 = Math.max((int)view[1], (int)view[3]);
-    	y2 = Math.max(y2, (int)view[5]);
-    	y2 = Math.max(y2, (int)view[7]);
-
-    	return new Rectangle(x1, y1, x2 - x1, y2 - y1);
-    }
-
-    /**
-     * Converts view coordinates to drawing coordinates.
-     */
-    @Override
-    public Point2D.Double viewToDrawing(Point p) {
-    	Point2D point = null;
-
-    	try {
-			point = preTransform.inverseTransform(new Point2D.Double((double)p.x, (double)p.y), null);
-		} catch (NoninvertibleTransformException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-    	
-    	return (Point2D.Double) point;
-    }
-
-    @Override
-    public Rectangle2D.Double viewToDrawing(Rectangle r) {
-    	double[] drawing = {r.x, r.y, r.x + r.width, r.y, r.x + r.width, r.y + r.height, r.x, r.y + r.height};
-    	double[] view = new double[8];
-    	preTransform.transform(drawing, 0, view, 0, 4);
-
-    	try {
-        	preTransform.inverseTransform(drawing, 0, view, 0, 4);
-		} catch (NoninvertibleTransformException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-    	
-    	double x1 = Math.min(view[0], view[2]);
-    	x1 = Math.min(x1, view[4]);
-    	x1 = Math.min(x1, view[6]);
-    
-    	double x2 = Math.max(view[0], view[2]);
-    	x2 = Math.max(x2, view[4]);
-    	x2 = Math.max(x2, view[6]);
-
-    	double y1 = Math.min(view[1], view[3]);
-    	y1 = Math.min(y1, view[5]);
-    	y1 = Math.min(y1, view[7]);
-    	
-    	double y2 = Math.max(view[1], view[3]);
-    	y2 = Math.max(y2, view[5]);
-    	y2 = Math.max(y2, view[7]);
-    	
-    	return new Rectangle2D.Double(x1, y1, x2 - x1, y2 - y1);
-    }
-
-    
-    @Override
-    public AffineTransform getDrawingToViewTransform() {
-        AffineTransform t = new AffineTransform();
-        t.setTransform(preTransform);
-        return t;
-    }
-       
-    /**
-     * All the scale factor and translating factor are decided by the given transformation.
-     * We don't need this for in this context.
-     */
-    @Override
-    protected void validateViewTranslation() {
-    }
-    
-    @Override
-    protected void repaintDrawingArea(Rectangle2D.Double r) {
-        Rectangle vr = drawingToView(r);
-        repaint(vr);
-    }
-
-    @Override
-    public void invalidate() {
-    	//super.invalidate();
     }
 }
