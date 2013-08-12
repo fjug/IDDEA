@@ -45,8 +45,8 @@
     <orderEntry type="library" name="Maven: org.jhotdraw:jhotdraw:7.6.0" level="project" />
     <orderEntry type="library" name="Maven: ch.randelshofer:quaqua:6.5" level="project" />
     <orderEntry type="module" module-name="imglib2" />
-    <orderEntry type="module" module-name="imglib2-realtransform (1)" />
-    <orderEntry type="module" module-name="imglib2-ui (1)" />
+    <orderEntry type="module" module-name="imglib2-realtransform" />
+    <orderEntry type="module" module-name="imglib2-ui" />
   </component>
 </module>
 
