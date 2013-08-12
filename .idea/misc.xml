@@ -55,11 +55,30 @@
         <option value="$PROJECT_DIR$/InteractiveDisplay/pom.xml" />
         <option value="$PROJECT_DIR$/spim_viewer/pom.xml" />
         <option value="$PROJECT_DIR$/../ScientificPlatform/ImgLib2/imglib/pom.xml" />
+        <option value="$PROJECT_DIR$/jhotdraw7/pom.xml" />
+        <option value="$PROJECT_DIR$/imglib2/pom.xml" />
       </list>
     </option>
     <option name="ignoredFiles">
       <set>
+        <option value="$PROJECT_DIR$/imglib2/pom.xml" />
+        <option value="$PROJECT_DIR$/jhotdraw7/pom.xml" />
+        <option value="$PROJECT_DIR$/spim_viewer/pom.xml" />
+        <option value="$PROJECT_DIR$/../ScientificPlatform/ImgLib2/imglib/algorithms/core/pom.xml" />
+        <option value="$PROJECT_DIR$/../ScientificPlatform/ImgLib2/imglib/algorithms/gpl/pom.xml" />
+        <option value="$PROJECT_DIR$/../ScientificPlatform/ImgLib2/imglib/algorithms/legacy/pom.xml" />
+        <option value="$PROJECT_DIR$/../ScientificPlatform/ImgLib2/imglib/algorithms/pom.xml" />
+        <option value="$PROJECT_DIR$/../ScientificPlatform/ImgLib2/imglib/core/pom.xml" />
         <option value="$PROJECT_DIR$/../ScientificPlatform/ImgLib2/imglib/examples/pom.xml" />
+        <option value="$PROJECT_DIR$/../ScientificPlatform/ImgLib2/imglib/ij/pom.xml" />
+        <option value="$PROJECT_DIR$/../ScientificPlatform/ImgLib2/imglib/io/pom.xml" />
+        <option value="$PROJECT_DIR$/../ScientificPlatform/ImgLib2/imglib/ops/pom.xml" />
+        <option value="$PROJECT_DIR$/../ScientificPlatform/ImgLib2/imglib/pom.xml" />
+        <option value="$PROJECT_DIR$/../ScientificPlatform/ImgLib2/imglib/realtransform/pom.xml" />
+        <option value="$PROJECT_DIR$/../ScientificPlatform/ImgLib2/imglib/scripting/pom.xml" />
+        <option value="$PROJECT_DIR$/../ScientificPlatform/ImgLib2/imglib/tests/pom.xml" />
+        <option value="$PROJECT_DIR$/../ScientificPlatform/ImgLib2/imglib/ui/pom.xml" />
+        <option value="$PROJECT_DIR$/../ScientificPlatform/JHotDraw/jhotdraw-svn/trunk/jhotdraw7/pom.xml" />
       </set>
     </option>
   </component>

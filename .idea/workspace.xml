@@ -7,15 +7,16 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" readonly="true" id="da99a4df-e844-4c73-9974-9cbb781fac81" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../ScientificPlatform/JHotDraw/jhotdraw-svn/trunk/jhotdraw7/.classpath" afterPath="$PROJECT_DIR$/../ScientificPlatform/JHotDraw/jhotdraw-svn/trunk/jhotdraw7/.classpath" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../ScientificPlatform/JHotDraw/jhotdraw-svn/trunk/jhotdraw7/.project" afterPath="$PROJECT_DIR$/../ScientificPlatform/JHotDraw/jhotdraw-svn/trunk/jhotdraw7/.project" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../ScientificPlatform/JHotDraw/jhotdraw-svn/trunk/jhotdraw7/src/main/java/org/jhotdraw/draw/DefaultDrawing.java" afterPath="$PROJECT_DIR$/../ScientificPlatform/JHotDraw/jhotdraw-svn/trunk/jhotdraw7/src/main/java/org/jhotdraw/draw/DefaultDrawing.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../ScientificPlatform/JHotDraw/jhotdraw-svn/trunk/jhotdraw7/src/main/java/org/jhotdraw/draw/DefaultDrawingView.java" afterPath="$PROJECT_DIR$/../ScientificPlatform/JHotDraw/jhotdraw-svn/trunk/jhotdraw7/src/main/java/org/jhotdraw/draw/DefaultDrawingView.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../ScientificPlatform/JHotDraw/jhotdraw-svn/trunk/jhotdraw7/src/main/java/org/jhotdraw/xml/JavaPrimitivesDOMFactory.java" afterPath="$PROJECT_DIR$/../ScientificPlatform/JHotDraw/jhotdraw-svn/trunk/jhotdraw7/src/main/java/org/jhotdraw/xml/JavaPrimitivesDOMFactory.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../ScientificPlatform/JHotDraw/jhotdraw-svn/trunk/jhotdraw7/src/main/java/org/jhotdraw/draw/Labels.properties" afterPath="$PROJECT_DIR$/../ScientificPlatform/JHotDraw/jhotdraw-svn/trunk/jhotdraw7/src/main/java/org/jhotdraw/draw/Labels.properties" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../ScientificPlatform/JHotDraw/jhotdraw-svn/trunk/jhotdraw7/src/main/java/org/jhotdraw/app/OSXApplication.java" afterPath="$PROJECT_DIR$/../ScientificPlatform/JHotDraw/jhotdraw-svn/trunk/jhotdraw7/src/main/java/org/jhotdraw/app/OSXApplication.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../ScientificPlatform/JHotDraw/jhotdraw-svn/trunk/jhotdraw7/src/main/java/org/jhotdraw/draw/QuadTreeDrawing.java" afterPath="$PROJECT_DIR$/../ScientificPlatform/JHotDraw/jhotdraw-svn/trunk/jhotdraw7/src/main/java/org/jhotdraw/draw/QuadTreeDrawing.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../ScientificPlatform/ImgLib2/imglib/ui/src/main/java/net/imglib2/ui/TransformEventHandler2D.java" afterPath="$PROJECT_DIR$/../ScientificPlatform/ImgLib2/imglib/ui/src/main/java/net/imglib2/ui/TransformEventHandler2D.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/jhotdraw7/.classpath" afterPath="$PROJECT_DIR$/jhotdraw7/.classpath" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/jhotdraw7/.project" afterPath="$PROJECT_DIR$/jhotdraw7/.project" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/jhotdraw7/src/main/java/org/jhotdraw/draw/tool/AbstractTool.java" afterPath="$PROJECT_DIR$/jhotdraw7/src/main/java/org/jhotdraw/draw/tool/AbstractTool.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/jhotdraw7/src/main/java/org/jhotdraw/draw/DefaultDrawing.java" afterPath="$PROJECT_DIR$/jhotdraw7/src/main/java/org/jhotdraw/draw/DefaultDrawing.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/jhotdraw7/src/main/java/org/jhotdraw/draw/DefaultDrawingView.java" afterPath="$PROJECT_DIR$/jhotdraw7/src/main/java/org/jhotdraw/draw/DefaultDrawingView.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/jhotdraw7/src/main/java/org/jhotdraw/xml/JavaPrimitivesDOMFactory.java" afterPath="$PROJECT_DIR$/jhotdraw7/src/main/java/org/jhotdraw/xml/JavaPrimitivesDOMFactory.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/jhotdraw7/src/main/java/org/jhotdraw/draw/Labels.properties" afterPath="$PROJECT_DIR$/jhotdraw7/src/main/java/org/jhotdraw/draw/Labels.properties" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/jhotdraw7/src/main/java/org/jhotdraw/app/OSXApplication.java" afterPath="$PROJECT_DIR$/jhotdraw7/src/main/java/org/jhotdraw/app/OSXApplication.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/jhotdraw7/src/main/java/org/jhotdraw/draw/QuadTreeDrawing.java" afterPath="$PROJECT_DIR$/jhotdraw7/src/main/java/org/jhotdraw/draw/QuadTreeDrawing.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/jhotdraw7/src/main/java/org/jhotdraw/draw/tool/SelectionTool.java" afterPath="$PROJECT_DIR$/jhotdraw7/src/main/java/org/jhotdraw/draw/tool/SelectionTool.java" />
     </list>
     <ignored path="IDDEA.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -127,11 +128,13 @@
     <file path="/InteractiveDisplayDrawingView.java" changelist="da99a4df-e844-4c73-9974-9cbb781fac81" time="1375863971822" ignored="false" />
     <file path="/AbstractInteractiveViewer2D.java" changelist="da99a4df-e844-4c73-9974-9cbb781fac81" time="1375890304976" ignored="false" />
     <file path="/SpimTool.java" changelist="da99a4df-e844-4c73-9974-9cbb781fac81" time="1375862889160" ignored="false" />
-    <file path="/JHotDrawInteractiveDisplay2D.java" changelist="da99a4df-e844-4c73-9974-9cbb781fac81" time="1375949310048" ignored="false" />
+    <file path="/JHotDrawInteractiveDisplay2D.java" changelist="da99a4df-e844-4c73-9974-9cbb781fac81" time="1376037533439" ignored="false" />
     <file path="/OSXApplication.java" changelist="da99a4df-e844-4c73-9974-9cbb781fac81" time="1375869178702" ignored="false" />
-    <file path="/Dummy.txt" changelist="da99a4df-e844-4c73-9974-9cbb781fac81" time="1375998769278" ignored="false" />
+    <file path="/Dummy.txt" changelist="da99a4df-e844-4c73-9974-9cbb781fac81" time="1376090744955" ignored="false" />
     <file path="/MultiResolutionRenderer.java" changelist="da99a4df-e844-4c73-9974-9cbb781fac81" time="1375890976600" ignored="false" />
     <file path="/InteractiveViewer2D.java" changelist="da99a4df-e844-4c73-9974-9cbb781fac81" time="1375946014748" ignored="false" />
+    <file path="/fragment.java" changelist="da99a4df-e844-4c73-9974-9cbb781fac81" time="1376299571209" ignored="false" />
+    <file path="/pom.xml" changelist="da99a4df-e844-4c73-9974-9cbb781fac81" time="1376297913220" ignored="false" />
     <option name="TRACKING_ENABLED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -197,10 +200,28 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="JHotDrawInteractiveDisplay2D.java" pinned="false" current="true" current-in-tab="true">
+      <file leaf-file-name="JHotDrawInteractiveDisplay2D.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/InteractiveDisplay/src/main/java/view/JHotDrawInteractiveDisplay2D.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="313" column="0" selection-start="10367" selection-end="10367" vertical-scroll-proportion="1.1376896">
+            <state line="87" column="34" selection-start="3231" selection-end="3231" vertical-scroll-proportion="0.0">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="InteractiveDisplayApplicationModel.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/InteractiveDisplay/src/main/java/model/InteractiveDisplayApplicationModel.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="109" column="33" selection-start="3569" selection-end="3570" vertical-scroll-proportion="0.0">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="pom.xml" pinned="false" current="true" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/InteractiveDisplay/pom.xml">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="62" column="62" selection-start="2178" selection-end="2178" vertical-scroll-proportion="0.7199533">
               <folding />
             </state>
           </provider>
@@ -215,19 +236,10 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="OSXApplication.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/../ScientificPlatform/JHotDraw/jhotdraw-svn/trunk/jhotdraw7/src/main/java/org/jhotdraw/app/OSXApplication.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="13" column="0" selection-start="419" selection-end="419" vertical-scroll-proportion="0.0">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
       <file leaf-file-name="Main.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/InteractiveDisplay/src/main/java/Main.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="27" column="39" selection-start="814" selection-end="814" vertical-scroll-proportion="0.0">
+            <state line="33" column="76" selection-start="960" selection-end="960" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
@@ -236,7 +248,7 @@
       <file leaf-file-name="InteractiveViewer2D.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/InteractiveDisplay/src/main/java/view/InteractiveViewer2D.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="124" column="5" selection-start="4808" selection-end="4808" vertical-scroll-proportion="0.0">
+            <state line="52" column="43" selection-start="2431" selection-end="2431" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
@@ -251,15 +263,6 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="InteractiveDisplayView.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/InteractiveDisplay/src/main/java/view/InteractiveDisplayView.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="276" column="5" selection-start="8799" selection-end="8799" vertical-scroll-proportion="0.0">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
     </leaf>
   </component>
   <component name="FindManager">
@@ -268,6 +271,7 @@
     </FindUsagesManager>
   </component>
   <component name="Git.Settings">
+    <option name="UPDATE_TYPE" value="MERGE" />
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/../ScientificPlatform/ImgLib2/imglib" />
   </component>
   <component name="GitLogSettings">
@@ -278,7 +282,6 @@
   <component name="IdeDocumentHistory">
     <option name="changedFiles">
       <list>
-        <option value="$PROJECT_DIR$/InteractiveDisplay/src/main/java/model/InteractiveDisplayApplicationModel.java" />
         <option value="$PROJECT_DIR$/InteractiveDisplay/src/main/java/view/MandelbrotRealRandomAccessible.java" />
         <option value="$PROJECT_DIR$/InteractiveDisplay/src/main/java/view/AbstractInteractiveDisplay2D.java" />
         <option value="$PROJECT_DIR$/InteractiveDisplay/src/main/java/view/AbstractInteractiveDisplay.java" />
@@ -294,12 +297,13 @@
         <option value="$PROJECT_DIR$/InteractiveDisplay/src/main/java/view/InteractiveViewer2D.java" />
         <option value="$PROJECT_DIR$/InteractiveDisplay/src/main/java/view/InteractiveDisplayView.java" />
         <option value="$PROJECT_DIR$/InteractiveDisplay/src/main/java/view/JHotDrawInteractiveDisplay2D.java" />
+        <option value="$PROJECT_DIR$/InteractiveDisplay/pom.xml" />
       </list>
     </option>
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="444" />
-    <option name="y" value="65" />
+    <option name="x" value="358" />
+    <option name="y" value="37" />
     <option name="width" value="1647" />
     <option name="height" value="1177" />
   </component>
@@ -329,6 +333,40 @@
       <sortByType />
     </navigator>
     <panes>
+      <pane id="PackagesPane">
+        <subPane>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="InteractiveDisplay" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PackageViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="spim_viewer" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PackageViewModuleNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="InteractiveDisplay" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PackageViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="spim_viewer" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PackageViewModuleNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="viewer" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PackageElementNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="InteractiveDisplay" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PackageViewProjectNode" />
+            </PATH_ELEMENT>
+          </PATH>
+        </subPane>
+      </pane>
       <pane id="Scope">
         <subPane subId="Project Files">
           <PATH>
@@ -419,40 +457,6 @@
           </PATH>
         </subPane>
       </pane>
-      <pane id="PackagesPane">
-        <subPane>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="InteractiveDisplay" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PackageViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="spim_viewer" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PackageViewModuleNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="InteractiveDisplay" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PackageViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="spim_viewer" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PackageViewModuleNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="viewer" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PackageElementNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="InteractiveDisplay" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PackageViewProjectNode" />
-            </PATH_ELEMENT>
-          </PATH>
-        </subPane>
-      </pane>
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -476,18 +480,19 @@
     </panes>
   </component>
   <component name="PropertiesComponent">
-    <property name="project.structure.last.edited" value="Artifacts" />
+    <property name="project.structure.last.edited" value="Project" />
     <property name="GoToFile.includeJavaFiles" value="false" />
     <property name="project.structure.proportion" value="0.15" />
     <property name="options.splitter.main.proportions" value="0.3" />
-    <property name="options.lastSelected" value="preferences.externalResources" />
+    <property name="options.lastSelected" value="reference.settings.project.maven.importing" />
     <property name="MemberChooser.sorted" value="false" />
     <property name="recentsLimit" value="5" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/../ScientificPlatform/ImgLib2/imglib" />
-    <property name="project.structure.side.proportion" value="0.37029064" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/InteractiveDisplay/target" />
+    <property name="project.structure.side.proportion" value="0.21420883" />
     <property name="MemberChooser.copyJavadoc" value="false" />
     <property name="GoToClass.toSaveIncludeLibraries" value="false" />
     <property name="WebServerToolWindowFactoryState" value="true" />
+    <property name="restartRequiresConfirmation" value="true" />
     <property name="MemberChooser.showClasses" value="true" />
     <property name="FullScreen" value="false" />
     <property name="GoToClass.includeLibraries" value="false" />
@@ -530,12 +535,15 @@
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/InteractiveDisplay/lib" />
+      <recent name="$PROJECT_DIR$/InteractiveDisplay/src/main/java/model" />
       <recent name="$PROJECT_DIR$" />
       <recent name="$PROJECT_DIR$/target/classes" />
       <recent name="$PROJECT_DIR$/target" />
-      <recent name="$PROJECT_DIR$/src" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/InteractiveDisplay/src/main/resources/lib" />
+      <recent name="$PROJECT_DIR$/InteractiveDisplay/src/main/resources" />
       <recent name="$PROJECT_DIR$/spim_viewer" />
       <recent name="$PROJECT_DIR$" />
     </key>
@@ -566,11 +574,11 @@
     <configuration default="false" name="Main" type="Application" factoryName="Application" temporary="true">
       <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea" />
       <option name="MAIN_CLASS_NAME" value="Main" />
-      <option name="VM_PARAMETERS" />
-      <option name="PROGRAM_PARAMETERS" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="VM_PARAMETERS" value="-Djava.library.path=$MODULE_DIR$/lib" />
+      <option name="PROGRAM_PARAMETERS" value="" />
+      <option name="WORKING_DIRECTORY" value="file://$MODULE_DIR$" />
       <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
-      <option name="ALTERNATIVE_JRE_PATH" />
+      <option name="ALTERNATIVE_JRE_PATH" value="" />
       <option name="ENABLE_SWING_INSPECTOR" value="false" />
       <option name="ENV_VARIABLES" />
       <option name="PASS_PARENT_ENVS" value="true" />
@@ -710,16 +718,16 @@
     <option name="myMappingRoots">
       <list>
         <SvnCopyRootSimple>
-          <option name="myVcsRoot" value="$PROJECT_DIR$/../ScientificPlatform/JHotDraw/jhotdraw-svn/trunk/jhotdraw7" />
-          <option name="myCopyRoot" value="$PROJECT_DIR$/../ScientificPlatform/JHotDraw/jhotdraw-svn/trunk/jhotdraw7" />
+          <option name="myVcsRoot" value="$PROJECT_DIR$/jhotdraw7" />
+          <option name="myCopyRoot" value="$PROJECT_DIR$/jhotdraw7" />
         </SvnCopyRootSimple>
       </list>
     </option>
     <option name="myMoreRealMappingRoots">
       <list>
         <SvnCopyRootSimple>
-          <option name="myVcsRoot" value="$PROJECT_DIR$/../ScientificPlatform/JHotDraw/jhotdraw-svn/trunk/jhotdraw7" />
-          <option name="myCopyRoot" value="$PROJECT_DIR$/../ScientificPlatform/JHotDraw/jhotdraw-svn/trunk/jhotdraw7" />
+          <option name="myVcsRoot" value="$PROJECT_DIR$/jhotdraw7" />
+          <option name="myCopyRoot" value="$PROJECT_DIR$/jhotdraw7" />
         </SvnCopyRootSimple>
       </list>
     </option>
@@ -733,7 +741,7 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="444" y="65" width="1647" height="1177" extended-state="0" />
+    <frame x="358" y="37" width="1647" height="1177" extended-state="0" />
     <editor active="true" />
     <layout>
       <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
@@ -748,7 +756,7 @@
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="IDEtalk" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32991013" sideWeight="0.8026052" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3279099" sideWeight="0.49860466" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3271719" sideWeight="0.49848208" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="CDI" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.24903624" sideWeight="0.7692308" order="1" side_tool="false" content_ui="tabs" />
@@ -756,7 +764,7 @@
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="SLIDING" type="SLIDING" visible="false" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Application Servers" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.2173649" sideWeight="0.81792974" order="0" side_tool="false" content_ui="combo" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.18207024" sideWeight="0.49848208" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.18207024" sideWeight="0.49848208" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
@@ -833,36 +841,90 @@
     <option name="FILTER_TARGETS" value="false" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/spim_viewer/src/main/java/viewer/SequenceViewsLoader.java">
+    <entry file="file://$PROJECT_DIR$/../ScientificPlatform/ImgLib2/imglib/examples/src/main/java/interactive/InteractiveOpenConnectomeRotationExample.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="35" column="5" selection-start="1090" selection-end="1090" vertical-scroll-proportion="0.0" />
+        <state line="17" column="21" selection-start="883" selection-end="883" vertical-scroll-proportion="0.33333334" />
       </provider>
     </entry>
-    <entry file="jar://$MAVEN_REPOSITORY$/net/imglib2/imglib2-realtransform/2.0.0-SNAPSHOT/imglib2-realtransform-2.0.0-20130806.065301-1605.jar!/net/imglib2/realtransform/AffineTransform2D.class">
+    <entry file="file://$PROJECT_DIR$/InteractiveDisplay/src/main/java/view/MandelbrotRealRandomAccessible.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="6" column="13" selection-start="168" selection-end="168" vertical-scroll-proportion="-0.9868421" />
+        <state line="26" column="5" selection-start="682" selection-end="682" vertical-scroll-proportion="0.6210191" />
       </provider>
     </entry>
-    <entry file="jar://$MAVEN_REPOSITORY$/net/imglib2/imglib2-ui/2.0.0-SNAPSHOT/imglib2-ui-2.0.0-20130806.065301-1299.jar!/net/imglib2/ui/TransformEventHandler2D.class">
+    <entry file="file://$PROJECT_DIR$/InteractiveDisplay/InteractiveDisplay.iml">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="28" column="16" selection-start="1338" selection-end="1338" vertical-scroll-proportion="0.64696485" />
+        <state line="21" column="19" selection-start="1124" selection-end="1124" vertical-scroll-proportion="0.58550185" />
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/InteractiveDisplay/src/main/java/controller/tool/SpimTool.java">
+    <entry file="file://$PROJECT_DIR$/InteractiveDisplay/src/main/java/view/InteractiveViewer2D.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="44" column="0" selection-start="1138" selection-end="1138" vertical-scroll-proportion="0.0">
+        <state line="52" column="43" selection-start="2431" selection-end="2431" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/../ScientificPlatform/JHotDraw/jhotdraw-svn/trunk/jhotdraw7/src/main/java/org/jhotdraw/draw/DefaultDrawingView.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="45" column="13" selection-start="1598" selection-end="1598" vertical-scroll-proportion="-14.553691" />
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/InteractiveDisplay/src/main/java/Main.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="27" column="39" selection-start="814" selection-end="814" vertical-scroll-proportion="0.0">
+        <state line="33" column="76" selection-start="960" selection-end="960" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/jhotdraw7/src/main/java/org/jhotdraw/app/OSXApplication.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="298" column="30" selection-start="11047" selection-end="11047" vertical-scroll-proportion="0.022156574">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/InteractiveDisplay/src/main/java/view/JHotDrawInteractiveDisplay2D.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="87" column="34" selection-start="3231" selection-end="3231" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../ScientificPlatform/JHotDraw/jhotdraw-svn/trunk/jhotdraw7/src/main/java/org/jhotdraw/app/OSXApplication.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="13" column="0" selection-start="419" selection-end="419" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/InteractiveDisplay/src/main/java/model/Labels.properties">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$MAVEN_REPOSITORY$/org/jhotdraw/jhotdraw/7.6.0/jhotdraw-7.6.0.jar!/org/jhotdraw/util/ResourceBundleUtil.class">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="6" column="13" selection-start="160" selection-end="160" vertical-scroll-proportion="0.09422111">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../ScientificPlatform/JHotDraw/jhotdraw-svn/trunk/jhotdraw7/src/main/java/org/jhotdraw/app/Labels.properties">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="65" column="0" selection-start="2419" selection-end="2419" vertical-scroll-proportion="0.33248082">
+          <folding />
+        </state>
+      </provider>
+      <provider editor-type-id="ResourceBundle">
+        <state />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/InteractiveDisplay/src/main/java/model/InteractiveDisplayApplicationModel.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="109" column="33" selection-start="3569" selection-end="3570" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/InteractiveDisplay/src/main/java/view/InteractiveDisplayView.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="26" column="20" selection-start="830" selection-end="830" vertical-scroll-proportion="-1.6617429">
           <folding />
         </state>
       </provider>
@@ -874,57 +936,9 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/InteractiveDisplay/src/main/java/view/InteractiveDisplayView.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="276" column="5" selection-start="8799" selection-end="8799" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/InteractiveDisplay/src/main/java/view/InteractiveViewer2D.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="124" column="5" selection-start="4808" selection-end="4808" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/../ScientificPlatform/JHotDraw/jhotdraw-svn/trunk/jhotdraw7/src/main/java/org/jhotdraw/draw/Figure.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="240" column="18" selection-start="8505" selection-end="8505" vertical-scroll-proportion="4.3110237" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/../ScientificPlatform/JHotDraw/jhotdraw-svn/trunk/jhotdraw7/src/main/java/org/jhotdraw/draw/AbstractCompositeFigure.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="553" column="0" selection-start="16374" selection-end="16374" vertical-scroll-proportion="0.33333334" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/../ScientificPlatform/ImgLib2/imglib/examples/src/main/java/interactive/InteractiveOpenConnectomeRotationExample.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="17" column="21" selection-start="883" selection-end="883" vertical-scroll-proportion="0.33333334" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/InteractiveDisplay/src/main/java/view/MandelbrotRealRandomAccessible.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="26" column="5" selection-start="682" selection-end="682" vertical-scroll-proportion="0.6210191" />
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/InteractiveDisplay/pom.xml">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="11" column="10" selection-start="444" selection-end="444" vertical-scroll-proportion="0.21653543">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/InteractiveDisplay/InteractiveDisplay.iml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="21" column="19" selection-start="1124" selection-end="1124" vertical-scroll-proportion="0.58550185">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/InteractiveDisplay/src/main/java/view/JHotDrawInteractiveDisplay2D.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="313" column="0" selection-start="10367" selection-end="10367" vertical-scroll-proportion="1.1376896">
+        <state line="62" column="62" selection-start="2178" selection-end="2178" vertical-scroll-proportion="0.7199533">
           <folding />
         </state>
       </provider>
@@ -939,7 +953,7 @@
           <splitter-proportions>
             <option name="proportions">
               <list>
-                <option value="0.37029064" />
+                <option value="0.21420883" />
                 <option value="0.5" />
               </list>
             </option>
@@ -952,7 +966,7 @@
           <splitter-proportions>
             <option name="proportions">
               <list>
-                <option value="0.031659365" />
+                <option value="0.21420883" />
               </list>
             </option>
           </splitter-proportions>
@@ -964,7 +978,7 @@
           <splitter-proportions>
             <option name="proportions">
               <list>
-                <option value="0.031659365" />
+                <option value="0.21420883" />
               </list>
             </option>
           </splitter-proportions>
@@ -976,7 +990,7 @@
           <splitter-proportions>
             <option name="proportions">
               <list>
-                <option value="0.031659365" />
+                <option value="0.21420883" />
               </list>
             </option>
           </splitter-proportions>
@@ -988,7 +1002,7 @@
           <splitter-proportions>
             <option name="proportions">
               <list>
-                <option value="0.37029064" />
+                <option value="0.21420883" />
               </list>
             </option>
           </splitter-proportions>
@@ -1008,11 +1022,11 @@
       </state>
       <state key="ProjectLibrariesConfigurable.UI">
         <settings>
-          <last-edited>Maven: net.imglib2:imglib2:2.0.0-SNAPSHOT</last-edited>
+          <last-edited>Maven: asm:asm-analysis:3.1</last-edited>
           <splitter-proportions>
             <option name="proportions">
               <list>
-                <option value="0.37029064" />
+                <option value="0.21420883" />
               </list>
             </option>
           </splitter-proportions>

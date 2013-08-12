@@ -25,38 +25,49 @@
         <outputRelativeToContentRoot value="true" />
         <processorPath useClasspath="true" />
         <module name="imglib2" />
-        <module name="imglib2-algorithms" />
-        <module name="imglib2-algorithms-gpl" />
-        <module name="imglib2-algorithms-legacy" />
+        <module name="imglib2 (1)" />
+        <module name="imglib2-algorithms (1)" />
+        <module name="imglib2-algorithms-gpl (1)" />
+        <module name="imglib2-algorithms-legacy (1)" />
         <module name="imglib2-examples" />
-        <module name="imglib2-ij" />
-        <module name="imglib2-io" />
-        <module name="imglib2-ops" />
-        <module name="imglib2-realtransform" />
-        <module name="imglib2-scripting" />
-        <module name="imglib2-tests" />
-        <module name="imglib2-ui" />
+        <module name="imglib2-ij (1)" />
+        <module name="imglib2-io (1)" />
+        <module name="imglib2-ops (1)" />
+        <module name="imglib2-realtransform (1)" />
+        <module name="imglib2-scripting (1)" />
+        <module name="imglib2-ui (1)" />
         <module name="InteractiveDisplay" />
-        <module name="jhotdraw" />
-        <module name="spim_viewer" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
       <module name="imglib2" target="1.6" />
+      <module name="imglib2 (1)" target="1.6" />
       <module name="imglib2-algorithms" target="1.6" />
+      <module name="imglib2-algorithms (1)" target="1.6" />
       <module name="imglib2-algorithms-gpl" target="1.6" />
+      <module name="imglib2-algorithms-gpl (1)" target="1.6" />
       <module name="imglib2-algorithms-legacy" target="1.6" />
+      <module name="imglib2-algorithms-legacy (1)" target="1.6" />
       <module name="imglib2-examples" target="1.6" />
       <module name="imglib2-ij" target="1.6" />
+      <module name="imglib2-ij (1)" target="1.6" />
       <module name="imglib2-io" target="1.6" />
+      <module name="imglib2-io (1)" target="1.6" />
       <module name="imglib2-ops" target="1.6" />
+      <module name="imglib2-ops (1)" target="1.6" />
       <module name="imglib2-realtransform" target="1.6" />
+      <module name="imglib2-realtransform (1)" target="1.6" />
       <module name="imglib2-scripting" target="1.6" />
+      <module name="imglib2-scripting (1)" target="1.6" />
       <module name="imglib2-tests" target="1.6" />
       <module name="imglib2-ui" target="1.6" />
+      <module name="imglib2-ui (1)" target="1.6" />
       <module name="jhotdraw" target="1.6" />
+      <module name="jhotdraw (1)" target="1.6" />
       <module name="pom-imglib2" target="1.6" />
+      <module name="pom-imglib2 (1)" target="1.6" />
       <module name="pom-imglib2-algorithms" target="1.6" />
+      <module name="pom-imglib2-algorithms (1)" target="1.6" />
       <module name="spim_viewer" target="1.6" />
     </bytecodeTargetLevel>
   </component>

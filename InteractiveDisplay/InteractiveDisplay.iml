@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <module org.jetbrains.idea.maven.project.MavenProjectsManager.isMavenModule="true" type="JAVA_MODULE" version="4">
-  <component name="NewModuleRootManager" LANGUAGE_LEVEL="JDK_1_6" inherit-compiler-output="false">
+  <component name="NewModuleRootManager" inherit-compiler-output="false">
     <output url="file://$MODULE_DIR$/target/classes" />
     <output-test url="file://$MODULE_DIR$/target/test-classes" />
-    <exclude-output />
     <content url="file://$MODULE_DIR$">
       <sourceFolder url="file://$MODULE_DIR$/src/main/java" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/main/resources" isTestSource="false" />
@@ -12,7 +11,6 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="module" module-name="jhotdraw" exported="" />
     <orderEntry type="module-library" exported="">
       <library>
         <CLASSES>
@@ -23,15 +21,32 @@
         <jarDirectory url="file://$MODULE_DIR$/../lib" recursive="false" />
       </library>
     </orderEntry>
-    <orderEntry type="module" module-name="imglib2" exported="" />
-    <orderEntry type="module" module-name="imglib2-ui" exported="" />
-    <orderEntry type="module" module-name="imglib2-realtransform" exported="" />
-    <orderEntry type="module" module-name="imglib2-ij" exported="" />
-    <orderEntry type="module" module-name="imglib2-algorithms" exported="" />
-    <orderEntry type="module" module-name="imglib2-algorithms-legacy" exported="" />
-    <orderEntry type="module" module-name="imglib2-algorithms-gpl" exported="" />
-    <orderEntry type="module" module-name="imglib2-io" exported="" />
-    <orderEntry type="module" module-name="imglib2-scripting" exported="" />
+    <orderEntry type="library" name="Maven: com.google.code.findbugs:findbugs:1.3.9" level="project" />
+    <orderEntry type="library" name="Maven: com.google.code.findbugs:bcel:1.3.9" level="project" />
+    <orderEntry type="library" name="Maven: com.google.code.findbugs:jsr305:1.3.9" level="project" />
+    <orderEntry type="library" name="Maven: com.google.code.findbugs:jFormatString:1.3.9" level="project" />
+    <orderEntry type="library" name="Maven: com.google.code.findbugs:annotations:1.3.9" level="project" />
+    <orderEntry type="library" name="Maven: dom4j:dom4j:1.6.1" level="project" />
+    <orderEntry type="library" name="Maven: xml-apis:xml-apis:1.0.b2" level="project" />
+    <orderEntry type="library" name="Maven: jaxen:jaxen:1.1.1" level="project" />
+    <orderEntry type="library" name="Maven: jdom:jdom:1.0" level="project" />
+    <orderEntry type="library" name="Maven: xerces:xercesImpl:2.6.2" level="project" />
+    <orderEntry type="library" name="Maven: xom:xom:1.0" level="project" />
+    <orderEntry type="library" name="Maven: xerces:xmlParserAPIs:2.6.2" level="project" />
+    <orderEntry type="library" name="Maven: xalan:xalan:2.6.0" level="project" />
+    <orderEntry type="library" name="Maven: com.ibm.icu:icu4j:2.6.1" level="project" />
+    <orderEntry type="library" name="Maven: asm:asm:3.1" level="project" />
+    <orderEntry type="library" name="Maven: asm:asm-analysis:3.1" level="project" />
+    <orderEntry type="library" name="Maven: asm:asm-tree:3.1" level="project" />
+    <orderEntry type="library" name="Maven: asm:asm-commons:3.1" level="project" />
+    <orderEntry type="library" name="Maven: asm:asm-util:3.1" level="project" />
+    <orderEntry type="library" name="Maven: asm:asm-xml:3.1" level="project" />
+    <orderEntry type="library" name="Maven: commons-lang:commons-lang:2.4" level="project" />
+    <orderEntry type="library" name="Maven: org.jhotdraw:jhotdraw:7.6.0" level="project" />
+    <orderEntry type="library" name="Maven: ch.randelshofer:quaqua:6.5" level="project" />
+    <orderEntry type="module" module-name="imglib2" />
+    <orderEntry type="module" module-name="imglib2-realtransform (1)" />
+    <orderEntry type="module" module-name="imglib2-ui (1)" />
   </component>
 </module>
 

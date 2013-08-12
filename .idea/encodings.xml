@@ -2,6 +2,19 @@
 <project version="4">
   <component name="Encoding" useUTFGuessing="true" native2AsciiForPropertiesFiles="false">
     <file url="file://$PROJECT_DIR$" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/imglib2" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/imglib2/algorithms" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/imglib2/algorithms/core" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/imglib2/algorithms/gpl" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/imglib2/algorithms/legacy" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/imglib2/core" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/imglib2/ij" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/imglib2/io" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/imglib2/ops" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/imglib2/realtransform" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/imglib2/scripting" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/imglib2/ui" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/jhotdraw7" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/spim_viewer" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/../ScientificPlatform/ImgLib2/imglib" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/../ScientificPlatform/ImgLib2/imglib/algorithms" charset="UTF-8" />

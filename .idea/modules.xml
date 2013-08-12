@@ -3,21 +3,17 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/InteractiveDisplay/InteractiveDisplay.iml" filepath="$PROJECT_DIR$/InteractiveDisplay/InteractiveDisplay.iml" />
-      <module fileurl="file://$PROJECT_DIR$/../ScientificPlatform/ImgLib2/imglib/core/imglib2.iml" filepath="$PROJECT_DIR$/../ScientificPlatform/ImgLib2/imglib/core/imglib2.iml" />
-      <module fileurl="file://$PROJECT_DIR$/../ScientificPlatform/ImgLib2/imglib/algorithms/core/imglib2-algorithms.iml" filepath="$PROJECT_DIR$/../ScientificPlatform/ImgLib2/imglib/algorithms/core/imglib2-algorithms.iml" />
-      <module fileurl="file://$PROJECT_DIR$/../ScientificPlatform/ImgLib2/imglib/algorithms/gpl/imglib2-algorithms-gpl.iml" filepath="$PROJECT_DIR$/../ScientificPlatform/ImgLib2/imglib/algorithms/gpl/imglib2-algorithms-gpl.iml" />
-      <module fileurl="file://$PROJECT_DIR$/../ScientificPlatform/ImgLib2/imglib/algorithms/legacy/imglib2-algorithms-legacy.iml" filepath="$PROJECT_DIR$/../ScientificPlatform/ImgLib2/imglib/algorithms/legacy/imglib2-algorithms-legacy.iml" />
-      <module fileurl="file://$PROJECT_DIR$/../ScientificPlatform/ImgLib2/imglib/ij/imglib2-ij.iml" filepath="$PROJECT_DIR$/../ScientificPlatform/ImgLib2/imglib/ij/imglib2-ij.iml" />
-      <module fileurl="file://$PROJECT_DIR$/../ScientificPlatform/ImgLib2/imglib/io/imglib2-io.iml" filepath="$PROJECT_DIR$/../ScientificPlatform/ImgLib2/imglib/io/imglib2-io.iml" />
-      <module fileurl="file://$PROJECT_DIR$/../ScientificPlatform/ImgLib2/imglib/ops/imglib2-ops.iml" filepath="$PROJECT_DIR$/../ScientificPlatform/ImgLib2/imglib/ops/imglib2-ops.iml" />
-      <module fileurl="file://$PROJECT_DIR$/../ScientificPlatform/ImgLib2/imglib/realtransform/imglib2-realtransform.iml" filepath="$PROJECT_DIR$/../ScientificPlatform/ImgLib2/imglib/realtransform/imglib2-realtransform.iml" />
-      <module fileurl="file://$PROJECT_DIR$/../ScientificPlatform/ImgLib2/imglib/scripting/imglib2-scripting.iml" filepath="$PROJECT_DIR$/../ScientificPlatform/ImgLib2/imglib/scripting/imglib2-scripting.iml" />
-      <module fileurl="file://$PROJECT_DIR$/../ScientificPlatform/ImgLib2/imglib/tests/imglib2-tests.iml" filepath="$PROJECT_DIR$/../ScientificPlatform/ImgLib2/imglib/tests/imglib2-tests.iml" />
-      <module fileurl="file://$PROJECT_DIR$/../ScientificPlatform/ImgLib2/imglib/ui/imglib2-ui.iml" filepath="$PROJECT_DIR$/../ScientificPlatform/ImgLib2/imglib/ui/imglib2-ui.iml" />
-      <module fileurl="file://$PROJECT_DIR$/../ScientificPlatform/JHotDraw/jhotdraw-svn/trunk/jhotdraw7/jhotdraw.iml" filepath="$PROJECT_DIR$/../ScientificPlatform/JHotDraw/jhotdraw-svn/trunk/jhotdraw7/jhotdraw.iml" />
-      <module fileurl="file://$PROJECT_DIR$/../ScientificPlatform/ImgLib2/imglib/pom-imglib2.iml" filepath="$PROJECT_DIR$/../ScientificPlatform/ImgLib2/imglib/pom-imglib2.iml" />
-      <module fileurl="file://$PROJECT_DIR$/../ScientificPlatform/ImgLib2/imglib/algorithms/pom-imglib2-algorithms.iml" filepath="$PROJECT_DIR$/../ScientificPlatform/ImgLib2/imglib/algorithms/pom-imglib2-algorithms.iml" />
-      <module fileurl="file://$PROJECT_DIR$/spim_viewer/spim_viewer.iml" filepath="$PROJECT_DIR$/spim_viewer/spim_viewer.iml" />
+      <module fileurl="file://$PROJECT_DIR$/imglib2/core/imglib2.iml" filepath="$PROJECT_DIR$/imglib2/core/imglib2.iml" />
+      <module fileurl="file://$PROJECT_DIR$/imglib2/algorithms/core/imglib2-algorithms (1).iml" filepath="$PROJECT_DIR$/imglib2/algorithms/core/imglib2-algorithms (1).iml" />
+      <module fileurl="file://$PROJECT_DIR$/imglib2/algorithms/gpl/imglib2-algorithms-gpl (1).iml" filepath="$PROJECT_DIR$/imglib2/algorithms/gpl/imglib2-algorithms-gpl (1).iml" />
+      <module fileurl="file://$PROJECT_DIR$/imglib2/algorithms/legacy/imglib2-algorithms-legacy (1).iml" filepath="$PROJECT_DIR$/imglib2/algorithms/legacy/imglib2-algorithms-legacy (1).iml" />
+      <module fileurl="file://$PROJECT_DIR$/imglib2/ij/imglib2-ij (1).iml" filepath="$PROJECT_DIR$/imglib2/ij/imglib2-ij (1).iml" />
+      <module fileurl="file://$PROJECT_DIR$/imglib2/io/imglib2-io (1).iml" filepath="$PROJECT_DIR$/imglib2/io/imglib2-io (1).iml" />
+      <module fileurl="file://$PROJECT_DIR$/imglib2/ops/imglib2-ops (1).iml" filepath="$PROJECT_DIR$/imglib2/ops/imglib2-ops (1).iml" />
+      <module fileurl="file://$PROJECT_DIR$/imglib2/realtransform/imglib2-realtransform (1).iml" filepath="$PROJECT_DIR$/imglib2/realtransform/imglib2-realtransform (1).iml" />
+      <module fileurl="file://$PROJECT_DIR$/imglib2/scripting/imglib2-scripting (1).iml" filepath="$PROJECT_DIR$/imglib2/scripting/imglib2-scripting (1).iml" />
+      <module fileurl="file://$PROJECT_DIR$/imglib2/ui/imglib2-ui (1).iml" filepath="$PROJECT_DIR$/imglib2/ui/imglib2-ui (1).iml" />
+      <module fileurl="file://$PROJECT_DIR$/imglib2/algorithms/pom-imglib2-algorithms (1).iml" filepath="$PROJECT_DIR$/imglib2/algorithms/pom-imglib2-algorithms (1).iml" />
     </modules>
   </component>
 </project>

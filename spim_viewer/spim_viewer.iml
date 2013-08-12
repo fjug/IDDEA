@@ -96,7 +96,6 @@
     <orderEntry type="library" name="Maven: loci:turbojpeg:4.5-SNAPSHOT" level="project" />
     <orderEntry type="library" name="Maven: edu.ucar:netcdf:4.0.03" level="project" />
     <orderEntry type="library" name="Maven: cisd:jhdf5:12.02.3" level="project" />
-    <orderEntry type="module" module-name="jhotdraw" />
     <orderEntry type="library" name="lib" level="project" />
   </component>
 </module>
