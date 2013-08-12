@@ -2,7 +2,6 @@ package view;
 
 import edu.umd.cs.findbugs.annotations.Nullable;
 
-import java.awt.AlphaComposite;
 import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Dimension;
@@ -15,7 +14,7 @@ import java.awt.Rectangle;
 import java.awt.RenderingHints;
 import java.awt.Shape;
 import java.awt.TexturePaint;
-import java.awt.Transparency;
+
 import java.awt.geom.AffineTransform;
 import java.awt.geom.NoninvertibleTransformException;
 import java.awt.geom.Point2D;
@@ -28,11 +27,8 @@ import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.Set;
-import java.awt.*;
-import java.awt.geom.*;
 import java.awt.event.*;
 import java.awt.image.BufferedImage;
-import java.util.*;
 
 import javax.swing.*;
 import javax.swing.undo.*;
@@ -40,7 +36,6 @@ import javax.swing.undo.*;
 import org.jhotdraw.util.*;
 import org.jhotdraw.draw.AttributeKey;
 import org.jhotdraw.draw.Constrainer;
-import org.jhotdraw.draw.DefaultDrawingView;
 import org.jhotdraw.draw.DefaultDrawingViewTransferHandler;
 import org.jhotdraw.draw.Drawing;
 import org.jhotdraw.draw.DrawingEditor;
@@ -61,7 +56,15 @@ import org.jhotdraw.gui.EditableComponent;
 
 import static org.jhotdraw.draw.AttributeKeys.*;
 
-import java.awt.image.VolatileImage;
+
+/**
+ * InteractiveDrawingView provides modified drawing functions rather than jhotdraw's
+ * DefaultDrawingView.
+ *
+ * @version 0.1beta
+ * @since 8/12/13 5:08 PM
+ * @author HongKee Moon
+ */
 
 public abstract class InteractiveDrawingView extends JComponent implements DrawingView,
 		EditableComponent {

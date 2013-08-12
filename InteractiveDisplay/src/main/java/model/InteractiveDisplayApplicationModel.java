@@ -33,12 +33,14 @@ import controller.tool.SpimTool;
 import view.InteractiveDisplayView;
 
 /**
- * Created with IntelliJ IDEA.
- * User: moon
- * Date: 8/6/13
- * Time: 2:45 PM
- * To change this template use File | Settings | File Templates.
+ * InteractiveDisplay application model class provides an application model.
+ * Java initiates it with InteractiveDisplay view in Main class.
+ *
+ * @version 0.1beta
+ * @since 2:45 PM 8/6/13
+ * @author HongKee Moon
  */
+
 public class InteractiveDisplayApplicationModel extends DefaultApplicationModel {
     /**
      * This editor is shared by all views.

@@ -1,40 +1,28 @@
 package view;
 
-import static org.jhotdraw.draw.AttributeKeys.CANVAS_HEIGHT;
-import static org.jhotdraw.draw.AttributeKeys.CANVAS_WIDTH;
-import net.imglib2.display.ARGBScreenImage;
 import net.imglib2.realtransform.AffineTransform2D;
 import net.imglib2.ui.OverlayRenderer;
 import net.imglib2.ui.TransformEventHandler;
 import net.imglib2.ui.TransformEventHandlerFactory;
 import net.imglib2.ui.TransformListener;
 
-import org.jhotdraw.draw.DefaultDrawingView;
-import org.jhotdraw.draw.Figure;
-import org.jhotdraw.draw.event.TransformEdit;
-import org.jhotdraw.draw.handle.Handle;
-
-import javax.swing.*;
-import javax.swing.undo.UndoableEdit;
 
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.geom.AffineTransform;
-import java.awt.geom.NoninvertibleTransformException;
-import java.awt.geom.Point2D;
-import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
-import java.awt.image.ColorModel;
-import java.util.HashSet;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
- * Created with IntelliJ IDEA.
- * User: moon
- * Date: 8/7/13
- * Time: 11:14 AM
- * To change this template use File | Settings | File Templates.
+ * JHotDrawInteractiveDisplay2D gives 2D display view with the buffered image.
+ * This class uses MultiResolutionRenderer for realtime scaling view.
+ *
+ * @version 0.1beta
+ * @since 8/12/13 5:09 PM
+ * @author TobiasPietzsch <tobias.pietzsch@gmail.com>
+ * @author HongKee Moon
  */
+
 public class JHotDrawInteractiveDisplay2D<T> extends InteractiveDrawingView implements TransformListener<T>
 {
     /**

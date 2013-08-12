@@ -292,7 +292,6 @@ public class JavaPrimitivesDOMFactory implements DOMFactory {
             o = createEnum(in.getAttribute("type", (String) null), in.getText());
         } else if ("color".equals(tagName)) {
             o = new Color(in.getAttribute("rgba", 0xff), true);
-            System.out.println(o);
         } else if ("font".equals(tagName)) {
             o = new Font(in.getAttribute("name", "Dialog"), in.getAttribute("style", 0), in.getAttribute("size", 0));
         } else if ("byteArray".equals(tagName)) {

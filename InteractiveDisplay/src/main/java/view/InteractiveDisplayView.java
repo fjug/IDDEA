@@ -4,19 +4,15 @@ import net.imglib2.display.RealARGBConverter;
 import net.imglib2.realtransform.AffineTransform2D;
 import net.imglib2.type.numeric.integer.LongType;
 import net.imglib2.ui.util.FinalSource;
-import org.jhotdraw.draw.io.TextInputFormat;
+
 import org.jhotdraw.draw.io.OutputFormat;
 import org.jhotdraw.draw.io.InputFormat;
-import org.jhotdraw.draw.io.ImageOutputFormat;
-import org.jhotdraw.draw.io.ImageInputFormat;
 import org.jhotdraw.draw.print.DrawingPageable;
 import org.jhotdraw.draw.io.DOMStorableInputOutputFormat;
 
-import java.awt.geom.*;
 import java.awt.print.Pageable;
 
 import org.jhotdraw.gui.*;
-import org.jhotdraw.samples.draw.DrawFigureFactory;
 import org.jhotdraw.undo.*;
 import org.jhotdraw.util.*;
 
@@ -25,11 +21,9 @@ import java.beans.*;
 import java.io.*;
 import java.lang.reflect.*;
 import java.net.URI;
-import java.util.ArrayList;
 
 import javax.swing.*;
 import javax.swing.border.*;
-import javax.xml.parsers.ParserConfigurationException;
 
 import org.jhotdraw.app.AbstractView;
 import org.jhotdraw.app.action.edit.RedoAction;
@@ -41,14 +35,14 @@ import org.jhotdraw.net.URIUtil;
 
 
 
-/**
- * Created with IntelliJ IDEA.
- * User: moon
- * Date: 8/6/13
- * Time: 2:56 PM
- * To change this template use File | Settings | File Templates.
- */
 
+/**
+ * InteractvieDisplayView shows a DrawingView where users create and modify figures.
+ *
+ * @version 0.1beta
+ * @since 8/12/13 5:05 PM
+ * @author HongKee Moon
+ */
 
 public class InteractiveDisplayView extends AbstractView {
 

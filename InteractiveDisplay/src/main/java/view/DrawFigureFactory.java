@@ -6,9 +6,16 @@ import org.jhotdraw.draw.DefaultDrawing;
 import org.jhotdraw.draw.GroupFigure;
 import org.jhotdraw.draw.QuadTreeDrawing;
 import org.jhotdraw.draw.connector.ChopBezierConnector;
-import xml.DefaultDOMFactory;
 
-public class DrawFigureFactory extends DefaultDOMFactory {
+/**
+ * DrawFingureFactory provides how to store DOM model for the drawing objects.
+ *
+ * @version 0.1beta
+ * @since 8/12/13 5:03 PM
+ * @author HongKee Moon
+ */
+
+public class DrawFigureFactory extends xml.DefaultDOMFactory {
     private final static Object[][] classTagArray = {
         { DefaultDrawing.class, "drawing" },
         { QuadTreeDrawing.class, "drawing" },

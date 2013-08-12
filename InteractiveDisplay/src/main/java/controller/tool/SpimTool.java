@@ -1,19 +1,20 @@
 package controller.tool;
 
-/**
- * Created with IntelliJ IDEA.
- * User: moon
- * Date: 8/6/13
- * Time: 2:53 PM
- * To change this template use File | Settings | File Templates.
- */
-
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 
 import org.jhotdraw.draw.DrawingEditor;
 import org.jhotdraw.draw.DrawingView;
 import org.jhotdraw.draw.tool.AbstractTool;
+
+
+/**
+ * SpimTool provides a default bezier drawing.
+ *
+ * @version 0.1beta
+ * @since 8/12/13 5:12 PM
+ * @author HongKee Moon
+ */
 
 public class SpimTool extends AbstractTool {
 

@@ -13,6 +13,7 @@ package xml;
 
 import java.util.*;
 import org.jhotdraw.xml.DOMStorable;
+
 /**
  * {@code DefaultDOMFactory} can be used to serialize DOMStorable objects
  * in a DOM with the use of a mapping between Java class names and DOM element

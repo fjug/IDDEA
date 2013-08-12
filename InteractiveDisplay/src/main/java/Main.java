@@ -7,13 +7,16 @@ import org.jhotdraw.util.ResourceBundleUtil;
 import model.InteractiveDisplayApplicationModel;
 import view.InteractiveDisplayView;
 
+
+
 /**
- * Created with IntelliJ IDEA.
- * User: moon
- * Date: 8/6/13
- * Time: 3:06 PM
- * To change this template use File | Settings | File Templates.
+ * Main class instanciate a model with a view.
+ *
+ * @version 0.1beta
+ * @since 8/12/13 5:13 PM
+ * @author HongKee Moon
  */
+
 public class Main {
 
     public static void main( final String[] args )
