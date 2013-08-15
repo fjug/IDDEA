@@ -2,23 +2,13 @@ package model;
 
 import edu.umd.cs.findbugs.annotations.Nullable;
 
-import org.jhotdraw.draw.tool.CreationTool;
+import org.jhotdraw.app.action.file.*;
+import org.jhotdraw.app.action.edit.*;
 import org.jhotdraw.draw.tool.BezierTool;
-import org.jhotdraw.draw.tool.TextCreationTool;
-import org.jhotdraw.draw.tool.TextAreaCreationTool;
-import org.jhotdraw.draw.tool.ImageTool;
-import org.jhotdraw.draw.liner.ElbowLiner;
-import org.jhotdraw.draw.liner.CurvedLiner;
-import org.jhotdraw.draw.tool.ConnectionTool;
-import org.jhotdraw.draw.decoration.ArrowTip;
 import org.jhotdraw.gui.URIChooser;
 import org.jhotdraw.util.*;
 
 import java.awt.Color;
-import java.awt.Component;
-import java.awt.Graphics;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.*;
 
 import javax.swing.*;
@@ -30,6 +20,7 @@ import org.jhotdraw.gui.JFileURIChooser;
 import org.jhotdraw.gui.filechooser.ExtensionFileFilter;
 
 import controller.tool.SpimTool;
+import controller.action.*;
 import view.InteractiveDisplayView;
 
 /**
@@ -41,7 +32,9 @@ import view.InteractiveDisplayView;
  * @author HongKee Moon
  */
 
-public class InteractiveDisplayApplicationModel extends DefaultApplicationModel {
+public class InteractiveDisplayApplicationModel extends AbstractApplicationModel {
+    @Nullable private MenuBuilder menuBuilder;
+
     /**
      * This editor is shared by all views.
      */
@@ -50,6 +43,53 @@ public class InteractiveDisplayApplicationModel extends DefaultApplicationModel 
     /** Creates a new instance. */
     public InteractiveDisplayApplicationModel() {
     }
+
+    /**
+     * Returns an {@code ActionMap} with a default set of actions (See
+     * class comments).
+     */
+    @Override
+    public ActionMap createActionMap(Application a, @Nullable View v) {
+        ActionMap m=new ActionMap();
+
+        m.put(NewFileAction.ID, new NewFileAction(a));
+        m.put(OpenFileAction.ID, new OpenFileAction(a));
+        m.put(SaveFileAction.ID, new SaveFileAction(a,v));
+        m.put(SaveFileAsAction.ID, new SaveFileAsAction(a,v));
+        m.put(CloseFileAction.ID, new CloseFileAction(a,v));
+
+        m.put(UndoAction.ID, new UndoAction(a,v));
+        m.put(RedoAction.ID, new RedoAction(a,v));
+        m.put(CutAction.ID, new CutAction());
+        m.put(CopyAction.ID, new CopyAction());
+        m.put(PasteAction.ID, new PasteAction());
+        m.put(DeleteAction.ID, new DeleteAction());
+        m.put(DuplicateAction.ID, new DuplicateAction());
+        m.put(SelectAllAction.ID, new SelectAllAction());
+        m.put(ClearSelectionAction.ID, new ClearSelectionAction());
+
+        m.put(OpenImageFileAction.ID, new OpenImageFileAction(a));
+
+        return m;
+    }
+
+    /** Creates the DefaultMenuBuilder. */
+    protected MenuBuilder createMenuBuilder() {
+        return new InteractiveDisplayMenuBuilder();
+    }
+
+    @Override
+    public MenuBuilder getMenuBuilder() {
+        if (menuBuilder==null) {
+            menuBuilder=createMenuBuilder();
+        }
+        return menuBuilder;
+    }
+
+    public void setMenuBuilder(@Nullable MenuBuilder newValue) {
+        menuBuilder = newValue;
+    }
+
 
     public DefaultDrawingEditor getSharedEditor() {
         if (sharedEditor == null) {

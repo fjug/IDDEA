@@ -1,10 +1,32 @@
 package view;
 
+import edu.umd.cs.findbugs.annotations.Nullable;
+import ij.ImagePlus;
+import net.imglib2.IterableInterval;
+import net.imglib2.RandomAccessible;
+import net.imglib2.RandomAccessibleInterval;
+import net.imglib2.RealRandomAccessible;
+import net.imglib2.converter.Converter;
+import net.imglib2.converter.TypeIdentity;
+import net.imglib2.display.ChannelARGBConverter;
+import net.imglib2.display.CompositeXYProjector;
+import net.imglib2.display.XYProjector;
+import net.imglib2.type.NativeType;
+import net.imglib2.type.Type;
+import net.imglib2.type.numeric.ARGBType;
+import net.imglib2.type.numeric.RealType;
+import net.imglib2.type.numeric.integer.UnsignedByteType;
+import net.imglib2.type.numeric.real.*;
+import net.imglib2.img.*;
+import net.imglib2.img.array.*;
 import net.imglib2.display.RealARGBConverter;
 import net.imglib2.realtransform.AffineTransform2D;
 import net.imglib2.type.numeric.integer.LongType;
 import net.imglib2.ui.util.FinalSource;
+import net.imglib2.io.*;
+import net.imglib2.img.imageplus.*;
 
+import net.imglib2.view.Views;
 import org.jhotdraw.draw.io.OutputFormat;
 import org.jhotdraw.draw.io.InputFormat;
 import org.jhotdraw.draw.print.DrawingPageable;
@@ -19,7 +41,6 @@ import org.jhotdraw.util.*;
 import java.awt.*;
 import java.beans.*;
 import java.io.*;
-import java.lang.reflect.*;
 import java.net.URI;
 
 import javax.swing.*;
@@ -32,8 +53,7 @@ import org.jhotdraw.draw.*;
 import org.jhotdraw.draw.action.*;
 import org.jhotdraw.gui.URIChooser;
 import org.jhotdraw.net.URIUtil;
-
-
+import render.ImageSource;
 
 
 /**
@@ -195,7 +215,7 @@ public class InteractiveDisplayView extends AbstractView {
             InternalError error = new InternalError();
             e.initCause(e);
             throw error;
-        } catch (InvocationTargetException e) {
+        } catch (java.lang.reflect.InvocationTargetException e) {
             InternalError error = new InternalError();
             error.initCause(e);
             throw error;
@@ -239,7 +259,7 @@ public class InteractiveDisplayView extends AbstractView {
                     undo.discardAllEdits();
                 }
             });
-        } catch (InvocationTargetException ex) {
+        } catch (java.lang.reflect.InvocationTargetException ex) {
             ex.printStackTrace();
         } catch (InterruptedException ex) {
             ex.printStackTrace();
@@ -249,6 +269,59 @@ public class InteractiveDisplayView extends AbstractView {
     @Override
     public boolean canSaveTo(URI file) {
         return new File(file).getName().endsWith(".xml");
+    }
+
+    @Override
+    public void setURI(@Nullable URI newValue) {
+        if(newValue.toString().lastIndexOf("xml") > 0)
+        {
+            super.setURI(newValue);
+        }
+        else
+        {
+            String filename = newValue.toString().substring(5);
+
+            // Image import
+            final ImagePlus imp = new ImagePlus( filename );
+            ImagePlusImg<FloatType, ? > map = ImagePlusImgs.from( imp );
+            show(map);
+        }
+    }
+
+    private static < T extends Type< T > & Comparable< T > > void getMinMax( final IterableInterval< T > source, final T minValue, final T maxValue )
+    {
+        for ( final T t : source )
+            if ( minValue.compareTo( t ) > 0 )
+                minValue.set( t );
+            else if ( maxValue.compareTo( t ) < 0 )
+                maxValue.set( t );
+    }
+
+    public < T extends RealType< T > & NativeType< T >> void show( final ImagePlusImg<T, ? > interval )
+    {
+        int width = interval.getWidth();
+        int height = interval.getHeight();
+
+        if(ARGBType.class.isInstance(Views.iterable(interval).firstElement()))
+        {
+            ImageRandomAccessible img = new ImageRandomAccessible((ImagePlusImg<ARGBType, ?>)(ImagePlusImg<?, ?>)interval);
+            final AffineTransform2D transform = new AffineTransform2D();
+
+            InteractiveViewer2D iview = new InteractiveViewer2D( width, height, new ImageSource< ARGBType, AffineTransform2D >( img, transform, new TypeIdentity<ARGBType>()));
+
+            view = iview.getDisplay();
+            scrollPane.setViewportView(view);
+        }
+        else
+        {
+            final T min = Views.iterable( interval ).firstElement().copy();
+            final T max = min.copy();
+            getMinMax( Views.iterable( interval ), min, max );
+
+            final RealARGBConverter< T > converter = new RealARGBConverter< T >( min.getMinValue(), max.getMaxValue());
+
+            new net.imglib2.ui.viewer.InteractiveViewer2D< T >(width, height, interval, converter);
+        }
     }
 
     public InteractiveDrawingView getInteractiveDrawingView()
@@ -267,6 +340,22 @@ public class InteractiveDisplayView extends AbstractView {
 
         InteractiveViewer2D iview = new InteractiveViewer2D( width, height, new FinalSource< LongType, AffineTransform2D >( mandelbrot, transform, converter ) );
 
+
+
+//        String filename = new String("/Users/moon/Pictures/aeonflux.jpeg");
+//
+//        // Image import
+//        final ImagePlus imp = new ImagePlus( filename );
+//        ImagePlusImg<FloatType, ? > map = ImagePlusImgs.from( imp );
+//
+//        int width = map.getWidth();
+//        int height = map.getHeight();
+//
+//        ImageRandomAccessible img = new ImageRandomAccessible((ImagePlusImg<ARGBType, ?>)(ImagePlusImg<?, ?>)map);
+//        final AffineTransform2D transform = new AffineTransform2D();
+//
+//        InteractiveViewer2D iview = new InteractiveViewer2D( width, height, new ImageSource< ARGBType, AffineTransform2D >( img, transform, new TypeIdentity<ARGBType>()));
+//
         return iview.getDisplay();
     }
 

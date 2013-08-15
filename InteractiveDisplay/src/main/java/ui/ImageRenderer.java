@@ -1,4 +1,4 @@
-package view;
+package ui;
 
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
@@ -11,20 +11,18 @@ import net.imglib2.realtransform.AffineGet;
 import net.imglib2.realtransform.AffineSet;
 import net.imglib2.realtransform.RealViews;
 import net.imglib2.type.numeric.ARGBType;
-import net.imglib2.type.numeric.NumericType;
 import net.imglib2.ui.util.GuiUtil;
 import net.imglib2.ui.*;
-import render.ImageSource;
+import view.JHotDrawInteractiveDisplay2D;
 
 /**
- * TODO
+ * Created with IntelliJ IDEA.
  *
- * @param <A>
- *            transform type
- *
- * @author Tobias Pietzsch <tobias.pietzsch@gmail.com>
+ * @version 0.1beta
+ * @since 8/14/13 4:47 PM
+ * @author HongKee Moon
  */
-public class MultiResolutionRenderer< A extends AffineSet & AffineGet & Concatenable< AffineGet > >
+public class ImageRenderer< A extends AffineSet & AffineGet & Concatenable< AffineGet >>
 {
     final protected JHotDrawInteractiveDisplay2D<?> display;
 
@@ -138,7 +136,7 @@ public class MultiResolutionRenderer< A extends AffineSet & AffineGet & Concaten
      * @param numRenderingThreads
      *            How many threads to use for rendering.
      */
-    public MultiResolutionRenderer( final AffineTransformType< A > transformType, final JHotDrawInteractiveDisplay2D<?> display, final PainterThread painterThread, final double[] screenScales, final long targetRenderNanos, final boolean doubleBuffered, final int numRenderingThreads )
+    public ImageRenderer( final AffineTransformType< A > transformType, final JHotDrawInteractiveDisplay2D<?> display, final PainterThread painterThread, final double[] screenScales, final long targetRenderNanos, final boolean doubleBuffered, final int numRenderingThreads )
     {
         this.display = display;
         this.painterThread = painterThread;
@@ -300,89 +298,4 @@ public class MultiResolutionRenderer< A extends AffineSet & AffineGet & Concaten
 
         return RealViews.constantAffine( img, sourceToScreen );
     }
-
-    public boolean paint( final ImageSource< ARGBType, A > source, final A viewerTransform )
-    {
-        checkResize();
-
-        // the screen scale at which we will be rendering
-        final int currentScreenScaleIndex;
-
-        // the corresponding screen scale transform
-        final A currentScreenScaleTransform;
-
-        // the corresponding ARGBScreenImage (to render to)
-        final ARGBScreenImage screenImage;
-
-        // the corresponding BufferedImage (to paint to the canvas)
-        final BufferedImage bufferedImage;
-
-        // the projector that paints to the screenImage.
-        final InterruptibleProjector< ?, ARGBType > p;
-
-        synchronized( this )
-        {
-            renderingMayBeCancelled = ( requestedScreenScaleIndex < maxScreenScaleIndex );
-            currentScreenScaleIndex = requestedScreenScaleIndex;
-            currentScreenScaleTransform = screenScaleTransforms.get( currentScreenScaleIndex );
-
-            p = createProjector( transformType, source, viewerTransform, currentScreenScaleTransform);
-            screenImage = screenImages[ currentScreenScaleIndex ][ 0 ];
-            bufferedImage = bufferedImages[ currentScreenScaleIndex ][ 0 ];
-            projector = p;
-        }
-
-        // try rendering
-        final boolean success = p.map( screenImage, numRenderingThreads );
-
-        synchronized ( this )
-        {
-            // if rendering was not cancelled...
-            if ( success )
-            {
-                display.setBufferedImage( bufferedImage );
-
-                if ( doubleBuffered )
-                {
-                    screenImages[ currentScreenScaleIndex ][ 0 ] = screenImages[ currentScreenScaleIndex ][ 1 ];
-                    screenImages[ currentScreenScaleIndex ][ 1 ] = screenImage;
-                    bufferedImages[ currentScreenScaleIndex ][ 0 ] = bufferedImages[ currentScreenScaleIndex ][ 1 ];
-                    bufferedImages[ currentScreenScaleIndex ][ 1 ] = bufferedImage;
-                }
-
-                final long rendertime = p.getLastFrameRenderNanoTime();
-                if ( currentScreenScaleIndex == maxScreenScaleIndex )
-                {
-                    if ( rendertime > targetRenderNanos && maxScreenScaleIndex < screenScales.length - 1 )
-                        maxScreenScaleIndex++;
-                }
-                else if ( currentScreenScaleIndex == maxScreenScaleIndex - 1 )
-                {
-                    if ( rendertime < targetRenderNanos && maxScreenScaleIndex > 0 )
-                        maxScreenScaleIndex--;
-                }
-//				System.out.println( "scale = " + currentScreenScaleIndex );
-//				System.out.println( String.format( "rendering:%4d ms", rendertime / 1000000 ) );
-//				System.out.println( "maxScreenScaleIndex = " + maxScreenScaleIndex + "  (" + screenImages[ maxScreenScaleIndex ][ 0 ].dimension( 0 ) + " x " + screenImages[ maxScreenScaleIndex ][ 0 ].dimension( 1 ) + ")" );
-
-                if ( currentScreenScaleIndex > 0 )
-                    requestRepaint( currentScreenScaleIndex - 1 );
-            }
-        }
-
-        return success;
-    }
-
-    protected static < T extends NumericType<T>, A extends AffineGet & Concatenable< AffineGet > > InterruptibleProjector createProjector(  final AffineTransformType< A > transformType, final ImageSource< T, A > source, final A viewerTransform, final A screenScaleTransform)
-    {
-        final RealRandomAccessible< T > img = source.getInterpolatedSource();
-
-        final A sourceToScreen = transformType.createTransform();
-        transformType.set( sourceToScreen, screenScaleTransform );
-        sourceToScreen.concatenate( viewerTransform );
-        sourceToScreen.concatenate( source.getSourceTransform() );
-
-        return new InterruptibleProjector<T, ARGBType >( RealViews.constantAffine( img, sourceToScreen ), source.getConverter() );
-    }
-
 }
