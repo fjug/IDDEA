@@ -7,23 +7,16 @@ import net.imglib2.RandomAccessible;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.RealRandomAccessible;
 import net.imglib2.converter.Converter;
-import net.imglib2.converter.TypeIdentity;
-import net.imglib2.display.ChannelARGBConverter;
-import net.imglib2.display.CompositeXYProjector;
-import net.imglib2.display.XYProjector;
+import net.imglib2.converter.Converters;
+import net.imglib2.interpolation.randomaccess.NearestNeighborInterpolatorFactory;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.Type;
 import net.imglib2.type.numeric.ARGBType;
 import net.imglib2.type.numeric.RealType;
-import net.imglib2.type.numeric.integer.UnsignedByteType;
-import net.imglib2.type.numeric.real.*;
-import net.imglib2.img.*;
-import net.imglib2.img.array.*;
-import net.imglib2.display.RealARGBConverter;
-import net.imglib2.realtransform.AffineTransform2D;
 import net.imglib2.type.numeric.integer.LongType;
+import net.imglib2.type.numeric.real.FloatType;
+import net.imglib2.realtransform.AffineTransform2D;
 import net.imglib2.ui.util.FinalSource;
-import net.imglib2.io.*;
 import net.imglib2.img.imageplus.*;
 
 import net.imglib2.view.Views;
@@ -53,7 +46,9 @@ import org.jhotdraw.draw.*;
 import org.jhotdraw.draw.action.*;
 import org.jhotdraw.gui.URIChooser;
 import org.jhotdraw.net.URIUtil;
-import render.ImageSource;
+import view.ui.ARGBRealConverter;
+import view.ui.RealARGBConverter;
+import view.ui.RealARGBConverterDecode;
 
 
 /**
@@ -77,6 +72,8 @@ public class InteractiveDisplayView extends AbstractView {
      * view, or a single shared editor for all views.
      */
     private DrawingEditor editor;
+
+    private InteractiveViewer2D iview2d;
 
     /**
      * Creates a new view.
@@ -284,7 +281,21 @@ public class InteractiveDisplayView extends AbstractView {
             // Image import
             final ImagePlus imp = new ImagePlus( filename );
             ImagePlusImg<FloatType, ? > map = ImagePlusImgs.from( imp );
-            show(map);
+            if(iview2d != null)
+            {
+                iview2d.stop();
+
+            }
+            iview2d = show(map);
+
+            editor.remove(view);
+            InteractiveDrawingView newView = iview2d.getDisplay();
+            editor.add(newView);
+
+            newView.setDrawing(view.getDrawing());
+            view = newView;
+
+            scrollPane.setViewportView(view);
         }
     }
 
@@ -297,20 +308,24 @@ public class InteractiveDisplayView extends AbstractView {
                 maxValue.set( t );
     }
 
-    public < T extends RealType< T > & NativeType< T >> void show( final ImagePlusImg<T, ? > interval )
+    public < T extends RealType< T > & NativeType< T >> InteractiveViewer2D show( final ImagePlusImg<T, ? > interval )
     {
         int width = interval.getWidth();
         int height = interval.getHeight();
+        final AffineTransform2D transform = new AffineTransform2D();
+        InteractiveViewer2D iview = null;
 
         if(ARGBType.class.isInstance(Views.iterable(interval).firstElement()))
         {
-            ImageRandomAccessible img = new ImageRandomAccessible((ImagePlusImg<ARGBType, ?>)(ImagePlusImg<?, ?>)interval);
-            final AffineTransform2D transform = new AffineTransform2D();
+            Converter<ARGBType, FloatType> conv = new ARGBRealConverter();
+            RandomAccessible< FloatType > view1 = Converters.convert((RandomAccessibleInterval<ARGBType>)(ImagePlusImg<?, ?>)interval, conv, new FloatType());
 
-            InteractiveViewer2D iview = new InteractiveViewer2D( width, height, new ImageSource< ARGBType, AffineTransform2D >( img, transform, new TypeIdentity<ARGBType>()));
+//            RealRandomAccessible< FloatType > interpolated = Views.interpolate( view1, new NLinearInterpolatorFactory<FloatType>() );
+            RealRandomAccessible< FloatType > interpolated = Views.interpolate( view1, new NearestNeighborInterpolatorFactory<FloatType>() );
 
-            view = iview.getDisplay();
-            scrollPane.setViewportView(view);
+            final RealARGBConverterDecode< FloatType > converter = new RealARGBConverterDecode< FloatType >();
+
+            iview = new InteractiveViewer2D( width, height, new FinalSource< FloatType, AffineTransform2D >(interpolated, transform, converter));
         }
         else
         {
@@ -318,10 +333,16 @@ public class InteractiveDisplayView extends AbstractView {
             final T max = min.copy();
             getMinMax( Views.iterable( interval ), min, max );
 
+            NearestNeighborInterpolatorFactory< T > factory1 =
+                    new NearestNeighborInterpolatorFactory< T >();
+
+            //final view.ui.RealARGBConverterDecode< FloatType > converter = new view.ui.RealARGBConverterDecode< FloatType >();
             final RealARGBConverter< T > converter = new RealARGBConverter< T >( min.getMinValue(), max.getMaxValue());
 
-            new net.imglib2.ui.viewer.InteractiveViewer2D< T >(width, height, interval, converter);
+            iview = new InteractiveViewer2D( width, height, new FinalSource< T, AffineTransform2D >( Views.interpolate(interval, factory1), transform, converter));
         }
+
+        return iview;
     }
 
     public InteractiveDrawingView getInteractiveDrawingView()
@@ -338,8 +359,7 @@ public class InteractiveDisplayView extends AbstractView {
 
         final RealARGBConverter< LongType > converter = new RealARGBConverter< LongType >( 0, maxIterations );
 
-        InteractiveViewer2D iview = new InteractiveViewer2D( width, height, new FinalSource< LongType, AffineTransform2D >( mandelbrot, transform, converter ) );
-
+        InteractiveViewer2D iview = new InteractiveViewer2D( width, height, new FinalSource<LongType, AffineTransform2D >( mandelbrot, transform, converter ) );
 
 
 //        String filename = new String("/Users/moon/Pictures/aeonflux.jpeg");
@@ -355,6 +375,15 @@ public class InteractiveDisplayView extends AbstractView {
 //        final AffineTransform2D transform = new AffineTransform2D();
 //
 //        InteractiveViewer2D iview = new InteractiveViewer2D( width, height, new ImageSource< ARGBType, AffineTransform2D >( img, transform, new TypeIdentity<ARGBType>()));
+//
+
+
+//        String filename = new String("/Users/moon/Pictures/aeonflux.jpeg");
+////        String filename = new String("/Users/moon/Projects/ScientificPlatform/ImgLib2/imglib/examples/graffiti.tif");
+//        final ImagePlus imp = new ImagePlus( filename );
+//        ImagePlusImg<FloatType, ? > map = ImagePlusImgs.from( imp );
+//
+//        InteractiveViewer2D iview = show(map);
 //
         return iview.getDisplay();
     }

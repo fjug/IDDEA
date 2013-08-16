@@ -37,30 +37,12 @@
 
 package view;
 
-import java.awt.Graphics;
-
-
-import net.imglib2.display.ARGBScreenImage;
-import java.awt.BorderLayout;
-import java.awt.Container;
-import java.awt.GraphicsConfiguration;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
 
 import net.imglib2.realtransform.AffineTransform2D;
-import net.imglib2.type.numeric.ARGBType;
 import net.imglib2.ui.*;
-import net.imglib2.concatenate.Concatenable;
-import net.imglib2.realtransform.AffineGet;
-import net.imglib2.realtransform.AffineSet;
-import net.imglib2.ui.AffineTransformType;
-import net.imglib2.ui.InteractiveDisplayCanvas;
 import net.imglib2.ui.PainterThread;
 import net.imglib2.ui.RenderSource;
 import net.imglib2.ui.TransformListener;
-import net.imglib2.ui.PainterThread.Paintable;
-import net.imglib2.ui.util.GuiUtil;
-import render.ImageSource;
 
 /**
  *
@@ -68,12 +50,11 @@ import render.ImageSource;
  *
  * @author TobiasPietzsch <tobias.pietzsch@gmail.com>
  * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
+ * @author HongKee Moon <moon@mpi-cbg.de>
  */
 public class InteractiveViewer2D< T > implements TransformListener< AffineTransform2D >, PainterThread.Paintable
 {
     final protected RenderSource< T, AffineTransform2D > source;
-
-    final protected ImageSource< ARGBType, AffineTransform2D > imgSource;
 
     /**
      * Transformation set by the interactive viewer.
@@ -95,28 +76,6 @@ public class InteractiveViewer2D< T > implements TransformListener< AffineTransf
     public InteractiveViewer2D( final int width, final int height, final RenderSource< T, AffineTransform2D > source )
     {
         this.source = source;
-        this.imgSource = null;
-
-        viewerTransform = new AffineTransform2D();
-
-        display = new JHotDrawInteractiveDisplay2D<AffineTransform2D>( width, height, TransformEventHandler2D.factory());
-        display.addTransformListener( this );
-
-        painterThread = new PainterThread( this );
-
-        final boolean doubleBuffered = true;
-        final int numRenderingThreads = 3;
-        final double[] screenScales = new double[] { 1, 0.5, 0.25, 0.125 };
-        final long targetRenderNanos = 15 * 1000000;
-        imageRenderer = new MultiResolutionRenderer< AffineTransform2D >( AffineTransformType2D.instance, display, painterThread, screenScales, targetRenderNanos, doubleBuffered, numRenderingThreads );
-
-        painterThread.start();
-    }
-
-    public InteractiveViewer2D( final int width, final int height, final ImageSource<ARGBType, AffineTransform2D> source )
-    {
-        this.source = null;
-        this.imgSource = source;
 
         viewerTransform = new AffineTransform2D();
 
@@ -139,8 +98,6 @@ public class InteractiveViewer2D< T > implements TransformListener< AffineTransf
     {
         if(source != null)
             imageRenderer.paint( source, viewerTransform );
-        if(imgSource != null)
-            imageRenderer.paint( imgSource, viewerTransform );
         display.repaint();
     }
 
@@ -164,6 +121,7 @@ public class InteractiveViewer2D< T > implements TransformListener< AffineTransf
 
     public void stop()
     {
+        imageRenderer.stop();
         painterThread.stop();
     }
 }
