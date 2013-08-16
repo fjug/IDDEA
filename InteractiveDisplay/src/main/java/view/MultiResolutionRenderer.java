@@ -160,7 +160,8 @@ public class MultiResolutionRenderer< A extends AffineSet & AffineGet & Concaten
 
     public void stop()
     {
-        projector.cancel();
+        if(projector != null)
+            projector.cancel();
     }
 
     /**

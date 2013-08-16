@@ -165,10 +165,6 @@ public class InteractiveDisplayView extends AbstractView {
     public void write(URI f, URIChooser fc) throws IOException {
         Drawing drawing = view.getDrawing();
         OutputFormat outputFormat = drawing.getOutputFormats().get(0);
-        for(OutputFormat o : drawing.getOutputFormats())
-        {
-            System.out.println(o);
-        }
         outputFormat.write(f, drawing);
     }
 
@@ -179,35 +175,43 @@ public class InteractiveDisplayView extends AbstractView {
     public void read(URI f, URIChooser fc) throws IOException {
         try {
 
-            final Drawing drawing = createDrawing();
+            if(f.toString().lastIndexOf("xml") > 0)
+            {
 
-            boolean success = false;
-            for (InputFormat sfi : drawing.getInputFormats()) {
-                try {
-                    sfi.read(f, drawing, true);
-                    success = true;
-                    break;
-                } catch (Exception e) {
-                    // try with the next input format
+                final Drawing drawing = createDrawing();
+
+                boolean success = false;
+                for (InputFormat sfi : drawing.getInputFormats()) {
+                    try {
+                        sfi.read(f, drawing, true);
+                        success = true;
+                        break;
+                    } catch (Exception e) {
+                        // try with the next input format
+                    }
                 }
-            }
-            if (!success) {
-                ResourceBundleUtil labels = ResourceBundleUtil.getBundle("org.jhotdraw.app.Labels");
-                throw new IOException(labels.getFormatted("file.open.unsupportedFileFormat.message", URIUtil.getName(f)));
-            }
-
-//            ((QuadTreeDrawing) drawing).setAttributeOnChildren(org.jhotdraw.draw.AttributeKeys.FILL_COLOR, c );
-//            ((QuadTreeDrawing) drawing).setAttributeOnChildren(org.jhotdraw.draw.AttributeKeys.STROKE_COLOR, new Color( 1.0f, 0.0f, 0.0f, 0.33f ));
-
-            SwingUtilities.invokeAndWait(new Runnable() {
-                @Override
-                public void run() {
-                    view.getDrawing().removeUndoableEditListener(undo);
-                    view.setDrawing(drawing);
-                    view.getDrawing().addUndoableEditListener(undo);
-                    undo.discardAllEdits();
+                if (!success) {
+                    ResourceBundleUtil labels = ResourceBundleUtil.getBundle("org.jhotdraw.app.Labels");
+                    throw new IOException(labels.getFormatted("file.open.unsupportedFileFormat.message", URIUtil.getName(f)));
                 }
-            });
+
+    //            ((QuadTreeDrawing) drawing).setAttributeOnChildren(org.jhotdraw.draw.AttributeKeys.FILL_COLOR, c );
+    //            ((QuadTreeDrawing) drawing).setAttributeOnChildren(org.jhotdraw.draw.AttributeKeys.STROKE_COLOR, new Color( 1.0f, 0.0f, 0.0f, 0.33f ));
+
+                SwingUtilities.invokeAndWait(new Runnable() {
+                    @Override
+                    public void run() {
+                        view.getDrawing().removeUndoableEditListener(undo);
+                        view.setDrawing(drawing);
+                        view.getDrawing().addUndoableEditListener(undo);
+                        undo.discardAllEdits();
+                    }
+                });
+            }
+            else
+            {
+                setURI(f);
+            }
         } catch (InterruptedException e) {
             InternalError error = new InternalError();
             e.initCause(e);
@@ -333,13 +337,11 @@ public class InteractiveDisplayView extends AbstractView {
             final T max = min.copy();
             getMinMax( Views.iterable( interval ), min, max );
 
-            NearestNeighborInterpolatorFactory< T > factory1 =
-                    new NearestNeighborInterpolatorFactory< T >();
-
-            //final view.ui.RealARGBConverterDecode< FloatType > converter = new view.ui.RealARGBConverterDecode< FloatType >();
+//            RealRandomAccessible< T > interpolated = Views.interpolate( interval, new NLinearInterpolatorFactory<T>() );
+            RealRandomAccessible< T > interpolated = Views.interpolate( interval, new NearestNeighborInterpolatorFactory<T>() );
             final RealARGBConverter< T > converter = new RealARGBConverter< T >( min.getMinValue(), max.getMaxValue());
 
-            iview = new InteractiveViewer2D( width, height, new FinalSource< T, AffineTransform2D >( Views.interpolate(interval, factory1), transform, converter));
+            iview = new InteractiveViewer2D( width, height, new FinalSource< T, AffineTransform2D >( interpolated, transform, converter));
         }
 
         return iview;

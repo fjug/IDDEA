@@ -1,77 +1,88 @@
+/*
+ * @(#)OpenFileAction.java
+ *
+ * Copyright (c) 1996-2010 by the original authors of JHotDraw and all its
+ * contributors. All rights reserved.
+ *
+ * You may not use, copy or modify this file, except in compliance with the
+ * license agreement you entered into with the copyright holders. For details
+ * see accompanying license terms.
+ */
+
 package controller.action;
 
-import edu.umd.cs.findbugs.annotations.Nullable;
-import org.jhotdraw.app.action.*;
-import org.jhotdraw.app.*;
-import org.jhotdraw.gui.JFileURIChooser;
-import org.jhotdraw.gui.JSheet;
-import org.jhotdraw.gui.URIChooser;
-import org.jhotdraw.gui.Worker;
-import org.jhotdraw.gui.filechooser.ExtensionFileFilter;
-import org.jhotdraw.net.URIUtil;
-import org.jhotdraw.app.Application;
-import org.jhotdraw.app.ApplicationModel;
-import org.jhotdraw.app.View;
-import org.jhotdraw.util.ResourceBundleUtil;
-
+import org.jhotdraw.util.*;
+import org.jhotdraw.gui.*;
 import java.awt.*;
-import java.util.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
-import java.io.File;
-import java.io.IOException;
-import java.net.URI;
-import java.util.List;
-import java.util.prefs.Preferences;
-
-import model.*;
-import org.jhotdraw.util.prefs.PreferencesUtil;
-
+import java.awt.event.*;
 import javax.swing.*;
-import javax.swing.filechooser.FileNameExtensionFilter;
-
+import java.io.*;
+import java.net.URI;
+import java.util.prefs.Preferences;
+import org.jhotdraw.app.Application;
+import org.jhotdraw.app.View;
+import org.jhotdraw.app.action.AbstractApplicationAction;
+import org.jhotdraw.gui.URIChooser;
+import org.jhotdraw.net.URIUtil;
+import org.jhotdraw.util.prefs.PreferencesUtil;
+import org.jhotdraw.app.action.file.*;
 /**
  * Created with IntelliJ IDEA.
  *
  * @version 0.1beta
- * @since 8/13/13 2:56 PM
+ * @since 8/16/13 6:02 PM
  * @author HongKee Moon
  */
-public class OpenImageFileAction extends AbstractApplicationAction
-{
-    public final static String ID = "file.openImageFile";
-    private URIChooser openImgChooser;
+
+
+/**
+ * Presents an {@code URIChooser} and loads the selected URI into an
+ * empty view. If no empty view is available, a new view is created.
+ * <p>
+ * This action is called when the user selects the Open item in the File
+ * menu. The menu item is automatically created by the application.
+ * A Recent Files sub-menu is also automatically generated.
+ * <p>
+ * If you want this behavior in your application, you have to create it
+ * and put it in your {@code ApplicationModel} in method
+ * {@link org.jhotdraw.app.ApplicationModel#initApplication}.
+ * <p>
+ * This action is designed for applications which automatically
+ * create a new view for each opened file. This action goes together with
+ * {@link NewFileAction}, {@link OpenDirectoryAction} and {@link CloseFileAction}.
+ * This action should not be used together with {@link LoadFileAction}.
+ * <hr>
+ * <b>Features</b>
+ *
+ *<p><em>Allow multiple views per URI</em><br>
+ * When the feature is disabled, {@code OpenFileAction} prevents opening an URI
+ * which* is opened in another view.<br>
+ * See {@link org.jhotdraw.app} for a description of the feature.
+ * </p>
+ *
+ * <p><em>Open last URI on launch</em><br>
+ * {@code OpenFileAction} supplies data for this feature by calling
+ * {@link Application#addRecentURI} when it successfully opened a file.
+ * See {@link org.jhotdraw.app} for a description of the feature.
+ * </p>
+ *
+ * @author  Werner Randelshofer
+ * @version $Id: OpenFileAction.java 780 2012-10-25 05:15:43Z rawcoder $
+ */
+public class OpenFileAction extends AbstractApplicationAction {
+
+    public final static String ID = "file.open";
 
     /** Creates a new instance. */
-    public OpenImageFileAction(Application app) {
-        this(app,ID);
-    }
-    public OpenImageFileAction(Application app, String id) {
+    public OpenFileAction(Application app) {
         super(app);
-        ResourceBundleUtil labels = ResourceBundleUtil.getBundle("model.Labels");
-        labels.configureAction(this, id);
+        ResourceBundleUtil labels = ResourceBundleUtil.getBundle("org.jhotdraw.app.Labels");
+        labels.configureAction(this, ID);
     }
 
     protected URIChooser getChooser(View view) {
         // Note: We pass null here, because we want the application-wide chooser
-        //return getApplication().getOpenChooser(null);
-        return getOpenChooser(null);
-    }
-
-    protected URIChooser getOpenChooser(@Nullable View v) {
-        if(openImgChooser == null)
-        {
-            JFileURIChooser c = new JFileURIChooser();
-            FileNameExtensionFilter filter = new FileNameExtensionFilter("Images","tif", "tiff", "jpg", "jpeg", "png");
-            c.setFileFilter(filter);
-            c.getComponent().putClientProperty("application", this);
-
-            openImgChooser = c;
-        }
-
-        return openImgChooser;
+        return getApplication().getOpenChooser(null);
     }
 
     @Override
@@ -153,9 +164,7 @@ public class OpenImageFileAction extends AbstractApplicationAction
                 } catch (IllegalArgumentException e) {
                 }
                 if (exists) {
-                    //TODO: Consider the better way to handle images
-                    //view.read(uri, chooser);
-                    //view.setURI(uri);
+                    view.read(uri, chooser);
                     return null;
                 } else {
                     ResourceBundleUtil labels = ResourceBundleUtil.getBundle("org.jhotdraw.app.Labels");
@@ -260,7 +269,7 @@ public class OpenImageFileAction extends AbstractApplicationAction
         //dialog.pack();
         Preferences prefs = PreferencesUtil.userNodeForPackage(getApplication().getModel().getClass());
 
-        PreferencesUtil.installFramePrefsHandler(prefs, "openImgChooser", dialog);
+        PreferencesUtil.installFramePrefsHandler(prefs, "openChooser", dialog);
         /*
         if (window.getBounds().isEmpty()) {
         Rectangle screenBounds = window.getGraphicsConfiguration().getBounds();

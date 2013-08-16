@@ -12,6 +12,7 @@ import java.awt.Color;
 import java.util.*;
 
 import javax.swing.*;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
 import org.jhotdraw.app.*;
 import org.jhotdraw.draw.*;
@@ -20,6 +21,7 @@ import org.jhotdraw.gui.JFileURIChooser;
 import org.jhotdraw.gui.filechooser.ExtensionFileFilter;
 
 import controller.tool.SpimTool;
+import controller.action.OpenFileAction;
 import controller.action.*;
 import view.InteractiveDisplayView;
 
@@ -53,7 +55,7 @@ public class InteractiveDisplayApplicationModel extends AbstractApplicationModel
         ActionMap m=new ActionMap();
 
         m.put(NewFileAction.ID, new NewFileAction(a));
-        m.put(OpenFileAction.ID, new OpenFileAction(a));
+        m.put(OpenFileAction.ID, new controller.action.OpenFileAction(a));
         m.put(SaveFileAction.ID, new SaveFileAction(a,v));
         m.put(SaveFileAsAction.ID, new SaveFileAsAction(a,v));
         m.put(CloseFileAction.ID, new CloseFileAction(a,v));
@@ -68,7 +70,7 @@ public class InteractiveDisplayApplicationModel extends AbstractApplicationModel
         m.put(SelectAllAction.ID, new SelectAllAction());
         m.put(ClearSelectionAction.ID, new ClearSelectionAction());
 
-        m.put(OpenImageFileAction.ID, new OpenImageFileAction(a));
+        //m.put(OpenImageFileAction.ID, new OpenImageFileAction(a));
 
         return m;
     }
@@ -163,6 +165,10 @@ public class InteractiveDisplayApplicationModel extends AbstractApplicationModel
     public URIChooser createOpenChooser(Application a, @Nullable View v) {
         JFileURIChooser c = new JFileURIChooser();
         c.addChoosableFileFilter(new ExtensionFileFilter("Drawing .xml","xml"));
+        c.addChoosableFileFilter(new ExtensionFileFilter("TIFF", new String[] {"tif","tiff"}));
+        c.addChoosableFileFilter(new ExtensionFileFilter("JPEG", new String[] {"jpg","jpeg"}));
+        c.addChoosableFileFilter(new ExtensionFileFilter("PNG", "png"));
+
         return c;
     }
 
@@ -170,6 +176,9 @@ public class InteractiveDisplayApplicationModel extends AbstractApplicationModel
     public URIChooser createSaveChooser(Application a, @Nullable View v) {
         JFileURIChooser c = new JFileURIChooser();
         c.addChoosableFileFilter(new ExtensionFileFilter("Drawing .xml","xml"));
+        c.addChoosableFileFilter(new ExtensionFileFilter("TIFF", new String[] {"tif","tiff"}));
+        c.addChoosableFileFilter(new ExtensionFileFilter("JPEG", new String[] {"jpg","jpeg"}));
+        c.addChoosableFileFilter(new ExtensionFileFilter("PNG", "png"));
         return c;
     }
 }
