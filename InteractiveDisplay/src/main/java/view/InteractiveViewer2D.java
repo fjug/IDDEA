@@ -38,11 +38,27 @@
 package view;
 
 
+import net.imglib2.*;
+import net.imglib2.img.Img;
+import net.imglib2.img.array.ArrayImgFactory;
+import net.imglib2.img.imageplus.ImagePlusImg;
 import net.imglib2.realtransform.AffineTransform2D;
+import net.imglib2.realtransform.RealViews;
+import net.imglib2.type.NativeType;
+import net.imglib2.type.Type;
+import net.imglib2.type.numeric.ARGBType;
+import net.imglib2.type.numeric.NumericType;
+import net.imglib2.type.numeric.RealType;
+import net.imglib2.type.numeric.integer.UnsignedByteType;
+import net.imglib2.type.numeric.real.DoubleType;
+import net.imglib2.type.numeric.real.FloatType;
 import net.imglib2.ui.*;
 import net.imglib2.ui.PainterThread;
 import net.imglib2.ui.RenderSource;
 import net.imglib2.ui.TransformListener;
+import net.imglib2.util.Intervals;
+import net.imglib2.util.Util;
+import net.imglib2.view.Views;
 
 /**
  *
@@ -52,9 +68,11 @@ import net.imglib2.ui.TransformListener;
  * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
  * @author HongKee Moon <moon@mpi-cbg.de>
  */
-public class InteractiveViewer2D< T > implements TransformListener< AffineTransform2D >, PainterThread.Paintable
+public class InteractiveViewer2D< T  extends NativeType<T>> implements TransformListener< AffineTransform2D >, PainterThread.Paintable
 {
     final protected RenderSource< T, AffineTransform2D > source;
+
+    final protected ImagePlusImg<T, ? > sourceInterval;
 
     /**
      * Transformation set by the interactive viewer.
@@ -76,6 +94,7 @@ public class InteractiveViewer2D< T > implements TransformListener< AffineTransf
     public InteractiveViewer2D( final int width, final int height, final RenderSource< T, AffineTransform2D > source )
     {
         this.source = source;
+        this.sourceInterval = null;
 
         viewerTransform = new AffineTransform2D();
 
@@ -90,6 +109,28 @@ public class InteractiveViewer2D< T > implements TransformListener< AffineTransf
         final long targetRenderNanos = 15 * 1000000;
         imageRenderer = new MultiResolutionRenderer< AffineTransform2D >( AffineTransformType2D.instance, display, painterThread, screenScales, targetRenderNanos, doubleBuffered, numRenderingThreads );
 
+        painterThread.start();
+    }
+
+    public InteractiveViewer2D(final ImagePlusImg<T, ? > interval,  final RenderSource< T, AffineTransform2D > source )
+    {
+        this.source = source;
+        this.sourceInterval = interval;
+
+        viewerTransform = new AffineTransform2D();
+
+        display = new JHotDrawInteractiveDisplay2D<AffineTransform2D>( interval.getWidth(), interval.getHeight(), TransformEventHandler2D.factory());
+        display.addTransformListener( this );
+
+        painterThread = new PainterThread( this );
+
+        final boolean doubleBuffered = true;
+        final int numRenderingThreads = 3;
+        final double[] screenScales = new double[] { 1, 0.5, 0.25, 0.125 };
+        final long targetRenderNanos = 15 * 1000000;
+        imageRenderer = new MultiResolutionRenderer< AffineTransform2D >( AffineTransformType2D.instance, display, painterThread, screenScales, targetRenderNanos, doubleBuffered, numRenderingThreads );
+
+        meanIntensity();
         painterThread.start();
     }
 
@@ -117,6 +158,66 @@ public class InteractiveViewer2D< T > implements TransformListener< AffineTransf
     public JHotDrawInteractiveDisplay2D getDisplay()
     {
         return display;
+    }
+
+    public void meanIntensity()
+    {
+        if(sourceInterval != null)
+        {
+            if(ARGBType.class.isInstance(sourceInterval.firstElement()))
+            {
+                Cursor<ARGBType> cur = (Cursor<ARGBType>)(Cursor<?>) sourceInterval.localizingCursor();
+
+                System.out.println("Dim(0) aka. Width=" + sourceInterval.dimension(0) + "\t Dim(1) aka. Height=" + sourceInterval.dimension(1));
+                System.out.println("Min(0)=" + sourceInterval.min(0) + "\t Min(1)=" + sourceInterval.min(1));
+                System.out.println("Max(0)=" + sourceInterval.max(0) + "\t Max(1)=" + sourceInterval.max(1));
+
+                long size = sourceInterval.dimension(0) * sourceInterval.dimension(1);
+
+                double r = 0;
+                long rCnt = 0;
+                double g = 0;
+                long gCnt = 0;
+                double b = 0;
+                long bCnt = 0;
+
+                while(cur.hasNext())
+                {
+                    cur.next();
+                    int pixel = cur.get().get();
+                    rCnt += (ARGBType.red(pixel) > 0)? 1 : 0;
+                    r += ARGBType.red(pixel);
+                    gCnt += (ARGBType.green(pixel) > 0)? 1 : 0;
+                    g += ARGBType.green(pixel);
+                    bCnt += (ARGBType.blue(pixel) > 0)? 1 : 0;
+                    b += ARGBType.blue(pixel);
+                }
+
+                System.out.println("Pixels: " + size);
+                System.out.println("MeanIntensity(R) of selected regions: " + r / rCnt);
+                System.out.println("MeanIntensity(G) of selected regions: " + g / gCnt);
+                System.out.println("MeanIntensity(B) of selected regions: " + b / bCnt);
+            }
+            else
+            {
+                Cursor<T> cur = sourceInterval.localizingCursor();
+                double sum = 0d;
+
+                System.out.println("Dim(0) aka. Width=" + sourceInterval.dimension(0) + "\t Dim(1) aka. Height=" + sourceInterval.dimension(1));
+                System.out.println("Min(0)=" + sourceInterval.min(0) + "\t Min(1)=" + sourceInterval.min(1));
+                System.out.println("Max(0)=" + sourceInterval.max(0) + "\t Max(1)=" + sourceInterval.max(1));
+
+                long size = sourceInterval.dimension(0) * sourceInterval.dimension(1);
+                while(cur.hasNext())
+                {
+                    cur.next();
+                    sum += ((RealType<?>)cur.get()).getRealDouble();
+                }
+
+                System.out.println("Pixels: " + size);
+                System.out.println("MeanIntensity of selected regions: " + sum / size);
+            }
+        }
     }
 
     public void stop()

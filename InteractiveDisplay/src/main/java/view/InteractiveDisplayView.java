@@ -174,7 +174,6 @@ public class InteractiveDisplayView extends AbstractView {
     @Override
     public void read(URI f, URIChooser fc) throws IOException {
         try {
-
             if(f.toString().lastIndexOf("xml") > 0)
             {
 
@@ -204,10 +203,6 @@ public class InteractiveDisplayView extends AbstractView {
                         undo.discardAllEdits();
                     }
                 });
-            }
-            else
-            {
-                setURI(f);
             }
         } catch (InterruptedException e) {
             InternalError error = new InternalError();
@@ -317,12 +312,10 @@ public class InteractiveDisplayView extends AbstractView {
 
     public < T extends RealType< T > & NativeType< T >> InteractiveViewer2D show( final ImagePlusImg<T, ? > interval )
     {
-        int width = interval.getWidth();
-        int height = interval.getHeight();
         final AffineTransform2D transform = new AffineTransform2D();
         InteractiveViewer2D iview = null;
 
-        if(ARGBType.class.isInstance(Views.iterable(interval).firstElement()))
+        if(ARGBType.class.isInstance(interval.firstElement()))
         {
             Converter<ARGBType, FloatType> conv = new ARGBRealConverter();
             RandomAccessible< FloatType > view1 = Converters.convert((RandomAccessibleInterval<ARGBType>)(ImagePlusImg<?, ?>)interval, conv, new FloatType());
@@ -332,7 +325,7 @@ public class InteractiveDisplayView extends AbstractView {
 
             final RealARGBConverterDecode< FloatType > converter = new RealARGBConverterDecode< FloatType >();
 
-            iview = new InteractiveViewer2D( width, height, new FinalSource< FloatType, AffineTransform2D >(interpolated, transform, converter));
+            iview = new InteractiveViewer2D(interval, new FinalSource< FloatType, AffineTransform2D >(interpolated, transform, converter));
         }
         else
         {
@@ -344,7 +337,7 @@ public class InteractiveDisplayView extends AbstractView {
             RealRandomAccessible< T > interpolated = Views.interpolate( interval, new NearestNeighborInterpolatorFactory<T>() );
             final RealARGBConverter< T > converter = new RealARGBConverter< T >( min.getMinValue(), max.getMaxValue());
 
-            iview = new InteractiveViewer2D( width, height, new FinalSource< T, AffineTransform2D >( interpolated, transform, converter));
+            iview = new InteractiveViewer2D(interval, new FinalSource< T, AffineTransform2D >( interpolated, transform, converter));
         }
 
         return iview;
