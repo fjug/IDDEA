@@ -20,18 +20,12 @@ import java.awt.geom.NoninvertibleTransformException;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.net.URI;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.LinkedHashSet;
-import java.util.LinkedList;
-import java.util.Set;
+import java.util.*;
 import java.awt.event.*;
 import java.awt.image.BufferedImage;
 
 import javax.swing.*;
+import javax.swing.Timer;
 import javax.swing.undo.*;
 
 import org.jhotdraw.util.*;
@@ -129,6 +123,34 @@ public abstract class InteractiveDrawingView extends JComponent implements Drawi
         } catch (Throwable t) {
         }
         isWindows = b;
+    }
+
+    public void copyFrom(InteractiveDrawingView view)
+    {
+        this.setDrawing(view.getDrawing());
+        this.addToSelection(view.getSelectedFigures());
+        this.setSelectedFigures(view.getSelectedFigures());
+        this.setSelectionHandles(view.getSelectionHandles());
+        this.setSecondarySelectionHandles(view.getSecondaryHandles());
+    }
+
+    private void setSelectedFigures(Set<Figure> figures)
+    {
+        selectedFigures = new LinkedHashSet<Figure>();
+        for(Figure f: figures)
+            selectedFigures.add(f);
+    }
+    private void setSelectionHandles(List<Handle> handles)
+    {
+        selectionHandles = new LinkedList<Handle>();
+        for(Handle h : handles)
+            selectionHandles.add(h);
+    }
+    private void setSecondarySelectionHandles(List<Handle> handles)
+    {
+        secondaryHandles = new LinkedList<Handle>();
+        for(Handle h : handles)
+            secondaryHandles.add(h);
     }
 
     @Override

@@ -164,21 +164,26 @@ public class InteractiveDisplayApplicationModel extends AbstractApplicationModel
     @Override
     public URIChooser createOpenChooser(Application a, @Nullable View v) {
         JFileURIChooser c = new JFileURIChooser();
-        c.addChoosableFileFilter(new ExtensionFileFilter("Drawing .xml","xml"));
+        ExtensionFileFilter defaultFilter = new ExtensionFileFilter("Drawing .xml","xml");
+        c.addChoosableFileFilter(defaultFilter);
         c.addChoosableFileFilter(new ExtensionFileFilter("TIFF", new String[] {"tif","tiff"}));
         c.addChoosableFileFilter(new ExtensionFileFilter("JPEG", new String[] {"jpg","jpeg"}));
         c.addChoosableFileFilter(new ExtensionFileFilter("PNG", "png"));
 
+        c.setFileFilter(defaultFilter);
         return c;
     }
 
     @Override
     public URIChooser createSaveChooser(Application a, @Nullable View v) {
         JFileURIChooser c = new JFileURIChooser();
-        c.addChoosableFileFilter(new ExtensionFileFilter("Drawing .xml","xml"));
+        ExtensionFileFilter defaultFilter = new ExtensionFileFilter("Drawing .xml","xml");
+        c.addChoosableFileFilter(defaultFilter);
         c.addChoosableFileFilter(new ExtensionFileFilter("TIFF", new String[] {"tif","tiff"}));
         c.addChoosableFileFilter(new ExtensionFileFilter("JPEG", new String[] {"jpg","jpeg"}));
         c.addChoosableFileFilter(new ExtensionFileFilter("PNG", "png"));
+
+        c.setFileFilter(defaultFilter);
         return c;
     }
 }

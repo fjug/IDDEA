@@ -195,9 +195,6 @@ public class InteractiveDisplayView extends AbstractView {
                     throw new IOException(labels.getFormatted("file.open.unsupportedFileFormat.message", URIUtil.getName(f)));
                 }
 
-    //            ((QuadTreeDrawing) drawing).setAttributeOnChildren(org.jhotdraw.draw.AttributeKeys.FILL_COLOR, c );
-    //            ((QuadTreeDrawing) drawing).setAttributeOnChildren(org.jhotdraw.draw.AttributeKeys.STROKE_COLOR, new Color( 1.0f, 0.0f, 0.0f, 0.33f ));
-
                 SwingUtilities.invokeAndWait(new Runnable() {
                     @Override
                     public void run() {
@@ -294,14 +291,20 @@ public class InteractiveDisplayView extends AbstractView {
 
             editor.remove(view);
             InteractiveDrawingView newView = iview2d.getDisplay();
-            editor.add(newView);
+            newView.copyFrom(view);
 
-            newView.setDrawing(view.getDrawing());
+            editor.add(newView);
             view = newView;
 
             scrollPane.setViewportView(view);
         }
     }
+
+    @Override
+    public boolean hasUnsavedChanges() {
+        return false;
+    }
+
 
     private static < T extends Type< T > & Comparable< T > > void getMinMax( final IterableInterval< T > source, final T minValue, final T maxValue )
     {
