@@ -75,6 +75,10 @@ public class InteractiveDisplayView extends AbstractView {
 
     private InteractiveViewer2D iview2d;
 
+    public InteractiveViewer2D getIview2d() {
+        return iview2d;
+    }
+
     /**
      * Creates a new view.
      */
@@ -277,15 +281,15 @@ public class InteractiveDisplayView extends AbstractView {
             // Image import
             final ImagePlus imp = new ImagePlus( filename );
             ImagePlusImg<FloatType, ? > map = ImagePlusImgs.from( imp );
-            if(iview2d != null)
+            if(getIview2d() != null)
             {
-                iview2d.stop();
+                getIview2d().stop();
 
             }
             iview2d = show(map);
 
             editor.remove(view);
-            InteractiveDrawingView newView = iview2d.getDisplay();
+            InteractiveDrawingView newView = getIview2d().getDisplay();
             newView.copyFrom(view);
 
             editor.add(newView);

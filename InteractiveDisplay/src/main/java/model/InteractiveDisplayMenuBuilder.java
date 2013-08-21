@@ -1,5 +1,6 @@
 package model;
 
+import controller.action.MeanIntensityToolAction;
 import edu.umd.cs.findbugs.annotations.Nullable;
 import java.util.List;
 import javax.swing.Action;
@@ -314,6 +315,17 @@ public class InteractiveDisplayMenuBuilder implements MenuBuilder {
     /** Does nothing. */
     @Override
     public void addOtherMenus(List<JMenu> m, Application app, @Nullable View v) {
+        JMenu menu = new JMenu();
+
+        menu.setText("Tool");
+
+        ActionMap am = app.getActionMap(v);
+        Action a;
+        if (null != (a = am.get(MeanIntensityToolAction.ID))) {
+            add(menu,a);
+        }
+
+        m.add(menu);
     }
 
     /** Does nothing. */

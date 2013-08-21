@@ -71,6 +71,7 @@ public class InteractiveDisplayApplicationModel extends AbstractApplicationModel
         m.put(ClearSelectionAction.ID, new ClearSelectionAction());
 
         //m.put(OpenImageFileAction.ID, new OpenImageFileAction(a));
+        m.put(MeanIntensityToolAction.ID, new MeanIntensityToolAction(a));
 
         return m;
     }

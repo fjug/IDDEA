@@ -58,7 +58,12 @@ import net.imglib2.ui.RenderSource;
 import net.imglib2.ui.TransformListener;
 import net.imglib2.util.Intervals;
 import net.imglib2.util.Util;
+import net.imglib2.view.IntervalView;
 import net.imglib2.view.Views;
+import org.jhotdraw.draw.Figure;
+
+import java.awt.geom.Point2D;
+import java.util.Set;
 
 /**
  *
@@ -73,6 +78,10 @@ public class InteractiveViewer2D< T  extends NativeType<T>> implements Transform
     final protected RenderSource< T, AffineTransform2D > source;
 
     final protected ImagePlusImg<T, ? > sourceInterval;
+
+    public ImagePlusImg<T, ?> getSourceInterval() {
+        return sourceInterval;
+    }
 
     /**
      * Transformation set by the interactive viewer.
