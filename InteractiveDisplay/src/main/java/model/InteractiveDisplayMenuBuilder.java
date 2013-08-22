@@ -1,5 +1,6 @@
 package model;
 
+import controller.action.SpanSelectionToolAction;
 import controller.action.MeanIntensityToolAction;
 import edu.umd.cs.findbugs.annotations.Nullable;
 import java.util.List;
@@ -322,6 +323,9 @@ public class InteractiveDisplayMenuBuilder implements MenuBuilder {
         ActionMap am = app.getActionMap(v);
         Action a;
         if (null != (a = am.get(MeanIntensityToolAction.ID))) {
+            add(menu,a);
+        }
+        if (null != (a = am.get(SpanSelectionToolAction.ID))) {
             add(menu,a);
         }
 

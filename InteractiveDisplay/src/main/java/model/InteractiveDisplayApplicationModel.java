@@ -12,7 +12,6 @@ import java.awt.Color;
 import java.util.*;
 
 import javax.swing.*;
-import javax.swing.filechooser.FileNameExtensionFilter;
 
 import org.jhotdraw.app.*;
 import org.jhotdraw.draw.*;
@@ -72,6 +71,7 @@ public class InteractiveDisplayApplicationModel extends AbstractApplicationModel
 
         //m.put(OpenImageFileAction.ID, new OpenImageFileAction(a));
         m.put(MeanIntensityToolAction.ID, new MeanIntensityToolAction(a));
+        m.put(SpanSelectionToolAction.ID, new SpanSelectionToolAction(a));
 
         return m;
     }

@@ -61,7 +61,6 @@ public class MeanIntensityToolAction extends AbstractApplicationAction
         if (view != null) {
             InteractiveViewer2D viewer = ((InteractiveDisplayView) view).getIview2d();
 
-
             ImagePlusImg<?, ?> source = viewer.getSourceInterval();
             if(ARGBType.class.isInstance(source.firstElement()))
             {
