@@ -36,6 +36,14 @@
                 <enabled>false</enabled>
             </releases>
         </repository>
+                <repository>
+                        <id>imagej.releases</id>
+                        <url>http://maven.imagej.net/content/repositories/releases</url>
+                </repository>
+                <repository>
+                        <id>imagej.snapshots</id>
+                        <url>http://maven.imagej.net/content/repositories/snapshots</url>
+                </repository>
 	</repositories>
 
   <dependencies>
@@ -53,6 +61,16 @@
           <groupId>ch.randelshofer</groupId>
           <artifactId>quaqua</artifactId>
           <version>6.5</version>
+      </dependency>
+      <dependency>
+      	<groupId>gov.nih.imagej</groupId>
+      	<artifactId>imagej</artifactId>
+      	<version>1.47</version>
+      </dependency>
+      <dependency>
+      	<groupId>loci</groupId>
+      	<artifactId>bio-formats</artifactId>
+      	<version>4.4.8</version>
       </dependency>
   </dependencies>
 
