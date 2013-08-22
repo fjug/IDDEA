@@ -149,7 +149,6 @@ public class MeanIntensityToolAction extends AbstractApplicationAction
             }
             else
             {
-                net.imglib2.Cursor<?> cur = source.localizingCursor();
                 double sum = 0d;
 
                 System.out.println("Dim(0) aka. Width=" + source.dimension(0) + "\t Dim(1) aka. Height=" + source.dimension(1));
@@ -157,21 +156,32 @@ public class MeanIntensityToolAction extends AbstractApplicationAction
                 System.out.println("Max(0)=" + source.max(0) + "\t Max(1)=" + source.max(1));
 
                 long size = 0;
+                Set<Figure> figures = viewer.getDisplay().getSelectedFigures();
 
-                while(cur.hasNext())
+                for(Figure f: figures)
                 {
-                    cur.next();
+                    Rectangle2D.Double rec = f.getBounds();
 
-                    Set<Figure> figures = viewer.getDisplay().getSelectedFigures();
-                    Point2D.Double point = new Point2D.Double(cur.getDoublePosition(0), cur.getDoublePosition(1));
-                    for(Figure f: figures)
+                    RandomAccessibleInterval< RealType > viewSource = (RandomAccessibleInterval< RealType >) Views.offsetInterval( source,
+                            new long[] { (long)rec.getX(), (long)rec.getY() }, new long[]{ (long)rec.getWidth(), (long)rec.getHeight() } );
+
+                    Cursor<RealType> cur = (Cursor<RealType>) Views.iterable(viewSource).localizingCursor();
+
+                    while(cur.hasNext())
                     {
-                        // if the pixel in the figure,
-                        // Calculation is going on
-                        if(f.contains(point))
+                        cur.fwd();
+
+                        Point2D.Double point = new Point2D.Double(cur.getDoublePosition(0) + rec.getX(), cur.getDoublePosition(1) + rec.getY());
+                        try{
+                            if(f.contains(point))
+                            {
+                                sum += ((RealType<?>)cur.get()).getRealDouble();
+                                size++;
+                            }
+                        }
+                        catch(ArrayIndexOutOfBoundsException exc)
                         {
-                            size++;
-                            sum += ((RealType<?>)cur.get()).getRealDouble();
+
                         }
                     }
                 }
