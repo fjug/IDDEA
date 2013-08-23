@@ -2,6 +2,7 @@ package controller.action;
 
 import net.imglib2.img.imageplus.ImagePlusImg;
 import net.imglib2.type.numeric.ARGBType;
+
 import org.jhotdraw.app.Application;
 import org.jhotdraw.app.View;
 import org.jhotdraw.app.action.AbstractApplicationAction;
@@ -9,8 +10,10 @@ import org.jhotdraw.draw.Figure;
 import org.jhotdraw.geom.BezierPath;
 import org.jhotdraw.util.ResourceBundleUtil;
 import org.jhotdraw.draw.BezierFigure;
+
 import view.InteractiveDisplayView;
-import view.InteractiveViewer2D;
+import view.viewer.InteractiveRealViewer;
+//import view.InteractiveViewer2D;
 
 import java.awt.event.ActionEvent;
 import java.awt.geom.Point2D;
@@ -47,7 +50,7 @@ public class GrowSelectionToolAction extends AbstractApplicationAction
         }
     }
 
-    private void process(InteractiveViewer2D viewer)
+    private void process(InteractiveRealViewer viewer)
     {
         ImagePlusImg<?, ?> source = viewer.getSourceInterval();
         if(ARGBType.class.isInstance(source.firstElement()))

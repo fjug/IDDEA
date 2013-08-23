@@ -1,11 +1,11 @@
 package view;
 
 import net.imglib2.realtransform.AffineTransform2D;
+import net.imglib2.ui.InteractiveDisplayCanvas;
 import net.imglib2.ui.OverlayRenderer;
 import net.imglib2.ui.TransformEventHandler;
 import net.imglib2.ui.TransformEventHandlerFactory;
 import net.imglib2.ui.TransformListener;
-
 
 import java.awt.*;
 import java.awt.event.*;
@@ -23,7 +23,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
  * @author HongKee Moon
  */
 
-public class JHotDrawInteractiveDisplay2D<T> extends InteractiveDrawingView implements TransformListener<T>
+public class JHotDrawInteractiveDisplay2D<T> extends InteractiveDrawingView implements InteractiveDisplayCanvas<T>
 {
     /**
      * Mouse/Keyboard handler that manipulates the view transformation.

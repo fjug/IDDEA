@@ -9,19 +9,26 @@ import net.imglib2.type.numeric.RealType;
 import net.imglib2.util.Intervals;
 import net.imglib2.view.IntervalView;
 import net.imglib2.view.Views;
+
 import org.jhotdraw.draw.Figure;
 import org.jhotdraw.util.*;
+
 import net.imglib2.Cursor;
+
 import org.jhotdraw.gui.*;
+
 import java.awt.*;
 import java.awt.event.*;
+
 import javax.swing.*;
+
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.io.*;
 import java.net.URI;
 import java.util.Set;
 import java.util.prefs.Preferences;
+
 import org.jhotdraw.app.Application;
 import org.jhotdraw.app.View;
 import org.jhotdraw.app.action.AbstractApplicationAction;
@@ -29,8 +36,10 @@ import org.jhotdraw.gui.URIChooser;
 import org.jhotdraw.net.URIUtil;
 import org.jhotdraw.util.prefs.PreferencesUtil;
 import org.jhotdraw.app.action.file.*;
+
 import view.InteractiveDisplayView;
-import view.InteractiveViewer2D;
+import view.viewer.InteractiveRealViewer;
+//import view.InteractiveViewer2D;
 
 /**
  * Created with IntelliJ IDEA.
@@ -59,7 +68,7 @@ public class MeanIntensityToolAction extends AbstractApplicationAction
         final Application app = getApplication();
         View view = app.getActiveView();
         if (view != null) {
-            InteractiveViewer2D viewer = ((InteractiveDisplayView) view).getIview2d();
+            InteractiveRealViewer viewer = ((InteractiveDisplayView) view).getIview2d();
 
             ImagePlusImg<?, ?> source = viewer.getSourceInterval();
             if(ARGBType.class.isInstance(source.firstElement()))

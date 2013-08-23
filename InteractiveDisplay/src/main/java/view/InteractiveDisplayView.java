@@ -21,9 +21,9 @@ import net.imglib2.type.numeric.real.FloatType;
 import net.imglib2.realtransform.AffineTransform2D;
 import net.imglib2.ui.util.FinalSource;
 import net.imglib2.img.imageplus.*;
-
 import net.imglib2.ui.util.InterpolatingSource;
 import net.imglib2.view.Views;
+
 import org.jhotdraw.draw.io.OutputFormat;
 import org.jhotdraw.draw.io.InputFormat;
 import org.jhotdraw.draw.print.DrawingPageable;
@@ -51,6 +51,10 @@ import org.jhotdraw.draw.action.*;
 import org.jhotdraw.gui.URIChooser;
 import org.jhotdraw.net.URIUtil;
 
+import view.viewer.InteractiveRealViewer;
+import view.viewer.InteractiveRealViewer2D;
+import view.viewer.InteractiveViewer2D;
+
 
 
 /**
@@ -75,9 +79,9 @@ public class InteractiveDisplayView extends AbstractView {
      */
     private DrawingEditor editor;
 
-    private InteractiveViewer2D iview2d;
+    private InteractiveRealViewer iview2d;
 
-    public InteractiveViewer2D getIview2d() {
+    public InteractiveRealViewer getIview2d() {
         return iview2d;
     }
 
@@ -283,11 +287,11 @@ public class InteractiveDisplayView extends AbstractView {
             // Image import
             final ImagePlus imp = new ImagePlus( filename );
             ImagePlusImg<FloatType, ? > map = ImagePlusImgs.from( imp );
-            if(getIview2d() != null)
-            {
-                getIview2d().stop();
-
-            }
+//            if(getIview2d() != null)
+//            {
+//                getIview2d().stop();
+//
+//            }
             iview2d = show(map);
 
             editor.remove(view);
@@ -323,8 +327,8 @@ public class InteractiveDisplayView extends AbstractView {
 
         if(ARGBType.class.isInstance(interval.firstElement()))
         {
-            iview = new InteractiveViewer2D(
-                    interval,
+            iview = new InteractiveViewer2D(interval,
+                    interval.getWidth(), interval.getHeight(),
                     new InterpolatingSource(
                             Views.extendZero((RandomAccessibleInterval<ARGBType>)(ImagePlusImg<?, ?>) interval),
                             transform,
@@ -340,7 +344,7 @@ public class InteractiveDisplayView extends AbstractView {
             RealRandomAccessible< T > interpolated = Views.interpolate( Views.extendZero(interval), new NearestNeighborInterpolatorFactory<T>() );
             final RealARGBConverter< T > converter = new RealARGBConverter< T >( min.getMinValue(), max.getMaxValue());
 
-            iview = new InteractiveViewer2D(interval, new FinalSource< T, AffineTransform2D >( interpolated, transform, converter));
+            iview = new InteractiveViewer2D<T>(interval, interval.getWidth(), interval.getHeight(), Views.extendZero(interval), transform, converter);
         }
 
         return iview;
@@ -360,7 +364,7 @@ public class InteractiveDisplayView extends AbstractView {
 
         final RealARGBConverter< LongType > converter = new RealARGBConverter< LongType >( 0, maxIterations );
 
-        InteractiveViewer2D iview = new InteractiveViewer2D( width, height, new FinalSource<LongType, AffineTransform2D >( mandelbrot, transform, converter ) );
+        InteractiveRealViewer2D iview = new InteractiveRealViewer2D<LongType>(width, height, mandelbrot, transform, converter);
 
 
 //        String filename = new String("/Users/moon/Pictures/aeonflux.jpeg");
