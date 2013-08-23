@@ -8,6 +8,9 @@ import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.RealRandomAccessible;
 import net.imglib2.converter.Converter;
 import net.imglib2.converter.Converters;
+import net.imglib2.converter.TypeIdentity;
+import net.imglib2.display.RealARGBConverter;
+import net.imglib2.interpolation.randomaccess.NLinearInterpolatorFactory;
 import net.imglib2.interpolation.randomaccess.NearestNeighborInterpolatorFactory;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.Type;
@@ -19,6 +22,7 @@ import net.imglib2.realtransform.AffineTransform2D;
 import net.imglib2.ui.util.FinalSource;
 import net.imglib2.img.imageplus.*;
 
+import net.imglib2.ui.util.InterpolatingSource;
 import net.imglib2.view.Views;
 import org.jhotdraw.draw.io.OutputFormat;
 import org.jhotdraw.draw.io.InputFormat;
@@ -46,9 +50,7 @@ import org.jhotdraw.draw.*;
 import org.jhotdraw.draw.action.*;
 import org.jhotdraw.gui.URIChooser;
 import org.jhotdraw.net.URIUtil;
-import view.ui.ARGBRealConverter;
-import view.ui.RealARGBConverter;
-import view.ui.RealARGBConverterDecode;
+
 
 
 /**
@@ -321,15 +323,12 @@ public class InteractiveDisplayView extends AbstractView {
 
         if(ARGBType.class.isInstance(interval.firstElement()))
         {
-            Converter<ARGBType, FloatType> conv = new ARGBRealConverter();
-            RandomAccessible< FloatType > view1 = Converters.convert((RandomAccessibleInterval<ARGBType>)(ImagePlusImg<?, ?>)interval, conv, new FloatType());
-
-//            RealRandomAccessible< FloatType > interpolated = Views.interpolate( view1, new NLinearInterpolatorFactory<FloatType>() );
-            RealRandomAccessible< FloatType > interpolated = Views.interpolate( view1, new NearestNeighborInterpolatorFactory<FloatType>() );
-
-            final RealARGBConverterDecode< FloatType > converter = new RealARGBConverterDecode< FloatType >();
-
-            iview = new InteractiveViewer2D(interval, new FinalSource< FloatType, AffineTransform2D >(interpolated, transform, converter));
+            iview = new InteractiveViewer2D(
+                    interval,
+                    new InterpolatingSource(
+                            Views.extendZero((RandomAccessibleInterval<ARGBType>)(ImagePlusImg<?, ?>) interval),
+                            transform,
+                            new TypeIdentity<ARGBType>() ));
         }
         else
         {
@@ -338,7 +337,7 @@ public class InteractiveDisplayView extends AbstractView {
             getMinMax( Views.iterable( interval ), min, max );
 
 //            RealRandomAccessible< T > interpolated = Views.interpolate( interval, new NLinearInterpolatorFactory<T>() );
-            RealRandomAccessible< T > interpolated = Views.interpolate( interval, new NearestNeighborInterpolatorFactory<T>() );
+            RealRandomAccessible< T > interpolated = Views.interpolate( Views.extendZero(interval), new NearestNeighborInterpolatorFactory<T>() );
             final RealARGBConverter< T > converter = new RealARGBConverter< T >( min.getMinValue(), max.getMaxValue());
 
             iview = new InteractiveViewer2D(interval, new FinalSource< T, AffineTransform2D >( interpolated, transform, converter));
