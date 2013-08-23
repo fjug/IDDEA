@@ -24,15 +24,15 @@ import java.util.Set;
  * @since 8/22/13 4:43 PM
  * @author HongKee Moon
  */
-public class SpanSelectionToolAction extends AbstractApplicationAction
+public class GrowSelectionToolAction extends AbstractApplicationAction
 {
-    public final static String ID = "tool.spanSelection";
+    public final static String ID = "tool.growSelection";
 
-    public SpanSelectionToolAction(Application app) {
+    public GrowSelectionToolAction(Application app) {
         this(app, ID);
     }
 
-    public SpanSelectionToolAction(Application app, String id) {
+    public GrowSelectionToolAction(Application app, String id) {
         super(app);
         ResourceBundleUtil labels = ResourceBundleUtil.getBundle("model.Labels");
         labels.configureAction(this, id);

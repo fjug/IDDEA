@@ -1,4 +1,4 @@
-package view;
+package model;
 
 import org.jhotdraw.draw.AttributeKeys;
 import org.jhotdraw.draw.BezierFigure;
