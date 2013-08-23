@@ -133,7 +133,7 @@ public class InteractiveDisplayView extends AbstractView {
     protected Drawing createDrawing() {
         Drawing drawing = new QuadTreeDrawing();
         DOMStorableInputOutputFormat ioFormat =
-                new DOMStorableInputOutputFormat(new DrawFigureFactory());
+                new DOMStorableInputOutputFormat(new model.DrawFigureFactory());
 
         drawing.addInputFormat(ioFormat);
 

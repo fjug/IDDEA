@@ -1,6 +1,6 @@
 package model;
 
-import controller.action.SpanSelectionToolAction;
+import controller.action.GrowSelectionToolAction;
 import controller.action.MeanIntensityToolAction;
 import edu.umd.cs.findbugs.annotations.Nullable;
 import java.util.List;
@@ -8,8 +8,6 @@ import javax.swing.Action;
 import javax.swing.ActionMap;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
-
-import controller.action.OpenImageFileAction;
 
 import org.jhotdraw.app.Application;
 import org.jhotdraw.app.MenuBuilder;
@@ -147,9 +145,6 @@ public class InteractiveDisplayMenuBuilder implements MenuBuilder {
     public void addOpenFileItems(JMenu m, Application app, @Nullable View v) {
         ActionMap am = app.getActionMap(v);
         Action a;
-        if (null != (a = am.get(OpenImageFileAction.ID))) {
-            add(m,a);
-        }
         if (null != (a = am.get(OpenFileAction.ID))) {
             add(m,a);
         }
@@ -325,7 +320,7 @@ public class InteractiveDisplayMenuBuilder implements MenuBuilder {
         if (null != (a = am.get(MeanIntensityToolAction.ID))) {
             add(menu,a);
         }
-        if (null != (a = am.get(SpanSelectionToolAction.ID))) {
+        if (null != (a = am.get(GrowSelectionToolAction.ID))) {
             add(menu,a);
         }
 

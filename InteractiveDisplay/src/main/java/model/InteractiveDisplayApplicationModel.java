@@ -20,7 +20,6 @@ import org.jhotdraw.gui.JFileURIChooser;
 import org.jhotdraw.gui.filechooser.ExtensionFileFilter;
 
 import controller.tool.SpimTool;
-import controller.action.OpenFileAction;
 import controller.action.*;
 import view.InteractiveDisplayView;
 
@@ -54,7 +53,7 @@ public class InteractiveDisplayApplicationModel extends AbstractApplicationModel
         ActionMap m=new ActionMap();
 
         m.put(NewFileAction.ID, new NewFileAction(a));
-        m.put(OpenFileAction.ID, new controller.action.OpenFileAction(a));
+        m.put(OpenFileAction.ID, new OpenFileAction(a));
         m.put(SaveFileAction.ID, new SaveFileAction(a,v));
         m.put(SaveFileAsAction.ID, new SaveFileAsAction(a,v));
         m.put(CloseFileAction.ID, new CloseFileAction(a,v));
@@ -71,7 +70,7 @@ public class InteractiveDisplayApplicationModel extends AbstractApplicationModel
 
         //m.put(OpenImageFileAction.ID, new OpenImageFileAction(a));
         m.put(MeanIntensityToolAction.ID, new MeanIntensityToolAction(a));
-        m.put(SpanSelectionToolAction.ID, new SpanSelectionToolAction(a));
+        m.put(GrowSelectionToolAction.ID, new GrowSelectionToolAction(a));
 
         return m;
     }
