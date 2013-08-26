@@ -8,3 +8,5 @@
 # Application specific file
 *.project
 *.iml
+*.classpath
+*.settings
