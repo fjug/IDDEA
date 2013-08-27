@@ -1,5 +1,7 @@
 package view;
 
+import net.imglib2.RealRandomAccessible;
+import net.imglib2.img.imageplus.ImagePlusImg;
 import net.imglib2.realtransform.AffineTransform2D;
 import net.imglib2.ui.InteractiveDisplayCanvas;
 import net.imglib2.ui.OverlayRenderer;
@@ -10,6 +12,8 @@ import net.imglib2.ui.TransformListener;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.geom.AffineTransform;
+import java.awt.geom.NoninvertibleTransformException;
+import java.awt.geom.Point2D;
 import java.awt.image.BufferedImage;
 import java.util.concurrent.CopyOnWriteArrayList;
 
@@ -23,7 +27,8 @@ import java.util.concurrent.CopyOnWriteArrayList;
  * @author HongKee Moon
  */
 
-public class JHotDrawInteractiveDisplay2D<T> extends InteractiveDrawingView implements InteractiveDisplayCanvas<T>
+public class JHotDrawInteractiveDisplay2D<T> extends InteractiveDrawingView
+        implements InteractiveDisplayCanvas<T>
 {
     /**
      * Mouse/Keyboard handler that manipulates the view transformation.
@@ -40,10 +45,8 @@ public class JHotDrawInteractiveDisplay2D<T> extends InteractiveDrawingView impl
      */
     final protected CopyOnWriteArrayList<OverlayRenderer> overlayRenderers;
 
-    /**
-     * The {@link AffineTransform} stores the previous transform to restore in the next transformation.
-     */
-    //private AffineTransform preTransform = new AffineTransform(0.7775, 0.0, 0.0, 0.7775, 0.0, 66.75);
+    AffineTransform originTransform;
+
 
     /**
      * The {@link BufferedImage} that is actually drawn on the canvas. Depending
@@ -53,10 +56,17 @@ public class JHotDrawInteractiveDisplay2D<T> extends InteractiveDrawingView impl
      */
     protected BufferedImage bufferedImage;
 
-    public JHotDrawInteractiveDisplay2D( final int width, final int height, final TransformEventHandlerFactory< T > factory)
+    public JHotDrawInteractiveDisplay2D( final int width, final int height, final T sourceTransform, final TransformEventHandlerFactory< T > factory)
     {
         super();
-        
+
+        if(sourceTransform != null)
+        {
+            AffineTransform2D trsf = (AffineTransform2D)sourceTransform;
+            double[] tr = trsf.getRowPackedCopy();
+            this.originTransform = new AffineTransform(tr[0], tr[3], tr[1], tr[4], tr[2], tr[5]);
+        }
+
         setPreferredSize( new Dimension( width, height ) );
         setFocusable( true );
 
@@ -75,7 +85,7 @@ public class JHotDrawInteractiveDisplay2D<T> extends InteractiveDrawingView impl
                     // array design is different
                     double[] tr = trsf.getRowPackedCopy();
                     preTransform = new AffineTransform(tr[0], tr[3], tr[1], tr[4], tr[2], tr[5]);
-                    invalidateHandles();                  
+                    invalidateHandles();
                 }
             }
         });
@@ -108,6 +118,7 @@ public class JHotDrawInteractiveDisplay2D<T> extends InteractiveDrawingView impl
         handler = factory.create( this );
         handler.setCanvasSize( width, height, false );
 
+        //transformChanged(sourceTransform);
         //activateHandler will call addHandler(handler) in case of changing to SpimTool
         //addHandler( handler );
     }
@@ -137,6 +148,35 @@ public class JHotDrawInteractiveDisplay2D<T> extends InteractiveDrawingView impl
 
         for ( final OverlayRenderer or : overlayRenderers )
             or.drawOverlays( g );
+    }
+
+
+    public Point2D.Double viewToOrigin(Point2D.Double p) {
+        Point2D point = null;
+
+        if(originTransform != null)
+        {
+            try {
+
+                point = originTransform.inverseTransform(p, null);
+            } catch (NoninvertibleTransformException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return (Point2D.Double) point;
+    }
+
+    public Point2D.Double originToView(double x, double y) {
+        Point2D.Double p = new Point2D.Double(x, y);
+        Point2D point = null;
+
+        if(originTransform != null)
+        {
+            point = originTransform.transform(p, null);
+        }
+
+        return (Point2D.Double) point;
     }
 
     /**

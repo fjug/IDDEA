@@ -327,8 +327,7 @@ public class InteractiveDisplayView extends AbstractView {
 
         if(ARGBType.class.isInstance(interval.firstElement()))
         {
-            iview = new InteractiveViewer2D(interval,
-                    interval.getWidth(), interval.getHeight(),
+            iview = new InteractiveViewer2D(interval.getWidth(), interval.getHeight(),
                     new InterpolatingSource(
                             Views.extendZero((RandomAccessibleInterval<ARGBType>)(ImagePlusImg<?, ?>) interval),
                             transform,
@@ -344,7 +343,7 @@ public class InteractiveDisplayView extends AbstractView {
             RealRandomAccessible< T > interpolated = Views.interpolate( Views.extendZero(interval), new NearestNeighborInterpolatorFactory<T>() );
             final RealARGBConverter< T > converter = new RealARGBConverter< T >( min.getMinValue(), max.getMaxValue());
 
-            iview = new InteractiveViewer2D<T>(interval, interval.getWidth(), interval.getHeight(), Views.extendZero(interval), transform, converter);
+            iview = new InteractiveViewer2D<T>(interval.getWidth(), interval.getHeight(), Views.extendZero(interval), transform, converter);
         }
 
         return iview;
@@ -365,31 +364,8 @@ public class InteractiveDisplayView extends AbstractView {
         final RealARGBConverter< LongType > converter = new RealARGBConverter< LongType >( 0, maxIterations );
 
         InteractiveRealViewer2D iview = new InteractiveRealViewer2D<LongType>(width, height, mandelbrot, transform, converter);
+        iview2d = iview;
 
-
-//        String filename = new String("/Users/moon/Pictures/aeonflux.jpeg");
-//
-//        // Image import
-//        final ImagePlus imp = new ImagePlus( filename );
-//        ImagePlusImg<FloatType, ? > map = ImagePlusImgs.from( imp );
-//
-//        int width = map.getWidth();
-//        int height = map.getHeight();
-//
-//        ImageRandomAccessible img = new ImageRandomAccessible((ImagePlusImg<ARGBType, ?>)(ImagePlusImg<?, ?>)map);
-//        final AffineTransform2D transform = new AffineTransform2D();
-//
-//        InteractiveViewer2D iview = new InteractiveViewer2D( width, height, new ImageSource< ARGBType, AffineTransform2D >( img, transform, new TypeIdentity<ARGBType>()));
-//
-
-
-//        String filename = new String("/Users/moon/Pictures/aeonflux.jpeg");
-////        String filename = new String("/Users/moon/Projects/ScientificPlatform/ImgLib2/imglib/examples/graffiti.tif");
-//        final ImagePlus imp = new ImagePlus( filename );
-//        ImagePlusImg<FloatType, ? > map = ImagePlusImgs.from( imp );
-//
-//        InteractiveViewer2D iview = show(map);
-//
         return iview.getDisplay();
     }
 

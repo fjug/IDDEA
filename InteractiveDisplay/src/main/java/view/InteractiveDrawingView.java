@@ -1056,7 +1056,7 @@ public abstract class InteractiveDrawingView extends JComponent implements Drawi
     public Rectangle2D.Double viewToDrawing(Rectangle r) {
     	double[] drawing = {r.x, r.y, r.x + r.width, r.y, r.x + r.width, r.y + r.height, r.x, r.y + r.height};
     	double[] view = new double[8];
-    	preTransform.transform(drawing, 0, view, 0, 4);
+    	//preTransform.transform(drawing, 0, view, 0, 4);
 
     	try {
         	preTransform.inverseTransform(drawing, 0, view, 0, 4);

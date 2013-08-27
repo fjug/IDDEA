@@ -1,5 +1,6 @@
 package controller.action;
 
+import net.imglib2.RealRandomAccess;
 import net.imglib2.img.imageplus.ImagePlusImg;
 import net.imglib2.type.numeric.ARGBType;
 
@@ -52,8 +53,9 @@ public class GrowSelectionToolAction extends AbstractApplicationAction
 
     private void process(InteractiveRealViewer viewer)
     {
-        ImagePlusImg<?, ?> source = viewer.getSourceInterval();
-        if(ARGBType.class.isInstance(source.firstElement()))
+        //ImagePlusImg<?, ?> source = viewer.getSourceInterval();
+        RealRandomAccess<?> source = (RealRandomAccess<?>) viewer.getSource();
+        if(ARGBType.class.isInstance(source.get()))
         {
             Set<Figure> figures = viewer.getDisplay().getSelectedFigures();
             for(Figure f: figures)

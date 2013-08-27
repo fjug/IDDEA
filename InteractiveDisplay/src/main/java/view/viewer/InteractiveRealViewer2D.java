@@ -19,10 +19,7 @@ import net.imglib2.ui.util.FinalSource;
  */
 public class InteractiveRealViewer2D< T > extends InteractiveRealViewer< T, AffineTransform2D, JHotDrawInteractiveDisplay2D< AffineTransform2D > >
 {
-	public ImagePlusImg<?, ?> getSourceInterval() {
-		return null;
-	}
-	
+
 	public JHotDrawInteractiveDisplay2D getDisplay()
 	{
 		return (JHotDrawInteractiveDisplay2D) display;
@@ -48,7 +45,9 @@ public class InteractiveRealViewer2D< T > extends InteractiveRealViewer< T, Affi
 	public InteractiveRealViewer2D( final int width, final int height, final RealRandomAccessible< T > source, final AffineTransform2D sourceTransform, final Converter< T, ARGBType > converter )
 	{
 		super( AffineTransformType2D.instance,
-				new JHotDrawInteractiveDisplay2D< AffineTransform2D >( width, height, TransformEventHandler2D.factory() ),
+				new JHotDrawInteractiveDisplay2D< AffineTransform2D >( width, height, sourceTransform, TransformEventHandler2D.factory() ),
 				Defaults.rendererFactory( AffineTransformType2D.instance, new FinalSource< T, AffineTransform2D >( source, sourceTransform, converter ) ) );
+
+        this.source = source;
 	}
 }

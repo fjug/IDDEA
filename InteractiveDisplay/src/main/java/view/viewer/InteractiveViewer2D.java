@@ -24,12 +24,6 @@ import view.JHotDrawInteractiveDisplay2D;
  */
 public class InteractiveViewer2D< T extends NumericType< T > > extends InteractiveRealViewer< T, AffineTransform2D, JHotDrawInteractiveDisplay2D< AffineTransform2D > >
 {
-	final protected ImagePlusImg<?, ? > sourceInterval;
-	
-	public ImagePlusImg<?, ?> getSourceInterval() {
-		return sourceInterval;
-	}
-	
 	/**
 	 * Create an interactive viewer for a 2D {@link RandomAccessible}.
 	 *
@@ -48,14 +42,14 @@ public class InteractiveViewer2D< T extends NumericType< T > > extends Interacti
 	 *            Converter from the source type to argb for rendering the
 	 *            source.
 	 */
-	public InteractiveViewer2D( final ImagePlusImg<?, ? > sourceInterval,final int width, final int height, final RandomAccessible< T > source, final AffineTransform2D sourceTransform, final Converter< ? super T, ARGBType > converter )
+	public InteractiveViewer2D( final int width, final int height, final RandomAccessible< T > source, final AffineTransform2D sourceTransform, final Converter< ? super T, ARGBType > converter )
 	{
-		this( sourceInterval,width, height, new InterpolatingSource< T, AffineTransform2D >( source, sourceTransform, converter ) );
+		this( width, height, new InterpolatingSource< T, AffineTransform2D >( source, sourceTransform, converter ) );
 	}
 
-	public InteractiveViewer2D( final ImagePlusImg<?, ? > sourceInterval,final int width, final int height, final RandomAccessible< T > source, final Converter< ? super T, ARGBType > converter )
+	public InteractiveViewer2D( final int width, final int height, final RandomAccessible< T > source, final Converter< ? super T, ARGBType > converter )
 	{
-		this( sourceInterval, width, height, source, new AffineTransform2D(), converter );
+		this( width, height, source, new AffineTransform2D(), converter );
 	}
 	
 	public JHotDrawInteractiveDisplay2D getDisplay()
@@ -63,12 +57,13 @@ public class InteractiveViewer2D< T extends NumericType< T > > extends Interacti
 		return (JHotDrawInteractiveDisplay2D) display;
 	}
 
-	public InteractiveViewer2D( final ImagePlusImg<?, ? > sourceInterval, final int width, final int height, final InterpolatingSource< T, AffineTransform2D > interpolatingSource )
+	public InteractiveViewer2D( final int width, final int height, final InterpolatingSource< T, AffineTransform2D > interpolatingSource )
 	{
 		super( AffineTransformType2D.instance,
-				new JHotDrawInteractiveDisplay2D< AffineTransform2D >( width, height, TransformEventHandler2D.factory() ),
+				new JHotDrawInteractiveDisplay2D< AffineTransform2D >( width, height, null, TransformEventHandler2D.factory() ),
 				Defaults.rendererFactory( AffineTransformType2D.instance, interpolatingSource ) );
-		this.sourceInterval = sourceInterval;
+
+        this.source = interpolatingSource.getInterpolatedSource();
 
 		// add KeyHandler for toggling interpolation
 		display.addHandler( new KeyAdapter() {

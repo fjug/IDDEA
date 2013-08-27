@@ -9,6 +9,7 @@ import java.awt.event.WindowEvent;
 import javax.swing.JComponent;
 import javax.swing.JFrame;
 
+import net.imglib2.RealRandomAccessible;
 import view.JHotDrawInteractiveDisplay2D;
 import net.imglib2.concatenate.Concatenable;
 import net.imglib2.img.imageplus.ImagePlusImg;
@@ -24,6 +25,7 @@ import net.imglib2.ui.RendererFactory;
 import net.imglib2.ui.TransformListener;
 import net.imglib2.ui.overlay.BufferedImageOverlayRenderer;
 import net.imglib2.ui.util.GuiUtil;
+import view.SourceAccessible;
 
 /**
  * TODO
@@ -46,8 +48,12 @@ import net.imglib2.ui.util.GuiUtil;
  * @param <C>
  *            canvas component type
  */
-public abstract class InteractiveRealViewer< T, A extends AffineSet & AffineGet & Concatenable< AffineGet >, C extends JComponent & InteractiveDisplayCanvas< A > > implements TransformListener< A >, PainterThread.Paintable
+public abstract class InteractiveRealViewer< T, A extends AffineSet & AffineGet & Concatenable< AffineGet >, C extends JComponent & InteractiveDisplayCanvas< A > >
+        implements TransformListener< A >, PainterThread.Paintable, SourceAccessible<T>
 {
+    protected RealRandomAccessible<T> source;
+
+
 	final protected AffineTransformType< A > transformType;
 
 	/**
@@ -106,11 +112,6 @@ public abstract class InteractiveRealViewer< T, A extends AffineSet & AffineGet 
 
 		painterThread.start();
 	}
-	
-	public abstract ImagePlusImg<?, ?> getSourceInterval();
-	
-	public abstract JHotDrawInteractiveDisplay2D getDisplay();
-
 	/**
 	 * Render the source using the current viewer transformation and
 	 */
@@ -146,5 +147,20 @@ public abstract class InteractiveRealViewer< T, A extends AffineSet & AffineGet 
 	public void requestRepaint()
 	{
 		imageRenderer.requestRepaint();
-	}
+    }
+
+
+    /**
+     * It returns JHotDrawInteractiveDisplay2D instance.
+     * @return JHotDrawInteractiveDisplay2D
+     */
+    public abstract JHotDrawInteractiveDisplay2D getDisplay();
+
+    /**
+     * Get the underlying source.
+     * @return RealRandomAccessible<T>
+     */
+    public RealRandomAccessible<T> getSource() {
+        return source;
+    }
 }
