@@ -19,11 +19,6 @@ import net.imglib2.ui.util.FinalSource;
  */
 public class InteractiveRealViewer2D< T > extends InteractiveRealViewer< T, AffineTransform2D, JHotDrawInteractiveDisplay2D< AffineTransform2D > >
 {
-
-	public JHotDrawInteractiveDisplay2D getDisplay()
-	{
-		return (JHotDrawInteractiveDisplay2D) display;
-	}
 	/**
 	 * Create an interactive viewer for a 2D {@link RealRandomAccessible}.
 	 *

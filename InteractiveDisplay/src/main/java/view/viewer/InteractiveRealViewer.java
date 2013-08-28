@@ -1,18 +1,10 @@
 package view.viewer;
 
-import java.awt.BorderLayout;
-import java.awt.Container;
-import java.awt.GraphicsConfiguration;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
-
 import javax.swing.JComponent;
-import javax.swing.JFrame;
 
 import net.imglib2.RealRandomAccessible;
 import view.JHotDrawInteractiveDisplay2D;
 import net.imglib2.concatenate.Concatenable;
-import net.imglib2.img.imageplus.ImagePlusImg;
 import net.imglib2.realtransform.AffineGet;
 import net.imglib2.realtransform.AffineSet;
 import net.imglib2.ui.AffineTransformType;
@@ -24,8 +16,6 @@ import net.imglib2.ui.Renderer;
 import net.imglib2.ui.RendererFactory;
 import net.imglib2.ui.TransformListener;
 import net.imglib2.ui.overlay.BufferedImageOverlayRenderer;
-import net.imglib2.ui.util.GuiUtil;
-import view.SourceAccessible;
 
 /**
  * TODO
@@ -49,11 +39,8 @@ import view.SourceAccessible;
  *            canvas component type
  */
 public abstract class InteractiveRealViewer< T, A extends AffineSet & AffineGet & Concatenable< AffineGet >, C extends JComponent & InteractiveDisplayCanvas< A > >
-        implements TransformListener< A >, PainterThread.Paintable, SourceAccessible<T>
+        implements TransformListener< A >, PainterThread.Paintable
 {
-    protected RealRandomAccessible<T> source;
-
-
 	final protected AffineTransformType< A > transformType;
 
 	/**
@@ -72,6 +59,11 @@ public abstract class InteractiveRealViewer< T, A extends AffineSet & AffineGet 
 	final protected PainterThread painterThread;
 
 	final protected Renderer< A > imageRenderer;
+
+    /**
+     * Underlying source for accessing the data
+     */
+    protected RealRandomAccessible<T> source;
 
 	/**
 	 * TODO
@@ -149,12 +141,14 @@ public abstract class InteractiveRealViewer< T, A extends AffineSet & AffineGet 
 		imageRenderer.requestRepaint();
     }
 
-
     /**
      * It returns JHotDrawInteractiveDisplay2D instance.
      * @return JHotDrawInteractiveDisplay2D
      */
-    public abstract JHotDrawInteractiveDisplay2D getDisplay();
+    public JHotDrawInteractiveDisplay2D getJHotDrawDisplay()
+    {
+        return (JHotDrawInteractiveDisplay2D) display;
+    }
 
     /**
      * Get the underlying source.

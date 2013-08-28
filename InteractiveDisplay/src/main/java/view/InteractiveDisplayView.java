@@ -3,14 +3,10 @@ package view;
 import edu.umd.cs.findbugs.annotations.Nullable;
 import ij.ImagePlus;
 import net.imglib2.IterableInterval;
-import net.imglib2.RandomAccessible;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.RealRandomAccessible;
-import net.imglib2.converter.Converter;
-import net.imglib2.converter.Converters;
 import net.imglib2.converter.TypeIdentity;
 import net.imglib2.display.RealARGBConverter;
-import net.imglib2.interpolation.randomaccess.NLinearInterpolatorFactory;
 import net.imglib2.interpolation.randomaccess.NearestNeighborInterpolatorFactory;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.Type;
@@ -19,7 +15,6 @@ import net.imglib2.type.numeric.RealType;
 import net.imglib2.type.numeric.integer.LongType;
 import net.imglib2.type.numeric.real.FloatType;
 import net.imglib2.realtransform.AffineTransform2D;
-import net.imglib2.ui.util.FinalSource;
 import net.imglib2.img.imageplus.*;
 import net.imglib2.ui.util.InterpolatingSource;
 import net.imglib2.view.Views;
@@ -295,7 +290,7 @@ public class InteractiveDisplayView extends AbstractView {
             iview2d = show(map);
 
             editor.remove(view);
-            InteractiveDrawingView newView = getIview2d().getDisplay();
+            InteractiveDrawingView newView = getIview2d().getJHotDrawDisplay();
             newView.copyFrom(view);
 
             editor.add(newView);
@@ -366,7 +361,7 @@ public class InteractiveDisplayView extends AbstractView {
         InteractiveRealViewer2D iview = new InteractiveRealViewer2D<LongType>(width, height, mandelbrot, transform, converter);
         iview2d = iview;
 
-        return iview.getDisplay();
+        return iview.getJHotDrawDisplay();
     }
 
     /** This method is called from within the constructor to

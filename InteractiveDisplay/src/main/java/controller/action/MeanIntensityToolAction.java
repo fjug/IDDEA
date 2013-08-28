@@ -1,24 +1,10 @@
 package controller.action;
 
 import net.imglib2.*;
-import net.imglib2.img.Img;
-import net.imglib2.img.ImgFactory;
-import net.imglib2.img.array.ArrayImgFactory;
-import net.imglib2.img.display.imagej.ImageJFunctions;
-import net.imglib2.img.imageplus.ImagePlusImg;
-import net.imglib2.realtransform.AffineTransform;
-import net.imglib2.realtransform.AffineTransform2D;
-import net.imglib2.realtransform.InverseRealTransform;
-import net.imglib2.realtransform.RealViews;
 import net.imglib2.type.numeric.ARGBType;
-import net.imglib2.type.numeric.NumericType;
 import net.imglib2.type.numeric.RealType;
 import net.imglib2.type.numeric.integer.LongType;
-import net.imglib2.ui.AffineTransformType;
-import net.imglib2.ui.AffineTransformType2D;
-import net.imglib2.util.Intervals;
 import net.imglib2.util.Util;
-import net.imglib2.view.IntervalView;
 import net.imglib2.view.Views;
 
 import org.jhotdraw.draw.Figure;
@@ -26,27 +12,15 @@ import org.jhotdraw.util.*;
 
 import net.imglib2.Cursor;
 
-import org.jhotdraw.gui.*;
-
-import java.awt.*;
 import java.awt.event.*;
-
-import javax.swing.*;
 
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
-import java.io.*;
-import java.net.URI;
 import java.util.Set;
-import java.util.prefs.Preferences;
 
 import org.jhotdraw.app.Application;
 import org.jhotdraw.app.View;
 import org.jhotdraw.app.action.AbstractApplicationAction;
-import org.jhotdraw.gui.URIChooser;
-import org.jhotdraw.net.URIUtil;
-import org.jhotdraw.util.prefs.PreferencesUtil;
-import org.jhotdraw.app.action.file.*;
 
 import view.InteractiveDisplayView;
 import view.viewer.InteractiveRealViewer;
@@ -96,7 +70,7 @@ public class MeanIntensityToolAction extends AbstractApplicationAction
                 double b = 0;
                 long bCnt = 0;
 
-                Set<Figure> figures = viewer.getDisplay().getSelectedFigures();
+                Set<Figure> figures = viewer.getJHotDrawDisplay().getSelectedFigures();
                 for(Figure f: figures)
                 {
                     Rectangle2D.Double rec = f.getBounds();
@@ -139,7 +113,7 @@ public class MeanIntensityToolAction extends AbstractApplicationAction
 
                 long size = 0;
                 long boundarySize = 0;
-                Set<Figure> figures = viewer.getDisplay().getSelectedFigures();
+                Set<Figure> figures = viewer.getJHotDrawDisplay().getSelectedFigures();
 
                 for(Figure f: figures)
                 {
@@ -147,7 +121,7 @@ public class MeanIntensityToolAction extends AbstractApplicationAction
 
                     System.out.format("X=%f, Y=%f, W=%f, H=%f\n", rec.getX(), rec.getY(), rec.getX() + rec.getWidth(), rec.getY() + rec.getHeight());
 
-                    Rectangle2D.Double viewRec = viewer.getDisplay().viewToOrigin(rec);
+                    Rectangle2D.Double viewRec = viewer.getJHotDrawDisplay().viewToOrigin(rec);
 
                     double[] min = new double[] {viewRec.getX(), viewRec.getY()};
                     double[] max = new double[] {viewRec.getX() + viewRec.getWidth(), viewRec.getY() + viewRec.getHeight()};
@@ -179,7 +153,7 @@ public class MeanIntensityToolAction extends AbstractApplicationAction
 
                             realRandomAccess.setPosition(new double[]{xpos, ypos});
 //                            System.out.format("DX=%f, DY=%f\n",  xpos, ypos);
-                            Point2D.Double pixel = viewer.getDisplay().originToView(xpos, ypos);
+                            Point2D.Double pixel = viewer.getJHotDrawDisplay().originToView(xpos, ypos);
 //                            System.out.format("CX=%f, CY=%f\n",  pixel.getX(), pixel.getY());
 
                             boundarySize++;
@@ -205,7 +179,7 @@ public class MeanIntensityToolAction extends AbstractApplicationAction
 
                 long size = 0;
                 long boundarySize = 0;
-                Set<Figure> figures = viewer.getDisplay().getSelectedFigures();
+                Set<Figure> figures = viewer.getJHotDrawDisplay().getSelectedFigures();
 
                 for(Figure f: figures)
                 {

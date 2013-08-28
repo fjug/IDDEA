@@ -1,7 +1,6 @@
 package controller.action;
 
 import net.imglib2.RealRandomAccess;
-import net.imglib2.img.imageplus.ImagePlusImg;
 import net.imglib2.type.numeric.ARGBType;
 
 import org.jhotdraw.app.Application;
@@ -57,7 +56,7 @@ public class GrowSelectionToolAction extends AbstractApplicationAction
         RealRandomAccess<?> source = (RealRandomAccess<?>) viewer.getSource();
         if(ARGBType.class.isInstance(source.get()))
         {
-            Set<Figure> figures = viewer.getDisplay().getSelectedFigures();
+            Set<Figure> figures = viewer.getJHotDrawDisplay().getSelectedFigures();
             for(Figure f: figures)
             {
                 f.willChange();
@@ -90,7 +89,7 @@ public class GrowSelectionToolAction extends AbstractApplicationAction
                 f.changed();
 
             }
-            viewer.getDisplay().repaint();
+            viewer.getJHotDrawDisplay().repaint();
 
         }
         else

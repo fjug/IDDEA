@@ -52,11 +52,6 @@ public class InteractiveViewer2D< T extends NumericType< T > > extends Interacti
 		this( width, height, source, new AffineTransform2D(), converter );
 	}
 	
-	public JHotDrawInteractiveDisplay2D getDisplay()
-	{
-		return (JHotDrawInteractiveDisplay2D) display;
-	}
-
 	public InteractiveViewer2D( final int width, final int height, final InterpolatingSource< T, AffineTransform2D > interpolatingSource )
 	{
 		super( AffineTransformType2D.instance,
