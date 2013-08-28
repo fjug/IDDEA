@@ -53,7 +53,7 @@ import view.viewer.InteractiveRealViewer;
 //import view.InteractiveViewer2D;
 
 /**
- * Created with IntelliJ IDEA.
+ * Compute mean intensity values for the highlighted selection region.
  *
  * @version 0.1beta
  * @since 8/20/13 3:54 PM
@@ -145,63 +145,50 @@ public class MeanIntensityToolAction extends AbstractApplicationAction
                 {
                     Rectangle2D.Double rec = f.getBounds();
 
-                    Point2D.Double start = viewer.getDisplay().viewToOrigin(new Point2D.Double(rec.getX(), rec.getY()));
-                    Point2D.Double end = viewer.getDisplay().viewToOrigin(new Point2D.Double(rec.getX() + rec.getWidth(), rec.getY() + rec.getHeight()));
+                    System.out.format("X=%f, Y=%f, W=%f, H=%f\n", rec.getX(), rec.getY(), rec.getX() + rec.getWidth(), rec.getY() + rec.getHeight());
 
-                    double[] min = new double[] {start.x, start.y};
-                    double[] max = new double[] {end.x, end.y};
+                    Rectangle2D.Double viewRec = viewer.getDisplay().viewToOrigin(rec);
+
+                    double[] min = new double[] {viewRec.getX(), viewRec.getY()};
+                    double[] max = new double[] {viewRec.getX() + viewRec.getWidth(), viewRec.getY() + viewRec.getHeight()};
 
                     System.out.format("X=%f, Y=%f, W=%f, H=%f\n", min[0], min[1], max[0], max[1]);
-                    FinalRealInterval interval = new FinalRealInterval( min, max );
 
-                    int numDimensions = interval.numDimensions();
+                    int numDimensions = 2;
 
                     // compute the number of pixels of the output and the size of the real interval
-                    long[] pixelSize = new long[ numDimensions ];
-                    double[] intervalSize = new double[ numDimensions ];
+                    double[] intervalSize = new double[numDimensions];
+                    double[] pixelSize = new double[]{rec.getWidth(), rec.getHeight()};
+                    double[] gaps = new double[numDimensions];
 
                     for ( int d = 0; d < numDimensions; ++d )
                     {
-                        intervalSize[ d ] = interval.realMax( d ) - interval.realMin( d );
-                        pixelSize[ d ] = Math.round( intervalSize[ d ] * 200 ) + 1;
+                        intervalSize[ d ] = max[d] - min[d];
+                        gaps[d] = intervalSize[d] / pixelSize[d];
                     }
 
-                    // create the output image
-                    ImgFactory< LongType > factory= new ArrayImgFactory< LongType >();
-                    Img< LongType > out = factory.create( pixelSize, Util.getTypeFromRealRandomAccess( (RealRandomAccessible<LongType>)realSource ) );
-
-                    // cursor to iterate over all pixels
-                    Cursor< LongType > cursor = out.localizingCursor();
-
-                    // create a RealRandomAccess on the source (interpolator)
+                    // create a RealRandomAccess on the source
                     RealRandomAccess< LongType > realRandomAccess = (RealRandomAccess< LongType >)realSource.realRandomAccess();
 
-                    // the temporary array to compute the position
-                    double[] tmp = new double[ numDimensions ];
-
-                    while ( cursor.hasNext() )
+                    for(int x = 0; x < rec.getWidth(); x++)
                     {
-                        cursor.fwd();
-
-                        // compute the appropriate location of the interpolator
-                        for ( int d = 0; d < numDimensions; ++d )
+                        double xpos = min[0] + x * gaps[0];
+                        for(int y = 0; y < rec.getHeight(); y++)
                         {
-                            tmp[d] += cursor.getDoublePosition( d ) / out.realMax( d ) * intervalSize[ d ]
-                                    + interval.realMin( d );
+                            double ypos = min[1] + y * gaps[1];
+
+                            realRandomAccess.setPosition(new double[]{xpos, ypos});
+//                            System.out.format("DX=%f, DY=%f\n",  xpos, ypos);
+                            Point2D.Double pixel = viewer.getDisplay().originToView(xpos, ypos);
+//                            System.out.format("CX=%f, CY=%f\n",  pixel.getX(), pixel.getY());
+
+                            boundarySize++;
+                            if(f.contains(pixel))
+                            {
+                                size++;
+                                sum += realRandomAccess.get().getRealDouble();
+                            }
                         }
-
-                        Point2D.Double pixel = viewer.getDisplay().originToView(cursor.getDoublePosition( 0 ), cursor.getDoublePosition( 1 ));
-                        System.out.format("CX=%f, CY=%f\n",  pixel.getX(), pixel.getY());
-//                        if(f.contains(pixel))
-//                        {
-                            size++;
-
-                            // set the position
-                            realRandomAccess.setPosition( tmp );
-
-                            // set the new value
-                            sum += realRandomAccess.get().getRealDouble();
-//                        }
                     }
                 }
                 System.out.println("LongType");

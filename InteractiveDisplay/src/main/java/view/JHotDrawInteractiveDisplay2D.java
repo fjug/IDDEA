@@ -14,6 +14,7 @@ import java.awt.event.*;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.NoninvertibleTransformException;
 import java.awt.geom.Point2D;
+import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import java.util.concurrent.CopyOnWriteArrayList;
 
@@ -177,6 +178,31 @@ public class JHotDrawInteractiveDisplay2D<T> extends InteractiveDrawingView
         }
 
         return (Point2D.Double) point;
+    }
+
+    public Rectangle2D.Double viewToOrigin(Rectangle2D.Double r) {
+        double[] drawing = {r.x, r.y, r.x + r.width, r.y, r.x + r.width, r.y + r.height, r.x, r.y + r.height};
+        double[] view = new double[8];
+
+        if(originTransform != null)
+        {
+            try {
+                originTransform.inverseTransform(drawing, 0, view, 0, 4);
+            } catch (NoninvertibleTransformException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return new Rectangle2D.Double(view[0], view[1], view[2] - view[0], view[5] - view[1]);
+    }
+
+    public Rectangle2D.Double originToView(Rectangle2D.Double r)
+    {
+        double[] drawing = {r.x, r.y, r.x + r.width, r.y, r.x + r.width, r.y + r.height, r.x, r.y + r.height};
+        double[] view = new double[8];
+        preTransform.transform(drawing, 0, view, 0, 4);
+
+        return new Rectangle2D.Double(drawing[0], drawing[1], drawing[2] - drawing[0], drawing[5] - drawing[1]);
     }
 
     /**

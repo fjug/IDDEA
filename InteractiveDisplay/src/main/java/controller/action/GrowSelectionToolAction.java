@@ -22,7 +22,7 @@ import java.awt.geom.Rectangle2D;
 import java.util.Set;
 
 /**
- * Created with IntelliJ IDEA.
+ * Grow the selection boundary example.
  *
  * @version 0.1beta
  * @since 8/22/13 4:43 PM
