@@ -48,6 +48,7 @@ import org.jhotdraw.draw.action.*;
 import org.jhotdraw.gui.URIChooser;
 import org.jhotdraw.net.URIUtil;
 
+import view.display.ColorTables;
 import view.viewer.InteractiveRealViewer;
 import view.viewer.InteractiveRealViewer2D;
 import view.viewer.InteractiveViewer2D;
@@ -362,7 +363,9 @@ public class InteractiveDisplayView extends AbstractView {
         transform.scale( 200 );
         transform.translate( width / 2.0, height / 2.0 );
 
-        final RealARGBConverter< LongType > converter = new RealARGBConverter< LongType >( 0, maxIterations );
+        //final RealARGBConverter< LongType > converter = new RealARGBConverter< LongType >( 0, maxIterations );
+
+        final LUTConverter< LongType > converter = new LUTConverter< LongType >( 0d, 50, ColorTables.FIRE);
 
         InteractiveRealViewer2D iview = new InteractiveRealViewer2D<LongType>(width, height, mandelbrot, transform, converter);
         iview2d = iview;
