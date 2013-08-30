@@ -24,6 +24,8 @@ import org.jhotdraw.draw.io.InputFormat;
 import org.jhotdraw.draw.print.DrawingPageable;
 import org.jhotdraw.draw.io.DOMStorableInputOutputFormat;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.print.Pageable;
 
 import org.jhotdraw.gui.*;
@@ -344,13 +346,17 @@ public class InteractiveDisplayView extends AbstractView {
         return iview;
     }
 
+    Timer timer;
+    MandelbrotRealRandomAccessible mandelbrot;
+    boolean go = true;
+
     public InteractiveDrawingView getInteractiveDrawingView()
     {
         final int width = 800;
         final int height = 600;
 
         final int maxIterations = 100;
-        final MandelbrotRealRandomAccessible mandelbrot = new MandelbrotRealRandomAccessible( maxIterations );
+        mandelbrot = new MandelbrotRealRandomAccessible( maxIterations );
 
         final AffineTransform2D transform = new AffineTransform2D();
         transform.scale( 200 );
@@ -360,6 +366,30 @@ public class InteractiveDisplayView extends AbstractView {
 
         InteractiveRealViewer2D iview = new InteractiveRealViewer2D<LongType>(width, height, mandelbrot, transform, converter);
         iview2d = iview;
+
+        timer = new Timer(500, new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+                double value = mandelbrot.getRealCurve();
+
+                if(go)
+                {
+                    if(value >= 1d) go = false;
+                }
+                else
+                {
+                    if(value <= 0d) go = true;
+                }
+
+                if(go) mandelbrot.setRealCurve(value + 0.01d);
+                else mandelbrot.setRealCurve(value - 0.01d);
+
+                iview2d.requestRepaint();
+            }
+        });
+
+        timer.start();
 
         return iview.getJHotDrawDisplay();
     }
