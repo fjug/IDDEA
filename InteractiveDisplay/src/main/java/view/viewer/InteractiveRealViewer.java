@@ -3,7 +3,7 @@ package view.viewer;
 import javax.swing.JComponent;
 
 import net.imglib2.RealRandomAccessible;
-import view.JHotDrawInteractiveDisplay2D;
+import view.display.JHotDrawInteractiveDisplay2D;
 import net.imglib2.concatenate.Concatenable;
 import net.imglib2.realtransform.AffineGet;
 import net.imglib2.realtransform.AffineSet;

@@ -11,7 +11,7 @@ import org.jhotdraw.geom.BezierPath;
 import org.jhotdraw.util.ResourceBundleUtil;
 import org.jhotdraw.draw.BezierFigure;
 
-import view.InteractiveDisplayView;
+import view.display.InteractiveDisplayView;
 import view.viewer.InteractiveRealViewer;
 //import view.InteractiveViewer2D;
 

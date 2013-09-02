@@ -6,6 +6,7 @@ import java.awt.event.MouseEvent;
 import org.jhotdraw.draw.DrawingEditor;
 import org.jhotdraw.draw.DrawingView;
 import org.jhotdraw.draw.tool.AbstractTool;
+import view.display.JHotDrawInteractiveDisplay2D;
 
 
 /**
@@ -31,9 +32,9 @@ public class SpimTool extends AbstractTool {
 
         DrawingView view = this.editor.getActiveView();
         //System.out.println(view);
-        if ( view.JHotDrawInteractiveDisplay2D.class.isInstance( view ) )
+        if ( JHotDrawInteractiveDisplay2D.class.isInstance( view ) )
         {
-            ((view.JHotDrawInteractiveDisplay2D) view).activateHandler();
+            ((JHotDrawInteractiveDisplay2D) view).activateHandler();
         }
 
     }
@@ -46,9 +47,9 @@ public class SpimTool extends AbstractTool {
 
         DrawingView view = this.editor.getActiveView();
         //System.out.println(view);
-        if ( view.JHotDrawInteractiveDisplay2D.class.isInstance( view ) )
+        if ( JHotDrawInteractiveDisplay2D.class.isInstance( view ) )
         {
-            ((view.JHotDrawInteractiveDisplay2D) view).deactivateHandler();
+            ((JHotDrawInteractiveDisplay2D) view).deactivateHandler();
         }
     }
 

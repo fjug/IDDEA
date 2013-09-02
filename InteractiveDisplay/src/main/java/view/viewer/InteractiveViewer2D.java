@@ -3,19 +3,16 @@ package view.viewer;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 
-import view.JHotDrawInteractiveDisplay2D;
+import view.display.JHotDrawInteractiveDisplay2D;
 import net.imglib2.RandomAccessible;
 import net.imglib2.converter.Converter;
-import net.imglib2.img.imageplus.ImagePlusImg;
 import net.imglib2.realtransform.AffineTransform2D;
 import net.imglib2.type.numeric.ARGBType;
 import net.imglib2.type.numeric.NumericType;
 import net.imglib2.ui.AffineTransformType2D;
-import net.imglib2.ui.InteractiveDisplayCanvasComponent;
 import net.imglib2.ui.TransformEventHandler2D;
 import net.imglib2.ui.util.Defaults;
 import net.imglib2.ui.util.InterpolatingSource;
-import view.JHotDrawInteractiveDisplay2D;
 
 /**
  * Interactive viewer for a 2D {@link RandomAccessible}.

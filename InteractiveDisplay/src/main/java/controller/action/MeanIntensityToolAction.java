@@ -22,7 +22,7 @@ import org.jhotdraw.app.Application;
 import org.jhotdraw.app.View;
 import org.jhotdraw.app.action.AbstractApplicationAction;
 
-import view.InteractiveDisplayView;
+import view.display.InteractiveDisplayView;
 import view.viewer.InteractiveRealViewer;
 //import view.InteractiveViewer2D;
 

@@ -1,4 +1,4 @@
-import model.InteractiveDisplayApplicationModel;
+import model.application.InteractiveDisplayApplicationModel;
 import org.jhotdraw.app.Application;
 import org.jhotdraw.app.OSXApplication;
 import org.jhotdraw.app.SDIApplication;
@@ -32,7 +32,7 @@ public class Main {
 
         InteractiveDisplayApplicationModel model = new InteractiveDisplayApplicationModel();
 //        model.setViewClass(InteractiveDisplayView.class);
-        model.setViewClassName("view.InteractiveDisplayView");
+        model.setViewClassName("view.display.InteractiveDisplayView");
         model.setName("IDDEA Draw");
 //        model.setVersion(Main.class.getPackage().getImplementationVersion());
         model.setVersion("0.1beta");
