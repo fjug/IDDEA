@@ -1,4 +1,4 @@
-package view;
+package view.display;
 
 import edu.umd.cs.findbugs.annotations.Nullable;
 
@@ -19,13 +19,11 @@ import java.awt.geom.AffineTransform;
 import java.awt.geom.NoninvertibleTransformException;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
-import java.net.URI;
 import java.util.*;
 import java.awt.event.*;
 import java.awt.image.BufferedImage;
 
 import javax.swing.*;
-import javax.swing.Timer;
 import javax.swing.undo.*;
 
 import org.jhotdraw.util.*;
@@ -1056,7 +1054,7 @@ public abstract class InteractiveDrawingView extends JComponent implements Drawi
     public Rectangle2D.Double viewToDrawing(Rectangle r) {
     	double[] drawing = {r.x, r.y, r.x + r.width, r.y, r.x + r.width, r.y + r.height, r.x, r.y + r.height};
     	double[] view = new double[8];
-    	preTransform.transform(drawing, 0, view, 0, 4);
+    	//preTransform.transform(drawing, 0, view, 0, 4);
 
     	try {
         	preTransform.inverseTransform(drawing, 0, view, 0, 4);

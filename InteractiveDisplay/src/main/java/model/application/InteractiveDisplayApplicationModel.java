@@ -1,4 +1,4 @@
-package model;
+package model.application;
 
 import edu.umd.cs.findbugs.annotations.Nullable;
 
@@ -21,7 +21,7 @@ import org.jhotdraw.gui.filechooser.ExtensionFileFilter;
 
 import controller.tool.SpimTool;
 import controller.action.*;
-import view.InteractiveDisplayView;
+import view.display.InteractiveDisplayView;
 
 /**
  * InteractiveDisplay application model class provides an application model.
