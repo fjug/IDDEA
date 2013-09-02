@@ -7,6 +7,11 @@ It provides jhotdraw based selection tools on ImgLib2 user interface
 including bezier drawing(currently), drawing save/load as well user
 interactivity(zoom, rotate and translate) based on affine transform functions.
 
+Diagram
+--
+![Diagram](https://github.com/hkmoon/IDDEA/blob/master/InteractiveDisplay/doc/IDDEA-mindmap.png?raw=true)
+
+
 Goals
 ------
 
