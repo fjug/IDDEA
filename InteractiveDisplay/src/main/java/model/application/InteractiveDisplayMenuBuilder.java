@@ -1,4 +1,4 @@
-package model;
+package model.application;
 
 import controller.action.GrowSelectionToolAction;
 import controller.action.MeanIntensityToolAction;

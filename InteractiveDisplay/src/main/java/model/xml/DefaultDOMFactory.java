@@ -9,7 +9,7 @@
  * see accompanying license terms.
  */
 
-package xml;
+package model.xml;
 
 import java.util.*;
 import org.jhotdraw.xml.DOMStorable;
@@ -22,7 +22,7 @@ import org.jhotdraw.xml.DOMStorable;
  * @author Werner Randelshofer.
  * @version $Id: DefaultDOMFactory.java 717 2010-11-21 12:30:57Z rawcoder $
  */
-public class DefaultDOMFactory extends xml.JavaPrimitivesDOMFactory {
+public class DefaultDOMFactory extends JavaPrimitivesDOMFactory {
     private final static HashMap<Class,String> classToNameMap = new HashMap<Class,String>();
     private final static HashMap<String,Object> nameToPrototypeMap = new HashMap<String,Object>();
     private final static HashMap<Class,String> enumClassToNameMap = new HashMap<Class,String>();

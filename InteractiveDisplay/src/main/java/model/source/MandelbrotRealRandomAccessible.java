@@ -1,4 +1,4 @@
-package view;
+package model.source;
 
 import net.imglib2.RealInterval;
 import net.imglib2.RealPoint;
@@ -16,6 +16,19 @@ public class MandelbrotRealRandomAccessible implements RealRandomAccessible< Lon
 {
     final protected LongType t;
     long maxIterations;
+    static double realCurve = 0d;
+
+    public void setRealCurve(double a)
+    {
+        if(a > 1d) realCurve = 1d;
+        else if(a < 0d) realCurve = 0d;
+        else realCurve = a;
+    }
+
+    public double getRealCurve()
+    {
+        return realCurve;
+    }
 
     public MandelbrotRealRandomAccessible()
     {
@@ -41,12 +54,12 @@ public class MandelbrotRealRandomAccessible implements RealRandomAccessible< Lon
         long i = 0;
         for ( ; i < maxIterations; ++i )
         {
-            final double squre = re * re;
+            final double squre = re * (re - re * realCurve) ;
             final double squim = im * im;
             if ( squre + squim > 4 )
                 break;
             im = 2 * re * im + im0;
-            re = squre - squim + re0;
+            re = squre - squim  + re0;
         }
         return i;
     }

@@ -1,5 +1,6 @@
-package model;
+package model.figure;
 
+import model.xml.DefaultDOMFactory;
 import org.jhotdraw.draw.AttributeKeys;
 import org.jhotdraw.draw.BezierFigure;
 import org.jhotdraw.draw.DefaultDrawing;
@@ -15,7 +16,7 @@ import org.jhotdraw.draw.connector.ChopBezierConnector;
  * @author HongKee Moon
  */
 
-public class DrawFigureFactory extends xml.DefaultDOMFactory {
+public class DrawFigureFactory extends DefaultDOMFactory {
     private final static Object[][] classTagArray = {
         { DefaultDrawing.class, "drawing" },
         { QuadTreeDrawing.class, "drawing" },

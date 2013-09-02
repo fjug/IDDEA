@@ -8,7 +8,7 @@
  * license agreement you entered into with the copyright holders. For details
  * see accompanying license terms.
  */
-package xml;
+package model.xml;
 
 import edu.umd.cs.findbugs.annotations.Nullable;
 import java.awt.Color;

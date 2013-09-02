@@ -1,16 +1,14 @@
-package view;
+package view.display;
 
 import edu.umd.cs.findbugs.annotations.Nullable;
 import ij.ImagePlus;
+import model.figure.DrawFigureFactory;
+import model.source.MandelbrotRealRandomAccessible;
 import net.imglib2.IterableInterval;
-import net.imglib2.RandomAccessible;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.RealRandomAccessible;
-import net.imglib2.converter.Converter;
-import net.imglib2.converter.Converters;
 import net.imglib2.converter.TypeIdentity;
 import net.imglib2.display.RealARGBConverter;
-import net.imglib2.interpolation.randomaccess.NLinearInterpolatorFactory;
 import net.imglib2.interpolation.randomaccess.NearestNeighborInterpolatorFactory;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.Type;
@@ -19,7 +17,6 @@ import net.imglib2.type.numeric.RealType;
 import net.imglib2.type.numeric.integer.LongType;
 import net.imglib2.type.numeric.real.FloatType;
 import net.imglib2.realtransform.AffineTransform2D;
-import net.imglib2.ui.util.FinalSource;
 import net.imglib2.img.imageplus.*;
 import net.imglib2.ui.util.InterpolatingSource;
 import net.imglib2.view.Views;
@@ -29,6 +26,8 @@ import org.jhotdraw.draw.io.InputFormat;
 import org.jhotdraw.draw.print.DrawingPageable;
 import org.jhotdraw.draw.io.DOMStorableInputOutputFormat;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.print.Pageable;
 
 import org.jhotdraw.gui.*;
@@ -51,6 +50,8 @@ import org.jhotdraw.draw.action.*;
 import org.jhotdraw.gui.URIChooser;
 import org.jhotdraw.net.URIUtil;
 
+import view.converter.ColorTables;
+import view.converter.LUTConverter;
 import view.viewer.InteractiveRealViewer;
 import view.viewer.InteractiveRealViewer2D;
 import view.viewer.InteractiveViewer2D;
@@ -137,7 +138,7 @@ public class InteractiveDisplayView extends AbstractView {
     protected Drawing createDrawing() {
         Drawing drawing = new QuadTreeDrawing();
         DOMStorableInputOutputFormat ioFormat =
-                new DOMStorableInputOutputFormat(new model.DrawFigureFactory());
+                new DOMStorableInputOutputFormat(new DrawFigureFactory());
 
         drawing.addInputFormat(ioFormat);
 
@@ -295,7 +296,7 @@ public class InteractiveDisplayView extends AbstractView {
             iview2d = show(map);
 
             editor.remove(view);
-            InteractiveDrawingView newView = getIview2d().getDisplay();
+            InteractiveDrawingView newView = getIview2d().getJHotDrawDisplay();
             newView.copyFrom(view);
 
             editor.add(newView);
@@ -327,8 +328,7 @@ public class InteractiveDisplayView extends AbstractView {
 
         if(ARGBType.class.isInstance(interval.firstElement()))
         {
-            iview = new InteractiveViewer2D(interval,
-                    interval.getWidth(), interval.getHeight(),
+            iview = new InteractiveViewer2D(interval.getWidth(), interval.getHeight(),
                     new InterpolatingSource(
                             Views.extendZero((RandomAccessibleInterval<ARGBType>)(ImagePlusImg<?, ?>) interval),
                             transform,
@@ -344,11 +344,15 @@ public class InteractiveDisplayView extends AbstractView {
             RealRandomAccessible< T > interpolated = Views.interpolate( Views.extendZero(interval), new NearestNeighborInterpolatorFactory<T>() );
             final RealARGBConverter< T > converter = new RealARGBConverter< T >( min.getMinValue(), max.getMaxValue());
 
-            iview = new InteractiveViewer2D<T>(interval, interval.getWidth(), interval.getHeight(), Views.extendZero(interval), transform, converter);
+            iview = new InteractiveViewer2D<T>(interval.getWidth(), interval.getHeight(), Views.extendZero(interval), transform, converter);
         }
 
         return iview;
     }
+
+    Timer timer;
+    MandelbrotRealRandomAccessible mandelbrot;
+    boolean go = true;
 
     public InteractiveDrawingView getInteractiveDrawingView()
     {
@@ -356,41 +360,44 @@ public class InteractiveDisplayView extends AbstractView {
         final int height = 600;
 
         final int maxIterations = 100;
-        final MandelbrotRealRandomAccessible mandelbrot = new MandelbrotRealRandomAccessible( maxIterations );
+        mandelbrot = new MandelbrotRealRandomAccessible( maxIterations );
 
         final AffineTransform2D transform = new AffineTransform2D();
         transform.scale( 200 );
         transform.translate( width / 2.0, height / 2.0 );
 
-        final RealARGBConverter< LongType > converter = new RealARGBConverter< LongType >( 0, maxIterations );
+        //final RealARGBConverter< LongType > converter = new RealARGBConverter< LongType >( 0, maxIterations );
+
+        final LUTConverter< LongType > converter = new LUTConverter< LongType >( 0d, 50, ColorTables.FIRE);
 
         InteractiveRealViewer2D iview = new InteractiveRealViewer2D<LongType>(width, height, mandelbrot, transform, converter);
+        iview2d = iview;
 
+        timer = new Timer(500, new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
 
-//        String filename = new String("/Users/moon/Pictures/aeonflux.jpeg");
-//
-//        // Image import
-//        final ImagePlus imp = new ImagePlus( filename );
-//        ImagePlusImg<FloatType, ? > map = ImagePlusImgs.from( imp );
-//
-//        int width = map.getWidth();
-//        int height = map.getHeight();
-//
-//        ImageRandomAccessible img = new ImageRandomAccessible((ImagePlusImg<ARGBType, ?>)(ImagePlusImg<?, ?>)map);
-//        final AffineTransform2D transform = new AffineTransform2D();
-//
-//        InteractiveViewer2D iview = new InteractiveViewer2D( width, height, new ImageSource< ARGBType, AffineTransform2D >( img, transform, new TypeIdentity<ARGBType>()));
-//
+                double value = mandelbrot.getRealCurve();
 
+                if(go)
+                {
+                    if(value >= 1d) go = false;
+                }
+                else
+                {
+                    if(value <= 0d) go = true;
+                }
 
-//        String filename = new String("/Users/moon/Pictures/aeonflux.jpeg");
-////        String filename = new String("/Users/moon/Projects/ScientificPlatform/ImgLib2/imglib/examples/graffiti.tif");
-//        final ImagePlus imp = new ImagePlus( filename );
-//        ImagePlusImg<FloatType, ? > map = ImagePlusImgs.from( imp );
-//
-//        InteractiveViewer2D iview = show(map);
-//
-        return iview.getDisplay();
+                if(go) mandelbrot.setRealCurve(value + 0.01d);
+                else mandelbrot.setRealCurve(value - 0.01d);
+
+                iview2d.requestRepaint();
+            }
+        });
+
+        timer.start();
+
+        return iview.getJHotDrawDisplay();
     }
 
     /** This method is called from within the constructor to

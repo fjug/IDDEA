@@ -1,6 +1,6 @@
 package controller.action;
 
-import net.imglib2.img.imageplus.ImagePlusImg;
+import net.imglib2.RealRandomAccess;
 import net.imglib2.type.numeric.ARGBType;
 
 import org.jhotdraw.app.Application;
@@ -11,7 +11,7 @@ import org.jhotdraw.geom.BezierPath;
 import org.jhotdraw.util.ResourceBundleUtil;
 import org.jhotdraw.draw.BezierFigure;
 
-import view.InteractiveDisplayView;
+import view.display.InteractiveDisplayView;
 import view.viewer.InteractiveRealViewer;
 //import view.InteractiveViewer2D;
 
@@ -21,7 +21,7 @@ import java.awt.geom.Rectangle2D;
 import java.util.Set;
 
 /**
- * Created with IntelliJ IDEA.
+ * Grow the selection boundary example.
  *
  * @version 0.1beta
  * @since 8/22/13 4:43 PM
@@ -52,10 +52,11 @@ public class GrowSelectionToolAction extends AbstractApplicationAction
 
     private void process(InteractiveRealViewer viewer)
     {
-        ImagePlusImg<?, ?> source = viewer.getSourceInterval();
-        if(ARGBType.class.isInstance(source.firstElement()))
+        //ImagePlusImg<?, ?> source = viewer.getSourceInterval();
+        RealRandomAccess<?> source = (RealRandomAccess<?>) viewer.getSource();
+        if(ARGBType.class.isInstance(source.get()))
         {
-            Set<Figure> figures = viewer.getDisplay().getSelectedFigures();
+            Set<Figure> figures = viewer.getJHotDrawDisplay().getSelectedFigures();
             for(Figure f: figures)
             {
                 f.willChange();
@@ -88,7 +89,7 @@ public class GrowSelectionToolAction extends AbstractApplicationAction
                 f.changed();
 
             }
-            viewer.getDisplay().repaint();
+            viewer.getJHotDrawDisplay().repaint();
 
         }
         else
