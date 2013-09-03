@@ -3,6 +3,10 @@ import org.jhotdraw.app.Application;
 import org.jhotdraw.app.OSXApplication;
 import org.jhotdraw.app.SDIApplication;
 import org.jhotdraw.util.ResourceBundleUtil;
+import plugin.PluginRuntime;
+import view.console.ConsolePanel;
+
+import javax.swing.*;
 
 
 /**
@@ -28,6 +32,23 @@ public class Main {
             app = new SDIApplication();
         } else {
             app = new SDIApplication();
+        }
+
+        SwingUtilities.invokeLater(new Runnable() {
+            public void run() {
+                new ConsolePanel().createAndShowGui();
+            }
+        });
+
+        try{
+            PluginRuntime time = new PluginRuntime();
+            time.call();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+        } catch (InstantiationException e) {
+            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
         }
 
         InteractiveDisplayApplicationModel model = new InteractiveDisplayApplicationModel();

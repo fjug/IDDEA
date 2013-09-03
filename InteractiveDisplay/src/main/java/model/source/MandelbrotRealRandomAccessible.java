@@ -23,6 +23,7 @@ public class MandelbrotRealRandomAccessible implements RealRandomAccessible< Lon
         if(a > 1d) realCurve = 1d;
         else if(a < 0d) realCurve = 0d;
         else realCurve = a;
+        System.out.println("realCurve = " + realCurve);
     }
 
     public double getRealCurve()
