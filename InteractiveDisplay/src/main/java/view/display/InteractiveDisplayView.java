@@ -9,17 +9,25 @@ import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.RealRandomAccessible;
 import net.imglib2.converter.TypeIdentity;
 import net.imglib2.display.RealARGBConverter;
+import net.imglib2.exception.ImgLibException;
+import net.imglib2.img.ImagePlusAdapter;
+import net.imglib2.img.Img;
+import net.imglib2.img.ImgFactory;
+import net.imglib2.img.array.ArrayImgFactory;
 import net.imglib2.interpolation.randomaccess.NearestNeighborInterpolatorFactory;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.Type;
 import net.imglib2.type.numeric.ARGBType;
 import net.imglib2.type.numeric.RealType;
 import net.imglib2.type.numeric.integer.LongType;
+import net.imglib2.type.numeric.real.DoubleType;
 import net.imglib2.type.numeric.real.FloatType;
 import net.imglib2.realtransform.AffineTransform2D;
 import net.imglib2.img.imageplus.*;
 import net.imglib2.ui.util.InterpolatingSource;
+import net.imglib2.view.IntervalView;
 import net.imglib2.view.Views;
+import net.imglib2.algorithm.stats.Normalize;
 
 import org.jhotdraw.draw.io.OutputFormat;
 import org.jhotdraw.draw.io.InputFormat;
@@ -114,22 +122,22 @@ public class InteractiveDisplayView extends AbstractView {
             }
         });
 
-        ResourceBundleUtil labels = ResourceBundleUtil.getBundle("org.jhotdraw.draw.Labels");
-
-        JPanel placardPanel = new JPanel(new BorderLayout());
-        javax.swing.AbstractButton pButton;
-        pButton = ButtonFactory.createZoomButton(view);
-        pButton.putClientProperty("Quaqua.Button.style","placard");
-        pButton.putClientProperty("Quaqua.Component.visualMargin",new Insets(0,0,0,0));
-        pButton.setFont(UIManager.getFont("SmallSystemFont"));
-        placardPanel.add(pButton, BorderLayout.WEST);
-        pButton = ButtonFactory.createToggleGridButton(view);
-        pButton.putClientProperty("Quaqua.Button.style","placard");
-        pButton.putClientProperty("Quaqua.Component.visualMargin",new Insets(0,0,0,0));
-        pButton.setFont(UIManager.getFont("SmallSystemFont"));
-        labels.configureToolBarButton(pButton, "view.toggleGrid.placard");
-        placardPanel.add(pButton, BorderLayout.EAST);
-        scrollPane.add(placardPanel, JScrollPane.LOWER_LEFT_CORNER);
+//        ResourceBundleUtil labels = ResourceBundleUtil.getBundle("org.jhotdraw.draw.Labels");
+//
+//        JPanel placardPanel = new JPanel(new BorderLayout());
+//        javax.swing.AbstractButton pButton;
+//        pButton = ButtonFactory.createZoomButton(view);
+//        pButton.putClientProperty("Quaqua.Button.style","placard");
+//        pButton.putClientProperty("Quaqua.Component.visualMargin",new Insets(0,0,0,0));
+//        pButton.setFont(UIManager.getFont("SmallSystemFont"));
+//        placardPanel.add(pButton, BorderLayout.WEST);
+//        pButton = ButtonFactory.createToggleGridButton(view);
+//        pButton.putClientProperty("Quaqua.Button.style","placard");
+//        pButton.putClientProperty("Quaqua.Component.visualMargin",new Insets(0,0,0,0));
+//        pButton.setFont(UIManager.getFont("SmallSystemFont"));
+//        labels.configureToolBarButton(pButton, "view.toggleGrid.placard");
+//        placardPanel.add(pButton, BorderLayout.EAST);
+//        scrollPane.add(placardPanel, JScrollPane.LOWER_LEFT_CORNER);
     }
 
     /**
@@ -321,10 +329,14 @@ public class InteractiveDisplayView extends AbstractView {
                 maxValue.set( t );
     }
 
-    public < T extends RealType< T > & NativeType< T >> InteractiveViewer2D show( final ImagePlusImg<T, ? > interval )
-    {
+    public < T extends RealType< T > & NativeType< T >> InteractiveViewer2D show( final ImagePlusImg<T, ? > interval ) {
         final AffineTransform2D transform = new AffineTransform2D();
         InteractiveViewer2D iview = null;
+
+        System.out.println(interval.firstElement().getClass());
+        System.out.println("Channel: " + interval.getChannels());
+        System.out.println("Depth: " + interval.getDepth());
+        System.out.println("Frames: " + interval.getFrames());
 
         if(ARGBType.class.isInstance(interval.firstElement()))
         {
@@ -334,6 +346,35 @@ public class InteractiveDisplayView extends AbstractView {
                             transform,
                             new TypeIdentity<ARGBType>() ));
         }
+        else if(interval.getChannels() > 1)
+        {
+            Img< T > srcImg = null;
+            try {
+                srcImg = ImagePlusAdapter.wrap(interval.getImagePlus());
+            } catch (ImgLibException e) {
+                e.printStackTrace();
+            }
+
+            final ImgFactory< DoubleType > imgFactory = new ArrayImgFactory< DoubleType >();
+            final Img< DoubleType > ret = imgFactory.create( new int[] { interval.getWidth(), interval.getHeight(), 1, 1 }, new DoubleType() );
+            final IntervalView< DoubleType > src = Views.hyperSlice( Views.hyperSlice( (Img<DoubleType>)(Img<?>)srcImg, 3, 0 ), 2, 0 );
+            final IntervalView< DoubleType > target = Views.offset(ret, 0,0,0,0);
+
+            //DataMover.copy( src, target );
+
+            Normalize.normalize( ret, new DoubleType( 0. ), new DoubleType( 1. ) );
+
+            final DoubleType min = Views.iterable( target ).firstElement().copy();
+            final DoubleType max = min.copy();
+            getMinMax( Views.iterable( target ), min, max );
+
+            System.out.println("Min:" + min + "\tMax:" + max);
+
+            //final LUTConverter< DoubleType > converter = new LUTConverter< DoubleType >( min.getMinValue(), max.getMaxValue(), ColorTables.FIRE);
+            final RealARGBConverter< DoubleType > converter = new RealARGBConverter< DoubleType >( min.getMinValue(), max.getMaxValue());
+
+            iview = new InteractiveViewer2D<DoubleType>(interval.getWidth(), interval.getHeight(), Views.extendZero(ret), transform, converter);
+        }
         else
         {
             final T min = Views.iterable( interval ).firstElement().copy();
@@ -342,8 +383,9 @@ public class InteractiveDisplayView extends AbstractView {
 
 //            RealRandomAccessible< T > interpolated = Views.interpolate( interval, new NLinearInterpolatorFactory<T>() );
             RealRandomAccessible< T > interpolated = Views.interpolate( Views.extendZero(interval), new NearestNeighborInterpolatorFactory<T>() );
-            final RealARGBConverter< T > converter = new RealARGBConverter< T >( min.getMinValue(), max.getMaxValue());
+            //final RealARGBConverter< T > converter = new RealARGBConverter< T >( min.getMinValue(), max.getMaxValue());
 
+            final LUTConverter< T > converter = new LUTConverter< T >( min.getMinValue(), max.getMaxValue(), ColorTables.FIRE);
             iview = new InteractiveViewer2D<T>(interval.getWidth(), interval.getHeight(), Views.extendZero(interval), transform, converter);
         }
 
@@ -395,7 +437,7 @@ public class InteractiveDisplayView extends AbstractView {
             }
         });
 
-        timer.start();
+        //timer.start();
 
         return iview.getJHotDrawDisplay();
     }
