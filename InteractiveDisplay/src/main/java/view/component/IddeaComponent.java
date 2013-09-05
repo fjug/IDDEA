@@ -8,7 +8,6 @@ import model.source.MandelbrotRealRandomAccessible;
 import net.imglib2.IterableInterval;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.RealRandomAccessible;
-import net.imglib2.algorithm.stats.Normalize;
 import net.imglib2.converter.TypeIdentity;
 import net.imglib2.display.RealARGBConverter;
 import net.imglib2.exception.ImgLibException;

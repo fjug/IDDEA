@@ -27,7 +27,6 @@ import net.imglib2.img.imageplus.*;
 import net.imglib2.ui.util.InterpolatingSource;
 import net.imglib2.view.IntervalView;
 import net.imglib2.view.Views;
-import net.imglib2.algorithm.stats.Normalize;
 
 import org.jhotdraw.draw.io.OutputFormat;
 import org.jhotdraw.draw.io.InputFormat;
@@ -362,7 +361,7 @@ public class InteractiveDisplayView extends AbstractView {
 
             //DataMover.copy( src, target );
 
-            Normalize.normalize( ret, new DoubleType( 0. ), new DoubleType( 1. ) );
+            //Normalize.normalize( ret, new DoubleType( 0. ), new DoubleType( 1. ) );
 
             final DoubleType min = Views.iterable( target ).firstElement().copy();
             final DoubleType max = min.copy();
