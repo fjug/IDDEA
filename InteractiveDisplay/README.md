@@ -6,3 +6,4 @@ here. Because, java searches ./lib folder for finding related native libraries.
 
 
 Test
+Test2
