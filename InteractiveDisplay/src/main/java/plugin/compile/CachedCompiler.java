@@ -1,9 +1,11 @@
 package plugin.compile;
 
 /**
- * Created with IntelliJ IDEA.
+ * Dynamic code injection is based on the below blog.
+ * http://vanillajava.blogspot.co.uk/2010/11/more-uses-for-dynamic-code-in-java.html
  *
- * @author HongKee Moon
+ *
+ * @author Peter Lawrey
  * @version 0.1beta
  * @since 9/3/13
  */
@@ -26,7 +28,8 @@ public class CachedCompiler {
     }
 
     public Class loadFromJava(String className, String javaCode) throws ClassNotFoundException {
-        return loadFromJava(getClass().getClassLoader(), className, javaCode);
+        //return loadFromJava(getClass().getClassLoader(), className, javaCode);
+        return loadFromJava(new ReloadableClassLoader(getClass().getClassLoader()), className, javaCode);
     }
 
     public Map<String, byte[]> compileFromJava(String className, String javaCode) {

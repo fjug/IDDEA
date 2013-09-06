@@ -4,6 +4,7 @@ import org.jhotdraw.app.OSXApplication;
 import org.jhotdraw.app.SDIApplication;
 import org.jhotdraw.util.ResourceBundleUtil;
 import plugin.PluginRuntime;
+import plugin.desginer.SourceDesigner;
 import view.console.ConsolePanel;
 
 import javax.swing.*;
@@ -40,18 +41,8 @@ public class Main {
             }
         });
 
-        try{
-            PluginRuntime time = new PluginRuntime();
-            time.call();
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-        } catch (InstantiationException e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-        }
 
-        InteractiveDisplayApplicationModel model = new InteractiveDisplayApplicationModel();
+        final InteractiveDisplayApplicationModel model = new InteractiveDisplayApplicationModel();
 //        model.setViewClass(InteractiveDisplayView.class);
         model.setViewClassName("view.display.InteractiveDisplayView");
         model.setName("IDDEA Draw");
@@ -61,5 +52,13 @@ public class Main {
                 "This software is licensed under LGPL or Creative Commons 3.0 Attribution.");
         app.setModel(model);
         app.launch(args);
+
+        SwingUtilities.invokeLater(new Runnable() {
+            public void run() {
+                SourceDesigner designer = new SourceDesigner();
+                designer.setModel(model);
+                designer.setVisible(true);
+            }
+        });
     }
 }

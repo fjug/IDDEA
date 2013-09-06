@@ -3,18 +3,11 @@ package view.viewer;
 import javax.swing.JComponent;
 
 import net.imglib2.RealRandomAccessible;
+import net.imglib2.ui.*;
 import view.display.JHotDrawInteractiveDisplay2D;
 import net.imglib2.concatenate.Concatenable;
 import net.imglib2.realtransform.AffineGet;
 import net.imglib2.realtransform.AffineSet;
-import net.imglib2.ui.AffineTransformType;
-import net.imglib2.ui.InteractiveDisplayCanvas;
-import net.imglib2.ui.OverlayRenderer;
-import net.imglib2.ui.PainterThread;
-import net.imglib2.ui.RenderSource;
-import net.imglib2.ui.Renderer;
-import net.imglib2.ui.RendererFactory;
-import net.imglib2.ui.TransformListener;
 import net.imglib2.ui.overlay.BufferedImageOverlayRenderer;
 
 /**
@@ -58,13 +51,14 @@ public abstract class InteractiveRealViewer< T, A extends AffineSet & AffineGet 
 	 */
 	final protected PainterThread painterThread;
 
-	final protected Renderer< A > imageRenderer;
-
     /**
      * Underlying source for accessing the data
      */
     protected RealRandomAccessible<T> source;
 
+    protected BufferedImageOverlayRenderer target;
+
+    protected Renderer< A > imageRenderer;
 	/**
 	 * TODO
 	 *
@@ -93,7 +87,7 @@ public abstract class InteractiveRealViewer< T, A extends AffineSet & AffineGet 
 		display = interactiveDisplayCanvas;
 		display.addTransformListener( this );
 
-		final BufferedImageOverlayRenderer target = new BufferedImageOverlayRenderer();
+		target = new BufferedImageOverlayRenderer();
 		imageRenderer = rendererFactory.create( target, painterThread );
 		display.addOverlayRenderer( target );
 
@@ -104,6 +98,14 @@ public abstract class InteractiveRealViewer< T, A extends AffineSet & AffineGet 
 
 		painterThread.start();
 	}
+
+    public void updateRenderSource(RealRandomAccessible< T > source)
+    {
+        this.source = source;
+        ((AbstractRenderer) imageRenderer).updateSource(source);
+        imageRenderer.paint( viewerTransform );
+        display.repaint();
+    }
 	/**
 	 * Render the source using the current viewer transformation and
 	 */

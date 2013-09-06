@@ -1,9 +1,10 @@
 package plugin.compile;
 
 /**
- * Created with IntelliJ IDEA.
+ * Dynamic code injection is based on the below blog.
+ * http://vanillajava.blogspot.co.uk/2010/11/more-uses-for-dynamic-code-in-java.html
  *
- * @author HongKee Moon
+ * @author Peter Lawrey
  * @version 0.1beta
  * @since 9/3/13
  */
@@ -43,7 +44,7 @@ public class CompilerUtils {
     static StandardJavaFileManager s_standardJavaFileManager;
     static PluginJavaFileManager s_fileManager;
 
-    static void reset() {
+    public static void reset() {
         s_compiler = ToolProvider.getSystemJavaCompiler();
         if (s_compiler == null)
             s_compiler = JavacTool.create();

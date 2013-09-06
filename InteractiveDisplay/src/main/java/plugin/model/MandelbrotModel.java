@@ -9,6 +9,8 @@ import plugin.ModelPlugin;
 
 /**
  * Sample Mandelbrot model plugin for IDDEA
+ * You can copy and paste it in SourceDesigner
+ * Process -> Inject Source
  *
  * @author HongKee Moon
  * @version 0.1beta

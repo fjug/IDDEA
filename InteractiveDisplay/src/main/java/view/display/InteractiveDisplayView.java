@@ -354,6 +354,14 @@ public class InteractiveDisplayView extends AbstractView {
     MandelbrotRealRandomAccessible mandelbrot;
     boolean go = true;
 
+    public void updateRealRandomSource(RealRandomAccessible source)
+    {
+        if(InteractiveRealViewer2D.class.isInstance(iview2d))
+        {
+            ((InteractiveRealViewer2D) iview2d).updateSource(source);
+        }
+    }
+
     public InteractiveDrawingView getInteractiveDrawingView()
     {
         final int width = 800;
@@ -373,29 +381,29 @@ public class InteractiveDisplayView extends AbstractView {
         InteractiveRealViewer2D iview = new InteractiveRealViewer2D<LongType>(width, height, mandelbrot, transform, converter);
         iview2d = iview;
 
-        timer = new Timer(500, new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-
-                double value = mandelbrot.getRealCurve();
-
-                if(go)
-                {
-                    if(value >= 1d) go = false;
-                }
-                else
-                {
-                    if(value <= 0d) go = true;
-                }
-
-                if(go) mandelbrot.setRealCurve(value + 0.01d);
-                else mandelbrot.setRealCurve(value - 0.01d);
-
-                iview2d.requestRepaint();
-            }
-        });
-
-        timer.start();
+//        timer = new Timer(500, new ActionListener() {
+//            @Override
+//            public void actionPerformed(ActionEvent e) {
+//
+//                double value = mandelbrot.getRealCurve();
+//
+//                if(go)
+//                {
+//                    if(value >= 1d) go = false;
+//                }
+//                else
+//                {
+//                    if(value <= 0d) go = true;
+//                }
+//
+//                if(go) mandelbrot.setRealCurve(value + 0.01d);
+//                else mandelbrot.setRealCurve(value - 0.01d);
+//
+//                iview2d.requestRepaint();
+//            }
+//        });
+//
+//        timer.start();
 
         return iview.getJHotDrawDisplay();
     }

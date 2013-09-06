@@ -40,6 +40,8 @@ public class InteractiveDisplayApplicationModel extends AbstractApplicationModel
      */
     private DefaultDrawingEditor sharedEditor;
 
+    private InteractiveDisplayView iddeaView;
+
     /** Creates a new instance. */
     public InteractiveDisplayApplicationModel() {
     }
@@ -104,7 +106,13 @@ public class InteractiveDisplayApplicationModel extends AbstractApplicationModel
     public void initView(Application a,View p) {
         if (a.isSharingToolsAmongViews()) {
             ((InteractiveDisplayView) p).setEditor(getSharedEditor());
+            iddeaView = ((InteractiveDisplayView) p);
         }
+    }
+
+    public InteractiveDisplayView getDisplayView()
+    {
+        return iddeaView;
     }
 
     /**

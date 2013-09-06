@@ -43,4 +43,9 @@ public class InteractiveRealViewer2D< T > extends InteractiveRealViewer< T, Affi
 
         this.source = source;
 	}
+
+    public void updateSource(RealRandomAccessible< T > source)
+    {
+        super.updateRenderSource(source);
+    }
 }

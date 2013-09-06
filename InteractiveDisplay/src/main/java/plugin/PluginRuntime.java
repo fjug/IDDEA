@@ -25,102 +25,139 @@ import static java.lang.System.out;
  * @since 9/3/13
  */
 public class PluginRuntime {
-    public boolean compile()
-    {
-        final JavaCompiler compiler = ToolProvider.getSystemJavaCompiler();
-        DiagnosticCollector<JavaFileObject> diagnostics = new DiagnosticCollector<JavaFileObject>();
+//    public boolean compile(String className, String code)
+//    {
+//        final JavaCompiler compiler = ToolProvider.getSystemJavaCompiler();
+//        DiagnosticCollector<JavaFileObject> diagnostics = new DiagnosticCollector<JavaFileObject>();
+//
+//        StringWriter writer = new StringWriter();
+//        PrintWriter printout = new PrintWriter(writer);
+//        printout.print(code);
+//        printout.close();
+//
+//        JavaFileObject file = new JavaSourceFromString(className, writer.toString());
+//
+//        Iterable<? extends JavaFileObject> compilationUnits = Arrays.asList(file);
+//        JavaCompiler.CompilationTask task = compiler.getTask(null, null, diagnostics, null, null, compilationUnits);
+//
+//        boolean success = task.call();
+//        for (Diagnostic diagnostic : diagnostics.getDiagnostics()) {
+//            out.println(diagnostic.getCode());
+//            out.println(diagnostic.getKind());
+//            out.println(diagnostic.getPosition());
+//            out.println(diagnostic.getStartPosition());
+//            out.println(diagnostic.getEndPosition());
+//            out.println(diagnostic.getSource());
+//            out.println(diagnostic.getMessage(null));
+//        }
+//        out.println("Success: " + success);
+//
+//        return success;
+//    }
+//
+//    public boolean compile(String className, StringWriter writer)
+//    {
+//        final JavaCompiler compiler = ToolProvider.getSystemJavaCompiler();
+//        DiagnosticCollector<JavaFileObject> diagnostics = new DiagnosticCollector<JavaFileObject>();
+//
+//        JavaFileObject file = new JavaSourceFromString(className, writer.toString());
+//
+//        Iterable<? extends JavaFileObject> compilationUnits = Arrays.asList(file);
+//        JavaCompiler.CompilationTask task = compiler.getTask(null, null, diagnostics, null, null, compilationUnits);
+//
+//        boolean success = task.call();
+//        for (Diagnostic diagnostic : diagnostics.getDiagnostics()) {
+//            out.println(diagnostic.getCode());
+//            out.println(diagnostic.getKind());
+//            out.println(diagnostic.getPosition());
+//            out.println(diagnostic.getStartPosition());
+//            out.println(diagnostic.getEndPosition());
+//            out.println(diagnostic.getSource());
+//            out.println(diagnostic.getMessage(null));
+//        }
+//        out.println("Success: " + success);
+//
+//        return success;
+//    }
+//
+//    public void Test()
+//    {
+//        final JavaCompiler compiler = ToolProvider.getSystemJavaCompiler();
+//        DiagnosticCollector<JavaFileObject> diagnostics = new DiagnosticCollector<JavaFileObject>();
+//
+//        StringWriter writer = new StringWriter();
+//        PrintWriter printout = new PrintWriter(writer);
+//        printout.print(composeAProgram("TestPlugin"));
+//        printout.close();
+//
+//        JavaFileObject file = new JavaSourceFromString("TestPlugin", writer.toString());
+//
+//        Iterable<? extends JavaFileObject> compilationUnits = Arrays.asList(file);
+//        JavaCompiler.CompilationTask task = compiler.getTask(null, null, diagnostics, null, null, compilationUnits);
+//
+//        boolean success = task.call();
+//        for (Diagnostic diagnostic : diagnostics.getDiagnostics()) {
+//            out.println(diagnostic.getCode());
+//            out.println(diagnostic.getKind());
+//            out.println(diagnostic.getPosition());
+//            out.println(diagnostic.getStartPosition());
+//            out.println(diagnostic.getEndPosition());
+//            out.println(diagnostic.getSource());
+//            out.println(diagnostic.getMessage(null));
+//        }
+//        out.println("Success: " + success);
+//    }
+//
+//    private String composeAProgram( String className )
+//    {
+//        final StringBuilder sb = new StringBuilder( 1000 );
+//        sb.append( "package plugin;\n" );
+//        sb.append( "import java.util.Date;\n" );
+//        sb.append( "import plugin.IPlugin;\n" );
+//        sb.append( "import plugin.ProcessPlugin;\n" );
+//        sb.append( "public final class " ).append( className ).append( " extends ProcessPlugin\n" );
+//        sb.append( "{\n" );
+//        sb.append( "    @Override\n" );
+//        sb.append( "    public String getName()\n" );
+//        sb.append( "    {\n" );
+//        sb.append( "        return \"" );
+//        sb.append( "TestProcess" );
+//        sb.append( "\";\n" );
+//        sb.append( "     }\n" );
+//        sb.append( "    @Override\n" );
+//        sb.append( "    public String getAuthor()\n" );
+//        sb.append( "    {\n" );
+//        sb.append( "        return \"" );
+//        sb.append( "HongKee Moon" );
+//        sb.append( "\";\n" );
+//        sb.append( "     }\n" );
+//        sb.append( "    @Override\n" );
+//        sb.append( "    public String getVersion()\n" );
+//        sb.append( "    {\n" );
+//        sb.append( "        return \"" );
+//        sb.append( "1.0" );
+//        sb.append( "\";\n" );
+//        sb.append( "     }\n" );
+//        sb.append( "}\n" );
+//        return sb.toString();
+//    }
 
-        StringWriter writer = new StringWriter();
-        PrintWriter printout = new PrintWriter(writer);
-        printout.print(composeAProgram("TestPlugin"));
-        printout.close();
-
-        JavaFileObject file = new JavaSourceFromString("TestPlugin", writer.toString());
-
-        Iterable<? extends JavaFileObject> compilationUnits = Arrays.asList(file);
-        JavaCompiler.CompilationTask task = compiler.getTask(null, null, diagnostics, null, null, compilationUnits);
-
-        boolean success = task.call();
-        for (Diagnostic diagnostic : diagnostics.getDiagnostics()) {
-            out.println(diagnostic.getCode());
-            out.println(diagnostic.getKind());
-            out.println(diagnostic.getPosition());
-            out.println(diagnostic.getStartPosition());
-            out.println(diagnostic.getEndPosition());
-            out.println(diagnostic.getSource());
-            out.println(diagnostic.getMessage(null));
-        }
-        out.println("Success: " + success);
-
-        return success;
-    }
-
-    private String composeAProgram( String className )
-    {
-        final StringBuilder sb = new StringBuilder( 1000 );
-        sb.append( "package plugin;\n" );
-        sb.append( "import java.util.Date;\n" );
-        sb.append( "import plugin.IPlugin;\n" );
-        sb.append( "import plugin.ProcessPlugin;\n" );
-        sb.append( "public final class " ).append( className ).append( " extends ProcessPlugin\n" );
-        sb.append( "{\n" );
-        sb.append( "    @Override\n" );
-        sb.append( "    public String getName()\n" );
-        sb.append( "    {\n" );
-        sb.append( "        return \"" );
-        sb.append( "TestProcess" );
-        sb.append( "\";\n" );
-        sb.append( "     }\n" );
-        sb.append( "    @Override\n" );
-        sb.append( "    public String getAuthor()\n" );
-        sb.append( "    {\n" );
-        sb.append( "        return \"" );
-        sb.append( "HongKee Moon" );
-        sb.append( "\";\n" );
-        sb.append( "     }\n" );
-        sb.append( "    @Override\n" );
-        sb.append( "    public String getVersion()\n" );
-        sb.append( "    {\n" );
-        sb.append( "        return \"" );
-        sb.append( "1.0" );
-        sb.append( "\";\n" );
-        sb.append( "     }\n" );
-        sb.append( "}\n" );
-        return sb.toString();
-    }
-
-    public boolean call() throws
-            ClassNotFoundException,
-            IllegalAccessException,
-            InstantiationException
+    public boolean compile(String className, String code)
     {
         CachedCompiler cc = CompilerUtils.CACHED_COMPILER;
 
-        final String programText =
-                composeAProgram( "TestPlugin" );
-        out.println( "PROGRAM TO BE COMPILED" );
-        out.println( programText );
-        // compile item
-        final boolean status = cc.compileCheckFromJava("plugin.TestPlugin", programText);
-        out.println( "status of compile: " + status );
+        return cc.compileCheckFromJava(className, code);
+    }
 
-        if(status)
-        {
-            Class pluginClass = cc.loadFromJava("plugin.TestPlugin", programText);
+    public IPlugin instanciate(String className, String code) throws
+            ClassNotFoundException, IllegalAccessException, InstantiationException
+    {
+        CachedCompiler cc = CompilerUtils.CACHED_COMPILER;
 
-            IPlugin plugin = null;
+        Class pluginClass = cc.loadFromJava(className, code);
 
-            try {
-                plugin = (IPlugin) pluginClass.newInstance();
-            } catch (IllegalAccessException e) {
-                System.err.println("Illegal access: " + e);
-            }
+        IPlugin plugin = (IPlugin) pluginClass.newInstance();
 
-            out.println( "TestPlugin name is : " + plugin.getName() );
-            out.println( "TestPlugin author is : " + plugin.getAuthor() );
-            out.println( "TestPlugin version is : " + plugin.getVersion() );
-        }
-
-        return true;
+        return plugin;
     }
 }
