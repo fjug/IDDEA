@@ -4,6 +4,8 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.*;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -21,6 +23,7 @@ import plugin.PluginRuntime;
 import plugin.compile.CompilerUtils;
 
 import javax.swing.*;
+import javax.xml.crypto.dsig.keyinfo.KeyValue;
 
 import static java.lang.System.out;
 
@@ -34,13 +37,12 @@ import static java.lang.System.out;
 public abstract class AbstractDesigner extends JFrame {
     protected InteractiveDisplayApplicationModel model;
     protected final String pluginType;
-    protected final String processName;
     protected RSyntaxTextArea textArea;
     protected IPlugin plugin;
+    protected HashMap<String, ActionListener> buttons = new HashMap<String, ActionListener>();
 
-    protected AbstractDesigner(String pluginType, String processName) {
+    protected AbstractDesigner(String pluginType) {
         this.pluginType = pluginType;
-        this.processName = processName;
         initializeComponents();
     }
 
@@ -49,9 +51,7 @@ public abstract class AbstractDesigner extends JFrame {
         this.model = model;
     }
 
-    protected abstract void process();
-
-    public void initializeComponents()
+    protected void initializeComponents()
     {
         JPanel cp = new JPanel(new BorderLayout());
 
@@ -131,14 +131,12 @@ public abstract class AbstractDesigner extends JFrame {
         });
         bp.add(compileBtn);
 
-        JButton processBtn = new JButton(processName);
-        processBtn.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                process();
-            }
-        });
-        bp.add(processBtn);
+        for(Map.Entry<String, ActionListener> item : buttons.entrySet())
+        {
+            JButton btn = new JButton(item.getKey());
+            btn.addActionListener(item.getValue());
+            bp.add(btn);
+        }
 
         textArea = new RSyntaxTextArea(20, 60);
         textArea.setSyntaxEditingStyle(SyntaxConstants.SYNTAX_STYLE_JAVA);

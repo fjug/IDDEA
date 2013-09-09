@@ -18,10 +18,13 @@ import plugin.ModelPlugin;
  */
 public class MandelbrotModel extends ModelPlugin<LongType> {
 
+    MandelbrotRealRandomAccessible source = new MandelbrotRealRandomAccessible();
+
     public MandelbrotModel()
     {
-
     }
+
+    boolean go = true;
 
     @Override
     public String getName() {
@@ -40,7 +43,25 @@ public class MandelbrotModel extends ModelPlugin<LongType> {
 
     @Override
     public RealRandomAccessible<LongType> getSource() {
-        return new MandelbrotRealRandomAccessible();
+        return source;
+    }
+
+    @Override
+    public void animate()
+    {
+        double value = source.getRealCurve();
+
+        if(go)
+        {
+            if(value >= 1d) go = false;
+        }
+        else
+        {
+            if(value <= 0d) go = true;
+        }
+
+        if(go) source.setRealCurve(value + 0.01d);
+        else source.setRealCurve(value - 0.01d);
     }
 
     // Inner class MandelbrotRealRandomAccessible

@@ -4,6 +4,7 @@ import org.jhotdraw.app.OSXApplication;
 import org.jhotdraw.app.SDIApplication;
 import org.jhotdraw.util.ResourceBundleUtil;
 import plugin.PluginRuntime;
+import plugin.desginer.ProcessDesigner;
 import plugin.desginer.SourceDesigner;
 import view.console.ConsolePanel;
 
@@ -56,6 +57,14 @@ public class Main {
         SwingUtilities.invokeLater(new Runnable() {
             public void run() {
                 SourceDesigner designer = new SourceDesigner();
+                designer.setModel(model);
+                designer.setVisible(true);
+            }
+        });
+
+        SwingUtilities.invokeLater(new Runnable() {
+            public void run() {
+                ProcessDesigner designer = new ProcessDesigner();
                 designer.setModel(model);
                 designer.setVisible(true);
             }

@@ -8,6 +8,7 @@ import java.awt.event.ActionListener;
 import java.io.PrintStream;
 import java.util.prefs.Preferences;
 import javax.swing.*;
+import javax.swing.text.DefaultCaret;
 
 /**
  * Created with IntelliJ IDEA.
@@ -27,8 +28,16 @@ public class ConsolePanel extends JPanel {
     public ConsolePanel() {
         prefs = PreferencesUtil.userNodeForPackage(getClass());
         setLayout(new BorderLayout());
-        add(new JScrollPane(textArea, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
-                JScrollPane.HORIZONTAL_SCROLLBAR_NEVER));
+
+        textArea.setEditable(false);
+        DefaultCaret caret = (DefaultCaret) textArea.getCaret();
+        caret.setUpdatePolicy(DefaultCaret.ALWAYS_UPDATE);
+
+        JScrollPane scroll = new JScrollPane(textArea, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
+                JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+        scroll.setWheelScrollingEnabled(true);
+        add(scroll);
+
         PrintStream textPrintStream = new PrintStream(taOutputStream);
         System.setOut(textPrintStream);
         System.setErr(textPrintStream);

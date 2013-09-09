@@ -1,5 +1,11 @@
 package plugin;
 
+import net.imglib2.RandomAccessible;
+import net.imglib2.RandomAccessibleInterval;
+import org.jhotdraw.draw.Figure;
+
+import java.util.Set;
+
 /**
  * Created with IntelliJ IDEA.
  *
@@ -13,4 +19,8 @@ public abstract class ProcessPlugin implements IPlugin {
     public PluginType getPluginType() {
         return PluginType.ProcessPlugin;
     }
+
+    public abstract void process(RandomAccessibleInterval source);
+
+    public abstract void process(RandomAccessibleInterval source, Set<Figure> figures);
 }

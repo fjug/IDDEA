@@ -81,6 +81,7 @@ public class InteractiveDisplayView extends AbstractView {
     private DrawingEditor editor;
 
     private InteractiveRealViewer iview2d;
+    private InteractiveRealViewer orgIview2d;
 
     public InteractiveRealViewer getIview2d() {
         return iview2d;
@@ -321,10 +322,14 @@ public class InteractiveDisplayView extends AbstractView {
                 maxValue.set( t );
     }
 
+    public RandomAccessibleInterval interval = null;
+
     public < T extends RealType< T > & NativeType< T >> InteractiveViewer2D show( final ImagePlusImg<T, ? > interval )
     {
         final AffineTransform2D transform = new AffineTransform2D();
         InteractiveViewer2D iview = null;
+
+        this.interval = interval;
 
         if(ARGBType.class.isInstance(interval.firstElement()))
         {
@@ -360,6 +365,26 @@ public class InteractiveDisplayView extends AbstractView {
         {
             ((InteractiveRealViewer2D) iview2d).updateSource(source);
         }
+        else
+        {
+            iview2d = orgIview2d;
+
+            editor.remove(view);
+            InteractiveDrawingView newView = getIview2d().getJHotDrawDisplay();
+            newView.copyFrom(view);
+
+            editor.add(newView);
+            view = newView;
+
+            scrollPane.setViewportView(view);
+
+            ((InteractiveRealViewer2D) iview2d).updateSource(source);
+        }
+    }
+
+    public void updateRequest()
+    {
+        iview2d.requestRepaint();
     }
 
     public InteractiveDrawingView getInteractiveDrawingView()
@@ -380,7 +405,7 @@ public class InteractiveDisplayView extends AbstractView {
 
         InteractiveRealViewer2D iview = new InteractiveRealViewer2D<LongType>(width, height, mandelbrot, transform, converter);
         iview2d = iview;
-
+        orgIview2d = iview;
 //        timer = new Timer(500, new ActionListener() {
 //            @Override
 //            public void actionPerformed(ActionEvent e) {

@@ -1,10 +1,15 @@
 package plugin.desginer;
 
 import net.imglib2.RealRandomAccessible;
+import org.jhotdraw.util.prefs.PreferencesUtil;
 import plugin.ModelPlugin;
 import view.display.InteractiveDisplayView;
 
 import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.prefs.Preferences;
 
 /**
  * SourceDesigner generates a user-defined RealRandomAccessible
@@ -15,9 +20,68 @@ import javax.swing.*;
  */
 public class SourceDesigner extends AbstractDesigner {
 
+    Timer timer;
+
+    private final Preferences prefs;
+
     public SourceDesigner()
     {
-        super("SourceDesigner", "Inject Source");
+        super("SourceDesigner");
+
+        buttons.put("Inject Source", new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                process();
+            }
+        });
+
+        buttons.put("Start", new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                start();
+            }
+        });
+
+        buttons.put("Stop", new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                stop();
+            }
+        });
+
+        initializeComponents();
+        prefs = PreferencesUtil.userNodeForPackage(getClass());
+
+        PreferencesUtil.installFramePrefsHandler(prefs, "sourceDesigner", this);
+        Point loc = this.getLocation();
+        this.setLocation(loc);
+    }
+
+    private void start()
+    {
+        if(plugin != null)
+        {
+            final ModelPlugin pluginModel = (ModelPlugin)plugin;
+            RealRandomAccessible random = pluginModel.getSource();
+
+            timer = new Timer(500, new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    pluginModel.animate();
+                    model.getDisplayView().updateRequest();
+                }
+            });
+
+            timer.start();
+        }
+    }
+
+    private void stop()
+    {
+        if(timer != null)
+        {
+            timer.stop();
+        }
     }
 
     public void process()

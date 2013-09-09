@@ -17,4 +17,6 @@ public abstract class ModelPlugin<T> implements IPlugin {
     public PluginType getPluginType() {
         return PluginType.ModelPlugin;
     }
+
+    public abstract void animate();
 }
