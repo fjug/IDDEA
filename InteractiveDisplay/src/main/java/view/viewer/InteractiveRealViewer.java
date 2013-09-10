@@ -9,6 +9,7 @@ import net.imglib2.concatenate.Concatenable;
 import net.imglib2.realtransform.AffineGet;
 import net.imglib2.realtransform.AffineSet;
 import net.imglib2.ui.overlay.BufferedImageOverlayRenderer;
+import view.overlay.SourceInfoOverlay;
 
 /**
  * TODO
@@ -90,6 +91,8 @@ public abstract class InteractiveRealViewer< T, A extends AffineSet & AffineGet 
 		target = new BufferedImageOverlayRenderer();
 		imageRenderer = rendererFactory.create( target, painterThread );
 		display.addOverlayRenderer( target );
+
+        display.addOverlayRenderer(new SourceInfoOverlay());
 
 //		final GraphicsConfiguration gc = GuiUtil.getSuitableGraphicsConfiguration( GuiUtil.ARGB_COLOR_MODEL );
 //		final GraphicsConfiguration gc = GuiUtil.getSuitableGraphicsConfiguration( GuiUtil.RGB_COLOR_MODEL );

@@ -14,7 +14,6 @@ import net.imglib2.type.numeric.integer.LongType;
  */
 public class MandelbrotRealRandomAccessible implements RealRandomAccessible< LongType >
 {
-    final protected LongType t;
     long maxIterations;
     static double realCurve = 0d;
 
@@ -33,13 +32,11 @@ public class MandelbrotRealRandomAccessible implements RealRandomAccessible< Lon
 
     public MandelbrotRealRandomAccessible()
     {
-        t = new LongType();
         maxIterations = 50;
     }
 
     public MandelbrotRealRandomAccessible( final long maxIterations )
     {
-        t = new LongType();
         this.maxIterations = maxIterations;
     }
 
@@ -67,9 +64,12 @@ public class MandelbrotRealRandomAccessible implements RealRandomAccessible< Lon
 
     public class MandelbrotRealRandomAccess extends RealPoint implements RealRandomAccess< LongType >
     {
+        final protected LongType t;
+
         public MandelbrotRealRandomAccess()
         {
             super( 2 ); // number of dimensions is 2
+            t = new LongType();
         }
 
         @Override
