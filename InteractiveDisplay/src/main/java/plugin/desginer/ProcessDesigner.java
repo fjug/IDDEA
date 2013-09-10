@@ -32,6 +32,7 @@ public class ProcessDesigner extends AbstractDesigner {
             }
         });
 
+        initializeComponents();
         prefs = PreferencesUtil.userNodeForPackage(getClass());
 
         PreferencesUtil.installFramePrefsHandler(prefs, "processDesigner", this);
