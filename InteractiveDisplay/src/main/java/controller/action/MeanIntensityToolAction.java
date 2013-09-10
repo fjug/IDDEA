@@ -53,7 +53,7 @@ public class MeanIntensityToolAction extends AbstractApplicationAction
         final Application app = getApplication();
         View view = app.getActiveView();
         if (view != null) {
-            InteractiveRealViewer viewer = ((InteractiveDisplayView) view).getIview2d();
+            InteractiveRealViewer viewer = ((InteractiveDisplayView) view).getCurrentInteractiveViewer2D();
 
             RealRandomAccessible<?> realSource = (RealRandomAccessible<?>) viewer.getSource();
 

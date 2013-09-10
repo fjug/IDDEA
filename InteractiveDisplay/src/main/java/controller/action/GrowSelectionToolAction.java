@@ -46,7 +46,7 @@ public class GrowSelectionToolAction extends AbstractApplicationAction
         final Application app = getApplication();
         View view = app.getActiveView();
         if (view != null) {
-            process(((InteractiveDisplayView) view).getIview2d());
+            process(((InteractiveDisplayView) view).getCurrentInteractiveViewer2D());
         }
     }
 

@@ -26,8 +26,6 @@ import org.jhotdraw.draw.io.InputFormat;
 import org.jhotdraw.draw.print.DrawingPageable;
 import org.jhotdraw.draw.io.DOMStorableInputOutputFormat;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.print.Pageable;
 
 import org.jhotdraw.gui.*;
@@ -59,7 +57,7 @@ import view.viewer.InteractiveViewer2D;
 
 
 /**
- * InteractvieDisplayView shows a DrawingView where users create and modify figures.
+ * InteractiveDisplayView shows a DrawingView where users create and modify figures.
  *
  * @version 0.1beta
  * @since 8/12/13 5:05 PM
@@ -80,11 +78,18 @@ public class InteractiveDisplayView extends AbstractView {
      */
     private DrawingEditor editor;
 
-    private InteractiveRealViewer iview2d;
-    private InteractiveRealViewer orgIview2d;
+    /**
+     * It holds the current interactive viewer 2d
+     */
+    private InteractiveRealViewer currentInteractiveViewer2D;
 
-    public InteractiveRealViewer getIview2d() {
-        return iview2d;
+    /**
+     * It holds the interactive real viewer 2d
+     */
+    private InteractiveRealViewer interactiveRealViewer2D;
+
+    public InteractiveRealViewer getCurrentInteractiveViewer2D() {
+        return currentInteractiveViewer2D;
     }
 
     /**
@@ -289,15 +294,10 @@ public class InteractiveDisplayView extends AbstractView {
             // Image import
             final ImagePlus imp = new ImagePlus( filename );
             ImagePlusImg<FloatType, ? > map = ImagePlusImgs.from( imp );
-//            if(getIview2d() != null)
-//            {
-//                getIview2d().stop();
-//
-//            }
-            iview2d = show(map);
+            currentInteractiveViewer2D = show(map);
 
             editor.remove(view);
-            InteractiveDrawingView newView = getIview2d().getJHotDrawDisplay();
+            InteractiveDrawingView newView = getCurrentInteractiveViewer2D().getJHotDrawDisplay();
             newView.copyFrom(view);
 
             editor.add(newView);
@@ -355,22 +355,21 @@ public class InteractiveDisplayView extends AbstractView {
         return iview;
     }
 
-    Timer timer;
-    MandelbrotRealRandomAccessible mandelbrot;
-    boolean go = true;
-
     public void updateRealRandomSource(RealRandomAccessible source)
     {
-        if(InteractiveRealViewer2D.class.isInstance(iview2d))
+        if(InteractiveRealViewer2D.class.isInstance(currentInteractiveViewer2D))
         {
-            ((InteractiveRealViewer2D) iview2d).updateSource(source);
+            // User doesn't load any picture
+            ((InteractiveRealViewer2D) currentInteractiveViewer2D).updateSource(source);
         }
         else
         {
-            iview2d = orgIview2d;
+            // In case that user loaded InteractiveViewer2D already,
+            // We're changing to InteractiveRealViewer2D for the updating source
+            currentInteractiveViewer2D = interactiveRealViewer2D;
 
             editor.remove(view);
-            InteractiveDrawingView newView = getIview2d().getJHotDrawDisplay();
+            InteractiveDrawingView newView = getCurrentInteractiveViewer2D().getJHotDrawDisplay();
             newView.copyFrom(view);
 
             editor.add(newView);
@@ -378,13 +377,13 @@ public class InteractiveDisplayView extends AbstractView {
 
             scrollPane.setViewportView(view);
 
-            ((InteractiveRealViewer2D) iview2d).updateSource(source);
+            ((InteractiveRealViewer2D) currentInteractiveViewer2D).updateSource(source);
         }
     }
 
     public void updateRequest()
     {
-        iview2d.requestRepaint();
+        currentInteractiveViewer2D.requestRepaint();
     }
 
     public InteractiveDrawingView getInteractiveDrawingView()
@@ -393,7 +392,7 @@ public class InteractiveDisplayView extends AbstractView {
         final int height = 600;
 
         final int maxIterations = 100;
-        mandelbrot = new MandelbrotRealRandomAccessible( maxIterations );
+        MandelbrotRealRandomAccessible mandelbrot = new MandelbrotRealRandomAccessible( maxIterations );
 
         final AffineTransform2D transform = new AffineTransform2D();
         transform.scale( 200 );
@@ -404,31 +403,8 @@ public class InteractiveDisplayView extends AbstractView {
         final LUTConverter< LongType > converter = new LUTConverter< LongType >( 0d, 50, ColorTables.FIRE);
 
         InteractiveRealViewer2D iview = new InteractiveRealViewer2D<LongType>(width, height, mandelbrot, transform, converter);
-        iview2d = iview;
-        orgIview2d = iview;
-//        timer = new Timer(500, new ActionListener() {
-//            @Override
-//            public void actionPerformed(ActionEvent e) {
-//
-//                double value = mandelbrot.getRealCurve();
-//
-//                if(go)
-//                {
-//                    if(value >= 1d) go = false;
-//                }
-//                else
-//                {
-//                    if(value <= 0d) go = true;
-//                }
-//
-//                if(go) mandelbrot.setRealCurve(value + 0.01d);
-//                else mandelbrot.setRealCurve(value - 0.01d);
-//
-//                iview2d.requestRepaint();
-//            }
-//        });
-//
-//        timer.start();
+        currentInteractiveViewer2D = iview;
+        interactiveRealViewer2D = iview;
 
         return iview.getJHotDrawDisplay();
     }
