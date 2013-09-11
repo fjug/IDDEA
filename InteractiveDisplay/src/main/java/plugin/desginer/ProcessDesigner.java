@@ -35,6 +35,13 @@ public class ProcessDesigner extends AbstractDesigner {
             }
         });
 
+        buttons.put("Process Region", new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                processRegion();
+            }
+        });
+
         initializeComponents();
         prefs = PreferencesUtil.userNodeForPackage(getClass());
 
@@ -52,8 +59,22 @@ public class ProcessDesigner extends AbstractDesigner {
 
             // Process the whole picture
             prsPlugin.process(view.getInterval());
+        }
+        else
+        {
+            System.out.println("Compile it first!");
+        }
+    }
+
+    public void processRegion()
+    {
+        if(plugin != null)
+        {
+            ProcessPlugin prsPlugin = (ProcessPlugin)plugin;
+            InteractiveDisplayView view = model.getDisplayView();
 
             // Process the selected regions
+            prsPlugin.process(view.getInterval(), view.getSelectedFigures());
         }
         else
         {

@@ -44,6 +44,7 @@ import java.awt.*;
 import java.beans.*;
 import java.io.*;
 import java.net.URI;
+import java.util.Set;
 
 import javax.swing.*;
 import javax.swing.border.*;
@@ -448,6 +449,15 @@ public class InteractiveDisplayView extends AbstractView {
     public InteractiveDisplayCanvas getInteractiveDisplayCanvas()
     {
         return currentInteractiveViewer2D.getJHotDrawDisplay();
+    }
+
+    /**
+     * Get the selected shapes
+     * @return shapes
+     */
+    public Set<Figure> getSelectedFigures()
+    {
+        return currentInteractiveViewer2D.getJHotDrawDisplay().getSelectedFigures();
     }
 
     private InteractiveDrawingView getInteractiveDrawingView()

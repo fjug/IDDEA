@@ -1,4 +1,4 @@
-package plugin.model;
+package plugin.examples;
 
 import net.imglib2.RealInterval;
 import net.imglib2.RealPoint;
@@ -6,6 +6,11 @@ import net.imglib2.RealRandomAccess;
 import net.imglib2.RealRandomAccessible;
 import net.imglib2.type.numeric.integer.LongType;
 import plugin.ModelPlugin;
+
+import net.imglib2.ui.OverlayRenderer;
+
+import java.awt.*;
+import java.util.*;
 
 /**
  * Sample Mandelbrot model plugin for IDDEA
@@ -22,6 +27,8 @@ public class MandelbrotModel extends ModelPlugin<LongType> {
 
     public MandelbrotModel()
     {
+        // Overlay painters are added here
+        painters.add(new SourceInfoOverlay());
     }
 
     boolean go = true;
@@ -64,10 +71,39 @@ public class MandelbrotModel extends ModelPlugin<LongType> {
         else source.setRealCurve(value - 0.01d);
     }
 
+    public class SourceInfoOverlay implements OverlayRenderer {
+        protected String sourceName = "Mandelbrot Source Example";
+
+        protected String timepointString = new Date().toString();
+
+        /**
+         * Update data to show in the overlay.
+         */
+        public synchronized void updateInfo( final String source, final String time )
+        {
+            sourceName = source;
+            timepointString = time;
+        }
+
+        @Override
+        public void drawOverlays(Graphics g) {
+            Color c = g.getColor();
+            g.setColor(Color.white);
+            g.setFont( new Font( "Monospaced", Font.PLAIN, 12 ) );
+            g.drawString( sourceName, ( int ) g.getClipBounds().getWidth() / 2 - 100, 12 );
+            g.drawString( timepointString, ( int ) g.getClipBounds().getWidth() - 240, 12 );
+            g.setColor(c);
+        }
+
+        @Override
+        public void setCanvasSize(int width, int height) {
+            // Change canvas size
+        }
+    }
+
     // Inner class MandelbrotRealRandomAccessible
     class MandelbrotRealRandomAccessible implements RealRandomAccessible< LongType >
     {
-        final protected LongType t;
         long maxIterations;
         double realCurve = 0d;
 
@@ -85,13 +121,11 @@ public class MandelbrotModel extends ModelPlugin<LongType> {
 
         public MandelbrotRealRandomAccessible()
         {
-            t = new LongType();
             maxIterations = 50;
         }
 
         public MandelbrotRealRandomAccessible( final long maxIterations )
         {
-            t = new LongType();
             this.maxIterations = maxIterations;
         }
 
@@ -119,9 +153,11 @@ public class MandelbrotModel extends ModelPlugin<LongType> {
 
         public class MandelbrotRealRandomAccess extends RealPoint implements RealRandomAccess< LongType >
         {
+            final protected LongType t;
             public MandelbrotRealRandomAccess()
             {
                 super( 2 ); // number of dimensions is 2
+                t = new LongType();
             }
 
             @Override
@@ -165,3 +201,4 @@ public class MandelbrotModel extends ModelPlugin<LongType> {
         }
     }
 }
+

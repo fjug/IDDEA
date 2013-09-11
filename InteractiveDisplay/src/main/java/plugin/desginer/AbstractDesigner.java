@@ -45,29 +45,23 @@ public abstract class AbstractDesigner extends JFrame {
     protected HashMap<String, ActionListener> buttons = new HashMap<String, ActionListener>();
 
     private InteractiveDisplayCanvas canvas;
+    private InteractiveDisplayCanvas orgCanvas;
 
     protected void load()
     {
         System.out.println("Loaded");
+        this.canvas = model.getDisplayView().getInteractiveDisplayCanvas();
+
         // Initialize itself when it's compiled.
-        if(canvas != null)
-        {
-            for(OverlayRenderer painter: plugin.getPainters())
-                canvas.addOverlayRenderer(painter);
-        }
-        else
-            System.out.println("Canvas is null");
+        for(OverlayRenderer painter: plugin.getPainters())
+           canvas.addOverlayRenderer(painter);
     }
+
     protected void unload()
     {
         System.out.println("Unloaded");
-        if(canvas != null)
-        {
-            for(OverlayRenderer painter: plugin.getPainters())
-                canvas.removeOverlayRenderer(painter);
-        }
-        else
-            System.out.println("Canvas is null");
+        for(OverlayRenderer painter: plugin.getPainters())
+            canvas.removeOverlayRenderer(painter);
     }
 
     protected AbstractDesigner(String pluginType) {
@@ -78,7 +72,7 @@ public abstract class AbstractDesigner extends JFrame {
     public void setModel(InteractiveDisplayApplicationModel model)
     {
         this.model = model;
-        this.canvas = model.getDisplayView().getInteractiveDisplayCanvas();
+        //this.canvas = model.getDisplayView().getInteractiveDisplayCanvas();
     }
 
     protected void initializeComponents()

@@ -1,4 +1,4 @@
-package plugin.process;
+package plugin.examples;
 
 import net.imglib2.Cursor;
 import net.imglib2.RandomAccessible;
@@ -9,11 +9,13 @@ import net.imglib2.view.Views;
 import org.jhotdraw.draw.Figure;
 import plugin.ProcessPlugin;
 
-import java.awt.*;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
-import java.util.Date;
 import java.util.Set;
+import net.imglib2.ui.OverlayRenderer;
+
+import java.awt.*;
+import java.util.*;
 
 /**
  * The sample code for calculating meanintensity values for whole picture and selected regions
@@ -23,6 +25,12 @@ import java.util.Set;
  * @since 9/3/13
  */
 public class MeanIntensityProcess extends ProcessPlugin {
+
+    public MeanIntensityProcess()
+    {
+        // Overlay painters are added here
+        painters.add(new SourceInfoOverlay());
+    }
 
     @Override
     public String getName() {
@@ -98,7 +106,13 @@ public class MeanIntensityProcess extends ProcessPlugin {
             {
                 Rectangle2D.Double rec = f.getBounds();
 
-                Cursor<ARGBType> cur = Views.iterable(source).localizingCursor();
+                RandomAccessibleInterval< ARGBType > viewSource = (RandomAccessibleInterval< ARGBType >) Views.offsetInterval(
+                        source,
+                        new long[]{ (long)rec.getX(), (long)rec.getY() },
+                        new long[]{ (long)rec.getWidth(), (long)rec.getHeight() }
+                );
+
+                Cursor<ARGBType> cur = Views.iterable(viewSource).localizingCursor();
 
                 while(cur.hasNext())
                 {
@@ -124,6 +138,36 @@ public class MeanIntensityProcess extends ProcessPlugin {
             System.out.println("MeanIntensity(R) of selected regions: " + r / rCnt);
             System.out.println("MeanIntensity(G) of selected regions: " + g / gCnt);
             System.out.println("MeanIntensity(B) of selected regions: " + b / bCnt);
+        }
+    }
+
+    public class SourceInfoOverlay implements OverlayRenderer {
+        protected String sourceName = "Mandelbrot Process Example";
+
+        protected String timepointString = new Date().toString();
+
+        /**
+         * Update data to show in the overlay.
+         */
+        public synchronized void updateInfo( final String source, final String time )
+        {
+            sourceName = source;
+            timepointString = time;
+        }
+
+        @Override
+        public void drawOverlays(Graphics g) {
+            Color c = g.getColor();
+            g.setColor(Color.white);
+            g.setFont( new Font( "Monospaced", Font.PLAIN, 12 ) );
+            g.drawString( sourceName, ( int ) g.getClipBounds().getWidth() / 2 - 100, 12 );
+            g.drawString( timepointString, ( int ) g.getClipBounds().getWidth() - 240, 12 );
+            g.setColor(c);
+        }
+
+        @Override
+        public void setCanvasSize(int width, int height) {
+            // Change canvas size
         }
     }
 }
