@@ -1,8 +1,11 @@
 package plugin.desginer;
 
+import net.imglib2.ui.InteractiveDisplayCanvas;
+import net.imglib2.ui.OverlayRenderer;
 import org.jhotdraw.util.prefs.PreferencesUtil;
 import plugin.ProcessPlugin;
 import view.display.InteractiveDisplayView;
+import view.display.JHotDrawInteractiveDisplay2D;
 
 import javax.swing.*;
 import java.awt.*;
@@ -48,7 +51,7 @@ public class ProcessDesigner extends AbstractDesigner {
             InteractiveDisplayView view = model.getDisplayView();
 
             // Process the whole picture
-            prsPlugin.process(view.interval);
+            prsPlugin.process(view.getInterval());
 
             // Process the selected regions
         }
