@@ -11,6 +11,9 @@ Diagram
 --
 ![Diagram](https://github.com/hkmoon/IDDEA/blob/master/InteractiveDisplay/doc/IDDEA-mindmap.png?raw=true)
 
+Screenshot
+--
+![Screenshot](https://github.com/hkmoon/IDDEA/blob/master/InteractiveDisplay/doc/screenshot01.png?raw=true)
 
 Goals
 ------
