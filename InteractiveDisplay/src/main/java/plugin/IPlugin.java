@@ -1,5 +1,9 @@
 package plugin;
 
+import net.imglib2.ui.OverlayRenderer;
+
+import java.util.LinkedList;
+
 /**
  * Interface of plugin
  *
@@ -12,5 +16,6 @@ public interface IPlugin {
     String getAuthor();
     String getVersion();
     PluginType getPluginType();
+    LinkedList<OverlayRenderer> getPainters();
 }
 

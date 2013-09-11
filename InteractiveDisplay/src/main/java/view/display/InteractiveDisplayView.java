@@ -24,6 +24,7 @@ import net.imglib2.type.numeric.real.DoubleType;
 import net.imglib2.type.numeric.real.FloatType;
 import net.imglib2.realtransform.AffineTransform2D;
 import net.imglib2.img.imageplus.*;
+import net.imglib2.ui.InteractiveDisplayCanvas;
 import net.imglib2.ui.util.InterpolatingSource;
 import net.imglib2.view.IntervalView;
 import net.imglib2.view.Views;
@@ -330,9 +331,18 @@ public class InteractiveDisplayView extends AbstractView {
     }
 
 
-    public RandomAccessibleInterval interval = null;
+    private RandomAccessibleInterval interval = null;
 
-    public < T extends RealType< T > & NativeType< T >> InteractiveViewer2D show( final ImagePlusImg<T, ? > interval )
+    public RandomAccessibleInterval getInterval() {
+        return interval;
+    }
+
+    /**
+     * When the new image is coming, it makes new InteractiveViewer2D.
+     * @param interval
+     * @return InteractiveView2D
+     */
+    private < T extends RealType< T > & NativeType< T >> InteractiveViewer2D show( final ImagePlusImg<T, ? > interval )
     {
         final AffineTransform2D transform = new AffineTransform2D();
         InteractiveViewer2D iview = null;
@@ -393,6 +403,10 @@ public class InteractiveDisplayView extends AbstractView {
         return iview;
     }
 
+    /**
+     * Update the realRandomSource with new source.
+     * @param source
+     */
     public void updateRealRandomSource(RealRandomAccessible source)
     {
         if(InteractiveRealViewer2D.class.isInstance(currentInteractiveViewer2D))
@@ -419,12 +433,24 @@ public class InteractiveDisplayView extends AbstractView {
         }
     }
 
+    /**
+     * Request repaint() of the viewer.
+     */
     public void updateRequest()
     {
         currentInteractiveViewer2D.requestRepaint();
     }
 
-    public InteractiveDrawingView getInteractiveDrawingView()
+    /**
+     * Get the current InteractiveDisplayCanvas.
+     * @return InteractiveDisplayCanvas
+     */
+    public InteractiveDisplayCanvas getInteractiveDisplayCanvas()
+    {
+        return currentInteractiveViewer2D.getJHotDrawDisplay();
+    }
+
+    private InteractiveDrawingView getInteractiveDrawingView()
     {
         final int width = 800;
         final int height = 600;
