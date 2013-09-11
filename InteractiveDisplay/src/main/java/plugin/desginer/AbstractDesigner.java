@@ -11,6 +11,8 @@ import java.util.regex.Pattern;
 
 import edu.umd.cs.findbugs.annotations.Nullable;
 import model.application.InteractiveDisplayApplicationModel;
+import net.imglib2.ui.InteractiveDisplayCanvas;
+import net.imglib2.ui.OverlayRenderer;
 import org.fife.ui.rtextarea.*;
 import org.fife.ui.rsyntaxtextarea.*;
 import org.jhotdraw.app.Application;
@@ -21,6 +23,7 @@ import org.jhotdraw.gui.filechooser.ExtensionFileFilter;
 import plugin.IPlugin;
 import plugin.PluginRuntime;
 import plugin.compile.CompilerUtils;
+import view.display.JHotDrawInteractiveDisplay2D;
 
 import javax.swing.*;
 import javax.xml.crypto.dsig.keyinfo.KeyValue;
@@ -41,6 +44,32 @@ public abstract class AbstractDesigner extends JFrame {
     protected IPlugin plugin;
     protected HashMap<String, ActionListener> buttons = new HashMap<String, ActionListener>();
 
+    private InteractiveDisplayCanvas canvas;
+
+    protected void load()
+    {
+        System.out.println("Loaded");
+        // Initialize itself when it's compiled.
+        if(canvas != null)
+        {
+            for(OverlayRenderer painter: plugin.getPainters())
+                canvas.addOverlayRenderer(painter);
+        }
+        else
+            System.out.println("Canvas is null");
+    }
+    protected void unload()
+    {
+        System.out.println("Unloaded");
+        if(canvas != null)
+        {
+            for(OverlayRenderer painter: plugin.getPainters())
+                canvas.removeOverlayRenderer(painter);
+        }
+        else
+            System.out.println("Canvas is null");
+    }
+
     protected AbstractDesigner(String pluginType) {
         this.pluginType = pluginType;
         initializeComponents();
@@ -49,6 +78,7 @@ public abstract class AbstractDesigner extends JFrame {
     public void setModel(InteractiveDisplayApplicationModel model)
     {
         this.model = model;
+        this.canvas = model.getDisplayView().getInteractiveDisplayCanvas();
     }
 
     protected void initializeComponents()
@@ -155,6 +185,11 @@ public abstract class AbstractDesigner extends JFrame {
     }
 
     private void compile() {
+        if(plugin != null)
+        {
+            unload();
+        }
+
         StringWriter writer = new StringWriter();
         try {
             textArea.write(writer);
@@ -185,6 +220,10 @@ public abstract class AbstractDesigner extends JFrame {
             out.println("Plugin name : " + plugin.getName());
             out.println("Plugin author : " + plugin.getAuthor());
             out.println("Plugin version : " + plugin.getVersion());
+            out.println("No. of painters : " + plugin.getPainters().size());
+
+            load();
+            model.getDisplayView().updateRequest();
         }
     }
 

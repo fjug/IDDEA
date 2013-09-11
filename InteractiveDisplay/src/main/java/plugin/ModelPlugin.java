@@ -1,6 +1,9 @@
 package plugin;
 
 import net.imglib2.RealRandomAccessible;
+import net.imglib2.ui.OverlayRenderer;
+
+import java.util.LinkedList;
 
 /**
  * Abstract ModelPlugin for creating RandomAccessibleSource
@@ -12,6 +15,7 @@ import net.imglib2.RealRandomAccessible;
 public abstract class ModelPlugin<T> implements IPlugin {
 
     public abstract RealRandomAccessible<T> getSource();
+    protected LinkedList<OverlayRenderer> painters = new LinkedList<OverlayRenderer>();
 
     @Override
     public PluginType getPluginType() {
@@ -19,4 +23,9 @@ public abstract class ModelPlugin<T> implements IPlugin {
     }
 
     public abstract void animate();
+
+    public LinkedList<OverlayRenderer> getPainters()
+    {
+        return painters;
+    }
 }

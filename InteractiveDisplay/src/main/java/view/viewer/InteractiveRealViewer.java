@@ -92,7 +92,7 @@ public abstract class InteractiveRealViewer< T, A extends AffineSet & AffineGet 
 		imageRenderer = rendererFactory.create( target, painterThread );
 		display.addOverlayRenderer( target );
 
-        display.addOverlayRenderer(new SourceInfoOverlay());
+//        display.addOverlayRenderer(new SourceInfoOverlay());
 
 //		final GraphicsConfiguration gc = GuiUtil.getSuitableGraphicsConfiguration( GuiUtil.ARGB_COLOR_MODEL );
 //		final GraphicsConfiguration gc = GuiUtil.getSuitableGraphicsConfiguration( GuiUtil.RGB_COLOR_MODEL );

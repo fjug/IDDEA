@@ -29,7 +29,8 @@ public class ConsolePanel extends JPanel {
         prefs = PreferencesUtil.userNodeForPackage(getClass());
         setLayout(new BorderLayout());
 
-        textArea.setEditable(false);
+        //textArea.setEditable(false);
+        textArea.setLineWrap(true);
         DefaultCaret caret = (DefaultCaret) textArea.getCaret();
         caret.setUpdatePolicy(DefaultCaret.ALWAYS_UPDATE);
 

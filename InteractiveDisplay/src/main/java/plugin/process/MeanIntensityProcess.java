@@ -9,8 +9,10 @@ import net.imglib2.view.Views;
 import org.jhotdraw.draw.Figure;
 import plugin.ProcessPlugin;
 
+import java.awt.*;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
+import java.util.Date;
 import java.util.Set;
 
 /**
