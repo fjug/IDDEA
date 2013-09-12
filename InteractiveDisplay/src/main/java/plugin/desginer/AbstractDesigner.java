@@ -185,6 +185,7 @@ public abstract class AbstractDesigner extends JFrame {
         }
 
         StringWriter writer = new StringWriter();
+
         try {
             textArea.write(writer);
         } catch (IOException e) {
@@ -195,10 +196,22 @@ public abstract class AbstractDesigner extends JFrame {
 
         String code = writer.toString();
 
-        String className = code.substring(code.indexOf("public class") + 13);
-        className = className.substring(0, className.indexOf(" "));
+        // Remove package declaration
+        code = code.replaceFirst("[\\s]*package .*?;", "");
 
-        if(runtime.compile(className, writer.toString()))
+        // Find a plugin class name
+        Pattern pattern = Pattern.compile("[\\s]*public class (.*?) ");
+        Matcher m = pattern.matcher(code);
+
+        m.find();
+        String className = m.group(1);
+
+        out.println("Class name: " + className);
+
+        //String className = code.substring(code.indexOf("public class") + 13);
+        //className = className.substring(0, className.indexOf(" "));
+
+        if(runtime.compile(className, code))
         {
             try {
                 plugin = runtime.instanciate(className, writer.toString());

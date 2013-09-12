@@ -1,4 +1,4 @@
-package plugin.examples;
+package plugin.samples;
 
 import net.imglib2.RealInterval;
 import net.imglib2.RealPoint;

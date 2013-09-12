@@ -1,7 +1,6 @@
-package plugin.examples;
+package plugin.samples;
 
 import net.imglib2.Cursor;
-import net.imglib2.RandomAccessible;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.type.numeric.ARGBType;
 import net.imglib2.util.Util;
