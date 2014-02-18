@@ -28,12 +28,12 @@ public class SourceDesigner extends AbstractDesigner {
     {
         super("SourceDesigner");
 
-        buttons.put("Inject Source", new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                process();
-            }
-        });
+//        buttons.put("Inject Source", new ActionListener() {
+//            @Override
+//            public void actionPerformed(ActionEvent e) {
+//                process();
+//            }
+//        });
 
         buttons.put("Start", new ActionListener() {
             @Override
@@ -84,7 +84,7 @@ public class SourceDesigner extends AbstractDesigner {
         }
     }
 
-    public void process()
+    public void inject()
     {
         if(plugin != null)
         {
@@ -95,10 +95,10 @@ public class SourceDesigner extends AbstractDesigner {
             InteractiveDisplayView view = model.getDisplayView();
             view.updateRealRandomSource(pluginModel.getSource());
         }
-        else
-        {
-            System.out.println("Compile it first!");
-        }
+//        else
+//        {
+//            System.out.println("Compile it first!");
+//        }
     }
 
     public static void main(String[] args) {

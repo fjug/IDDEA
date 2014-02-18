@@ -166,6 +166,17 @@ public abstract class AbstractDesigner extends JFrame {
         textArea.setSyntaxEditingStyle(SyntaxConstants.SYNTAX_STYLE_JAVA);
         textArea.setCodeFoldingEnabled(true);
         textArea.setAntiAliasingEnabled(true);
+		textArea.setAutoIndentEnabled(true);
+		textArea.setCloseCurlyBraces(true);
+		textArea.setMarkOccurrences(true);
+		textArea.setCodeFoldingEnabled(true);
+		textArea.setPaintMarkOccurrencesBorder(true);
+		textArea.setPaintMatchedBracketPair(true);
+		textArea.setPaintTabLines(true);
+		textArea.setTabsEmulated(false);
+		//setTheme("eclipse");
+		setTheme("dark");
+
         RTextScrollPane sp = new RTextScrollPane(textArea);
         sp.setFoldIndicatorEnabled(true);
         cp.add(bp, BorderLayout.NORTH);
@@ -177,6 +188,23 @@ public abstract class AbstractDesigner extends JFrame {
         pack();
         setLocationRelativeTo(null);
     }
+
+	public void setTheme(String s)
+	{
+		try
+		{
+			Theme t = Theme.load(this.getClass().getClassLoader().getResourceAsStream("themes/" + s + ".xml"));
+			t.apply(textArea);
+		} catch (IOException e)
+		{
+			System.out.println("Couldn't load theme");
+		}
+	}
+
+	public void inject()
+	{
+
+	}
 
     private void compile() {
         if(plugin != null)
@@ -229,6 +257,7 @@ public abstract class AbstractDesigner extends JFrame {
             out.println("Plugin version : " + plugin.getVersion());
             out.println("No. of painters : " + plugin.getPainters().size());
 
+			inject();
             load();
             model.getDisplayView().updateRequest();
         }
