@@ -22,7 +22,7 @@ Screenshot
 Goals
 ------
 
-1. IDDEA gives more sophisticated selection algorithms along with user specific dimensions.
+1. IDDEA provides acceleration of research processes based on spiral model handling inductive and deductive proofing.
 
 2. Based on ImgLib2, developers can access the internal data bounded by ROIs.
 
