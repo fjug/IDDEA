@@ -1,9 +1,13 @@
 IDDEA
 =====
 
-IDDEA stands for Interactive Data Display for Elaborate Annotations.
+IDDEA stands for Inductive/Deductive Development Environment &amp; Application
 
-It provides jhotdraw based selection tools on ImgLib2 user interface
+It provides both inductive/deductive approaches of programming.
+For example, a model driven program creates visual entities. Those visual entities are represented in RGBA space.
+From the RGBA space representations, segmentation and detection algorithms can be developed and validated thanks to the ground truth.
+
+For annotation, it provides jhotdraw based selection tools on ImgLib2 user interface
 including bezier drawing(currently), drawing save/load as well user
 interactivity(zoom, rotate and translate) based on affine transform functions.
 
