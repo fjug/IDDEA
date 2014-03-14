@@ -1,7 +1,7 @@
 IDDEA
 =====
 
-IDDEA stands for Inductive/Deductive Development Environment &amp; Application
+IDDEA stands for Inductive &amp; Deductive Development Environment for Applications
 
 It provides both inductive/deductive approaches of programming.
 For example, a model driven program creates visual entities. Those visual entities are represented in RGBA space.
