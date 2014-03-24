@@ -9,7 +9,7 @@ import net.imglib2.IterableInterval;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.RealRandomAccessible;
 import net.imglib2.converter.TypeIdentity;
-import net.imglib2.display.RealARGBConverter;
+import net.imglib2.converter.RealARGBConverter;
 import net.imglib2.exception.ImgLibException;
 import net.imglib2.img.ImagePlusAdapter;
 import net.imglib2.img.Img;
@@ -53,6 +53,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URI;
 import java.util.*;
+
+import static org.jhotdraw.draw.AttributeKeys.STROKE_COLOR;
 
 /**
  * Created with IntelliJ IDEA.
@@ -187,11 +189,12 @@ public class IddeaComponent extends JPanel {
         ResourceBundleUtil labels = ResourceBundleUtil.getBundle("org.jhotdraw.draw.Labels");
 
         tb = new JToolBar();
-        tb.setOrientation(JToolBar.VERTICAL);
+        tb.setOrientation(JToolBar.HORIZONTAL);
 
         addCreationButtonsTo(tb, editor);
         tb.setName(labels.getString("window.drawToolBar.title"));
     }
+
 
     private void addCreationButtonsTo(JToolBar tb, DrawingEditor editor) {
         addDefaultCreationButtonsTo(tb, editor,
@@ -201,19 +204,32 @@ public class IddeaComponent extends JPanel {
 
     public void addDefaultCreationButtonsTo(JToolBar tb, final DrawingEditor editor,
                                             Collection<Action> drawingActions, Collection<Action> selectionActions) {
-        ResourceBundleUtil labels = ResourceBundleUtil.getBundle("org.jhotdraw.draw.Labels");
 
         ButtonFactory.addSelectionToolTo(tb, editor, drawingActions, selectionActions);
+
+        ResourceBundleUtil labels = ResourceBundleUtil.getBundle("model.Labels");
+        ButtonFactory.addToolTo(tb, editor, new SpimTool(), "edit.createSpim", labels);
+
+        tb.addSeparator();
 
         HashMap<AttributeKey, Object > a = new HashMap< AttributeKey, Object >();
         org.jhotdraw.draw.AttributeKeys.FILL_COLOR.put( a, new Color( 0.0f, 1.0f, 0.0f, 0.1f ) );
         org.jhotdraw.draw.AttributeKeys.STROKE_COLOR.put( a, new Color( 1.0f, 0.0f, 0.0f, 0.33f ) );
-        ButtonFactory.addToolTo(tb, editor, new BezierTool(new BezierFigure(true), a), "edit.createPolygon", labels);
+        ButtonFactory.addToolTo(tb, editor, new BezierTool(new BezierFigure(true), a), "edit.createPolygon",
+                ResourceBundleUtil.getBundle("org.jhotdraw.draw.Labels"));
 
-        tb.addSeparator();
+        HashMap<AttributeKey, Object> foreground = new HashMap< AttributeKey, Object>();
+        org.jhotdraw.draw.AttributeKeys.STROKE_COLOR.put( foreground, new Color(1.0f, 0.0f, 0.0f, 0.33f) );
+        ButtonFactory.addToolTo(tb, editor, new BezierTool(new BezierFigure(), foreground), "edit.scribbleForeground", labels);
 
-        labels = ResourceBundleUtil.getBundle("model.Labels");
-        ButtonFactory.addToolTo(tb, editor, new SpimTool(), "edit.createSpim", labels);
+        HashMap<AttributeKey, Object> background = new HashMap< AttributeKey, Object>();
+        org.jhotdraw.draw.AttributeKeys.STROKE_COLOR.put( background, new Color( 0.0f, 0.0f, 1.0f, 0.33f) );
+        ButtonFactory.addToolTo(tb, editor, new BezierTool(new BezierFigure(), background), "edit.scribbleBackground", labels);
+
+        tb.add(ButtonFactory.createStrokeWidthButton(
+                editor,
+                new double[]{5d, 10d, 15d},
+                ResourceBundleUtil.getBundle("org.jhotdraw.draw.Labels")));
     }
 
     /** This method is called from within the constructor to
@@ -226,7 +242,6 @@ public class IddeaComponent extends JPanel {
     {
         scrollPane = new javax.swing.JScrollPane();
 
-        JSlider sliderTime = new JSlider( JSlider.HORIZONTAL, 0, 10 - 1, 0 );
         if(img == null)
             view = getInteractiveDrawingView();
         else
@@ -239,11 +254,11 @@ public class IddeaComponent extends JPanel {
         scrollPane.setViewportView(view);
 
         add(scrollPane, java.awt.BorderLayout.CENTER);
-        add(sliderTime, java.awt.BorderLayout.SOUTH);
 
         if(toolbarVisible)
+        {
             add(tb, toolbarLocation);
-
+        }
     }// </editor-fold>//GEN-END:initComponents
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -267,9 +282,13 @@ public class IddeaComponent extends JPanel {
     public void setToolBarVisible(boolean visible) {
         toolbarVisible = visible;
         if(toolbarVisible)
+        {
             add(tb, toolbarLocation);
+        }
         else
+        {
             remove(tb);
+        }
     }
 
     public void loadAnnotations(String filename) {

@@ -39,7 +39,7 @@ public class InteractiveRealViewer2D< T > extends InteractiveRealViewer< T, Affi
 	{
 		super( AffineTransformType2D.instance,
 				new JHotDrawInteractiveDisplay2D< AffineTransform2D >( width, height, sourceTransform, TransformEventHandler2D.factory() ),
-				Defaults.rendererFactory( AffineTransformType2D.instance, new FinalSource< T, AffineTransform2D >( source, sourceTransform, converter ) ) );
+                InjectableDefaults.rendererFactory( AffineTransformType2D.instance, new InjectableSource< T, AffineTransform2D >( source, sourceTransform, converter ) ) );
 
         this.source = source;
 	}

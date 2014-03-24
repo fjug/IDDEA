@@ -105,7 +105,7 @@ public abstract class InteractiveRealViewer< T, A extends AffineSet & AffineGet 
     public void updateRenderSource(RealRandomAccessible< T > source)
     {
         this.source = source;
-        ((AbstractRenderer) imageRenderer).updateSource(source);
+        ((InjectableMultiResolutionRenderer) imageRenderer).injectSource(source);
         imageRenderer.paint( viewerTransform );
         display.repaint();
     }
