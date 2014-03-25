@@ -1,6 +1,7 @@
 package model.application;
 
 import controller.action.GrowSelectionToolAction;
+import controller.action.HistogramToolAction;
 import controller.action.MeanIntensityToolAction;
 import edu.umd.cs.findbugs.annotations.Nullable;
 import java.util.List;
@@ -53,7 +54,8 @@ public class InteractiveDisplayMenuBuilder implements MenuBuilder {
      * </ul>
      */
     @Override
-    public void addPreferencesItems(JMenu m, Application app, @Nullable View v) {
+    public void addPreferencesItems(JMenu m, Application app, @Nullable View v)
+    {
         ActionMap am = app.getActionMap(v);
         Action a;
         if (null != (a = am.get(AbstractPreferencesAction.ID))) {
@@ -321,6 +323,9 @@ public class InteractiveDisplayMenuBuilder implements MenuBuilder {
             add(menu,a);
         }
         if (null != (a = am.get(GrowSelectionToolAction.ID))) {
+            add(menu,a);
+        }
+        if (null != (a = am.get(HistogramToolAction.ID))) {
             add(menu,a);
         }
 

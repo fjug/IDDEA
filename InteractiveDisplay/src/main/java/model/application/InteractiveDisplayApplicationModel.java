@@ -73,6 +73,7 @@ public class InteractiveDisplayApplicationModel extends AbstractApplicationModel
         //m.put(OpenImageFileAction.ID, new OpenImageFileAction(a));
         m.put(MeanIntensityToolAction.ID, new MeanIntensityToolAction(a));
         m.put(GrowSelectionToolAction.ID, new GrowSelectionToolAction(a));
+        m.put(HistogramToolAction.ID, new HistogramToolAction(a));
 
         return m;
     }
@@ -152,9 +153,16 @@ public class InteractiveDisplayApplicationModel extends AbstractApplicationModel
 
     public void addDefaultCreationButtonsTo(JToolBar tb, final DrawingEditor editor,
                                             Collection<Action> drawingActions, Collection<Action> selectionActions) {
-        ResourceBundleUtil labels = ResourceBundleUtil.getBundle("org.jhotdraw.draw.Labels");
+        ResourceBundleUtil labels = null;
 
         ButtonFactory.addSelectionToolTo(tb, editor, drawingActions, selectionActions);
+
+        labels = ResourceBundleUtil.getBundle("model.Labels");
+        ButtonFactory.addToolTo(tb, editor, new SpimTool(),  "edit.createSpim", labels);
+
+        labels = ResourceBundleUtil.getBundle("org.jhotdraw.draw.Labels");
+
+        tb.addSeparator();
 
         HashMap< AttributeKey, Object > a = new HashMap< AttributeKey, Object >();
 //		org.jhotdraw.draw.AttributeKeys.UNCLOSED_PATH_FILLED.put( a, false );
@@ -163,10 +171,16 @@ public class InteractiveDisplayApplicationModel extends AbstractApplicationModel
 //		org.jhotdraw.draw.AttributeKeys.STROKE_WIDTH.put( a, 2.5 );
         ButtonFactory.addToolTo(tb, editor, new BezierTool(new BezierFigure(true), a), "edit.createPolygon", labels);
 
-        tb.addSeparator();
+        HashMap<AttributeKey, Object> scribble = new HashMap< AttributeKey, Object>();
+        org.jhotdraw.draw.AttributeKeys.FILL_COLOR.put( scribble, new Color( 0.0f, 1.0f, 0.0f, 0.1f ) );
+        org.jhotdraw.draw.AttributeKeys.STROKE_COLOR.put( scribble, new Color(0.0f, 0.0f, 1.0f, 0.33f) );
+        org.jhotdraw.draw.AttributeKeys.STROKE_WIDTH.put( scribble, 15d);
+        ButtonFactory.addToolTo(tb, editor, new BezierTool(new BezierFigure(), scribble), "edit.createScribble", labels);
 
-        labels = ResourceBundleUtil.getBundle("model.Labels");
-        ButtonFactory.addToolTo(tb, editor, new SpimTool(),  "edit.createSpim", labels);
+        tb.add(ButtonFactory.createStrokeWidthButton(
+                editor,
+                new double[]{5d, 10d, 15d},
+                ResourceBundleUtil.getBundle("org.jhotdraw.draw.Labels")));
     }
 
     @Override
