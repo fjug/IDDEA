@@ -3,6 +3,7 @@ package view.viewer;
 import net.imglib2.RandomAccessible;
 import net.imglib2.RealRandomAccessible;
 import net.imglib2.concatenate.Concatenable;
+import net.imglib2.converter.Converter;
 import net.imglib2.display.screenimage.awt.ARGBScreenImage;
 import net.imglib2.realtransform.AffineGet;
 import net.imglib2.realtransform.AffineSet;
@@ -174,5 +175,10 @@ public class InjectableMultiResolutionRenderer< A extends AffineSet & AffineGet 
     public void injectSource(final RealRandomAccessible source)
     {
         ((Injectable)this.source).injectSource(source);
+    }
+
+    public void injectConverter(final Converter converter)
+    {
+        ((Injectable)this.source).injectConverter(converter);
     }
 }

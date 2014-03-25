@@ -23,9 +23,9 @@ public class InjectableSource< T, A > implements RenderSource< T, A >, Injectabl
 {
     protected RealRandomAccessible< T > source;
 
-    protected final A sourceTransform;
+    protected Converter< ? super T, ARGBType > converter;
 
-    protected final Converter< ? super T, ARGBType > converter;
+    protected final A sourceTransform;
 
     /**
      * Create a {@link RenderSource}.
@@ -69,5 +69,11 @@ public class InjectableSource< T, A > implements RenderSource< T, A >, Injectabl
     public void injectSource(RealRandomAccessible<T> source)
     {
         this.source = source;
+    }
+
+    @Override
+    public void injectConverter(Converter< ? super T, ARGBType >  converter)
+    {
+        this.converter = converter;
     }
 }

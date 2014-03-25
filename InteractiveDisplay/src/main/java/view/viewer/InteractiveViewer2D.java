@@ -11,7 +11,6 @@ import net.imglib2.type.numeric.ARGBType;
 import net.imglib2.type.numeric.NumericType;
 import net.imglib2.ui.AffineTransformType2D;
 import net.imglib2.ui.TransformEventHandler2D;
-import net.imglib2.ui.util.Defaults;
 import net.imglib2.ui.util.InterpolatingSource;
 
 /**
@@ -53,7 +52,7 @@ public class InteractiveViewer2D< T extends NumericType< T > > extends Interacti
 	{
 		super( AffineTransformType2D.instance,
 				new JHotDrawInteractiveDisplay2D< AffineTransform2D >( width, height, null, TransformEventHandler2D.factory() ),
-				Defaults.rendererFactory( AffineTransformType2D.instance, interpolatingSource ) );
+                InjectableDefaults.rendererFactory( AffineTransformType2D.instance, interpolatingSource ) );
 
         this.source = interpolatingSource.getInterpolatedSource();
 

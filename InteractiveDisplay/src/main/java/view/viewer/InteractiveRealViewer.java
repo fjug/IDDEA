@@ -3,6 +3,8 @@ package view.viewer;
 import javax.swing.JComponent;
 
 import net.imglib2.RealRandomAccessible;
+import net.imglib2.converter.Converter;
+import net.imglib2.type.numeric.ARGBType;
 import net.imglib2.ui.*;
 import view.display.JHotDrawInteractiveDisplay2D;
 import net.imglib2.concatenate.Concatenable;
@@ -102,7 +104,12 @@ public abstract class InteractiveRealViewer< T, A extends AffineSet & AffineGet 
 		painterThread.start();
 	}
 
-    public void updateRenderSource(RealRandomAccessible< T > source)
+    protected void updateRenderConverter(Converter< ? super T, ARGBType > converter)
+    {
+        ((InjectableMultiResolutionRenderer) imageRenderer).injectConverter(converter);
+    }
+
+    synchronized protected void updateRenderSource(RealRandomAccessible< T > source)
     {
         this.source = source;
         ((InjectableMultiResolutionRenderer) imageRenderer).injectSource(source);

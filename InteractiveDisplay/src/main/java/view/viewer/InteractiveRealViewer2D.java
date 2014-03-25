@@ -48,4 +48,9 @@ public class InteractiveRealViewer2D< T > extends InteractiveRealViewer< T, Affi
     {
         super.updateRenderSource(source);
     }
+
+    public void updateConverter(Converter< ? super T, ARGBType > converter)
+    {
+        super.updateRenderConverter(converter);
+    }
 }

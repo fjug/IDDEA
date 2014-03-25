@@ -7,6 +7,7 @@ import model.source.MandelbrotRealRandomAccessible;
 import net.imglib2.IterableInterval;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.RealRandomAccessible;
+import net.imglib2.converter.Converter;
 import net.imglib2.converter.TypeIdentity;
 import net.imglib2.converter.RealARGBConverter;
 import net.imglib2.exception.ImgLibException;
@@ -402,6 +403,18 @@ public class InteractiveDisplayView extends AbstractView {
         }
 
         return iview;
+    }
+
+    /**
+     * Update the realConverter with new converter.
+     * @param converter
+     */
+    public void updateRealConverter(Converter converter)
+    {
+        if(InteractiveRealViewer2D.class.isInstance(currentInteractiveViewer2D))
+        {
+            ((InteractiveRealViewer2D) currentInteractiveViewer2D).updateConverter(converter);
+        }
     }
 
     /**
