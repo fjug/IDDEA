@@ -161,7 +161,7 @@ public class HistogramToolAction extends AbstractApplicationAction
                             {
                                 size++;
                                 Double d = realRandomAccess.get().getRealDouble();
-                                System.out.println(d);
+                                //System.out.println(d);
                                 sum += d;
                                 list.add(d.longValue());
                             }

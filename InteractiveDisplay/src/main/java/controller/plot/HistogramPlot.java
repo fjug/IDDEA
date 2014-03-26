@@ -1,15 +1,31 @@
 package controller.plot;
 
 import java.awt.*;
+import java.awt.geom.Area;
+import java.awt.geom.GeneralPath;
+import java.awt.geom.Line2D;
 import java.util.ArrayList;
 import java.util.Collections;
 
+import de.erichseifert.gral.data.DataSeries;
 import de.erichseifert.gral.data.DataSource;
 import de.erichseifert.gral.data.DataTable;
 import de.erichseifert.gral.data.EnumeratedData;
+import de.erichseifert.gral.data.filters.Convolution;
+import de.erichseifert.gral.data.filters.Filter;
+import de.erichseifert.gral.data.filters.Kernel;
+import de.erichseifert.gral.data.filters.KernelUtils;
 import de.erichseifert.gral.data.statistics.Histogram1D;
 import de.erichseifert.gral.data.statistics.Statistics;
 import de.erichseifert.gral.plots.BarPlot;
+import de.erichseifert.gral.plots.XYPlot;
+import de.erichseifert.gral.plots.areas.AreaRenderer;
+import de.erichseifert.gral.plots.areas.DefaultAreaRenderer2D;
+import de.erichseifert.gral.plots.areas.LineAreaRenderer2D;
+import de.erichseifert.gral.plots.lines.DefaultLineRenderer2D;
+import de.erichseifert.gral.plots.lines.LineRenderer;
+import de.erichseifert.gral.plots.points.DefaultPointRenderer2D;
+import de.erichseifert.gral.plots.points.PointRenderer;
 import de.erichseifert.gral.ui.InteractivePanel;
 import de.erichseifert.gral.util.GraphicsUtils;
 import de.erichseifert.gral.util.Insets2D;
@@ -83,32 +99,27 @@ public class HistogramPlot extends JPanel
         Histogram1D histogram = new Histogram1D(data, Orientation.VERTICAL, number);
         // Create a second dimension (x axis) for plotting
         DataSource histogram2d = new EnumeratedData(histogram, min, 1.0);
+        DataSeries ds = new DataSeries("Data", histogram2d, 0, 1);
 
         // Create new bar plot
-        BarPlot plot = new BarPlot(histogram2d);
+        XYPlot plot = new XYPlot(ds);
 
         // Format plot
         plot.setInsets(new Insets2D.Double(20.0, 65.0, 50.0, 40.0));
         plot.getTitle().setText(
-                String.format("Distribution of %d pixels", data.getRowCount()));
-        plot.setBarWidth(0.78);
+                String.format("Distribution of %d pixels\nBin: %d, Min: %d, Max:%d",
+                        data.getRowCount(), bin, min, max));
 
-        // Format x axis
-        plot.getAxisRenderer(BarPlot.AXIS_X).setTickAlignment(0.0);
-        plot.getAxisRenderer(BarPlot.AXIS_X).setTickSpacing(1.0);
-        plot.getAxisRenderer(BarPlot.AXIS_X).setMinorTicksVisible(false);
-        //plot.getAxisRenderer(BarPlot.AXIS_X).set
-        // Format y axis
-        plot.getAxis(BarPlot.AXIS_Y).setRange(0.0,
-                MathUtils.ceil(histogram.getStatistics().get(Statistics.MAX)*1.1, 25.0));
-        plot.getAxisRenderer(BarPlot.AXIS_Y).setTickAlignment(0.0);
-        plot.getAxisRenderer(BarPlot.AXIS_Y).setMinorTicksVisible(false);
-        plot.getAxisRenderer(BarPlot.AXIS_Y).setIntersection(-4.4);
+        final double KERNEL_VARIANCE = 3.0;
 
-        // Format bars
-        plot.getPointRenderer(histogram2d).setColor(
-                GraphicsUtils.deriveWithAlpha(COLOR1, 128));
-        plot.getPointRenderer(histogram2d).setValueVisible(true);
+        // Create a smoothed data series from a binomial (near-gaussian) convolution filter
+        Kernel kernelLowpass = KernelUtils.getBinomial(KERNEL_VARIANCE).normalize();
+        Filter dataLowpass = new Convolution(histogram2d, kernelLowpass, Filter.Mode.REPEAT, 1);
+        DataSeries dsLowpass = new DataSeries("Lowpass", dataLowpass, 0, 1);
+        plot.add(dsLowpass);
+
+        formatLineArea(plot, ds, COLOR2);
+        formatFilledArea(plot, dsLowpass, COLOR1);
 
         // Add plot to Swing component
         InteractivePanel panel = new InteractivePanel(plot);
@@ -116,6 +127,36 @@ public class HistogramPlot extends JPanel
         panel.setZoomable(true);
         add(panel);
         showInFrame();
+    }
+
+    private static void formatFilledArea(XYPlot plot, DataSource data, Color color) {
+        plot.setPointRenderer(data, null);
+
+        LineRenderer line = new DefaultLineRenderer2D();
+        line.setColor(color);
+        line.setGap(3.0);
+        line.setGapRounded(true);
+        plot.setLineRenderer(data, line);
+
+        AreaRenderer area = new DefaultAreaRenderer2D();
+        area.setColor(GraphicsUtils.deriveWithAlpha(color, 64));
+        plot.setAreaRenderer(data, area);
+    }
+
+    private static void formatLineArea(XYPlot plot, DataSource data, Color color) {
+        PointRenderer point = new DefaultPointRenderer2D();
+        point.setColor(new Color(1f, 1f, 1f, 1f));
+        point.setValueVisible(true);
+
+        plot.setPointRenderer(data, point);
+
+        plot.setLineRenderer(data, null);
+
+        LineAreaRenderer2D area = new LineAreaRenderer2D();
+        area.setGap(3.0);
+        area.setColor(color);
+        area.setStroke(new BasicStroke(5));
+        plot.setAreaRenderer(data, area);
     }
 
     public JFrame showInFrame() {
