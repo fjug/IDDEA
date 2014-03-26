@@ -171,11 +171,23 @@ public class InteractiveDisplayApplicationModel extends AbstractApplicationModel
 //		org.jhotdraw.draw.AttributeKeys.STROKE_WIDTH.put( a, 2.5 );
         ButtonFactory.addToolTo(tb, editor, new BezierTool(new BezierFigure(true), a), "edit.createPolygon", labels);
 
-        HashMap<AttributeKey, Object> scribble = new HashMap< AttributeKey, Object>();
-        org.jhotdraw.draw.AttributeKeys.FILL_COLOR.put( scribble, new Color( 0.0f, 1.0f, 0.0f, 0.1f ) );
-        org.jhotdraw.draw.AttributeKeys.STROKE_COLOR.put( scribble, new Color(0.0f, 0.0f, 1.0f, 0.33f) );
-        org.jhotdraw.draw.AttributeKeys.STROKE_WIDTH.put( scribble, 15d);
-        ButtonFactory.addToolTo(tb, editor, new BezierTool(new BezierFigure(), scribble), "edit.createScribble", labels);
+//        HashMap<AttributeKey, Object> scribble = new HashMap< AttributeKey, Object>();
+//        org.jhotdraw.draw.AttributeKeys.FILL_COLOR.put( scribble, new Color( 0.0f, 1.0f, 0.0f, 0.1f ) );
+//        org.jhotdraw.draw.AttributeKeys.STROKE_COLOR.put( scribble, new Color(0.0f, 0.0f, 1.0f, 0.33f) );
+//        org.jhotdraw.draw.AttributeKeys.STROKE_WIDTH.put( scribble, 15d);
+//        ButtonFactory.addToolTo(tb, editor, new BezierTool(new BezierFigure(), scribble), "edit.createScribble", labels);
+
+        labels = ResourceBundleUtil.getBundle("model.Labels");
+
+        HashMap<AttributeKey, Object> foreground = new HashMap< AttributeKey, Object>();
+        org.jhotdraw.draw.AttributeKeys.STROKE_COLOR.put( foreground, new Color(1.0f, 0.0f, 0.0f, 0.33f) );
+        org.jhotdraw.draw.AttributeKeys.STROKE_WIDTH.put( foreground, 15d);
+        ButtonFactory.addToolTo(tb, editor, new BezierTool(new BezierFigure(), foreground), "edit.scribbleForeground", labels);
+
+        HashMap<AttributeKey, Object> background = new HashMap< AttributeKey, Object>();
+        org.jhotdraw.draw.AttributeKeys.STROKE_COLOR.put( background, new Color( 0.0f, 0.0f, 1.0f, 0.33f) );
+        org.jhotdraw.draw.AttributeKeys.STROKE_WIDTH.put( background, 15d);
+        ButtonFactory.addToolTo(tb, editor, new BezierTool(new BezierFigure(), background), "edit.scribbleBackground", labels);
 
         tb.add(ButtonFactory.createStrokeWidthButton(
                 editor,

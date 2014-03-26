@@ -9,7 +9,10 @@ package controller.action;
  */
 
 import controller.plot.HistogramPlot;
+import model.util.DoubleArrayList;
+import model.util.LongArrayList;
 import net.imglib2.*;
+import net.imglib2.Cursor;
 import net.imglib2.type.numeric.ARGBType;
 import net.imglib2.type.numeric.RealType;
 import net.imglib2.type.numeric.integer.LongType;
@@ -23,6 +26,7 @@ import org.jhotdraw.util.ResourceBundleUtil;
 import view.display.InteractiveDisplayView;
 import view.viewer.InteractiveRealViewer;
 
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
@@ -36,6 +40,9 @@ public class HistogramToolAction extends AbstractApplicationAction
 {
     public final static String ID = "tool.computeHistogram";
 
+    public final Color foreground = new Color(1.0f, 0.0f, 0.0f, 0.33f);
+    public final Color background = new Color(0.0f, 0.0f, 1.0f, 0.33f);
+
     /** Creates a new instance. */
     public HistogramToolAction(Application app) {
         this(app,ID);
@@ -44,6 +51,11 @@ public class HistogramToolAction extends AbstractApplicationAction
         super(app);
         ResourceBundleUtil labels = ResourceBundleUtil.getBundle("model.Labels");
         labels.configureAction(this, id);
+    }
+
+    public HistogramToolAction()
+    {
+        super(null);
     }
 
     @Override
@@ -111,9 +123,10 @@ public class HistogramToolAction extends AbstractApplicationAction
 
                 long size = 0;
                 long boundarySize = 0;
-                Set<Figure> figures = viewer.getJHotDrawDisplay().getSelectedFigures();
+                Set<Figure> figures = viewer.getJHotDrawDisplay().getAllFigures();
 
-                ArrayList<Long> list = new ArrayList<Long>();
+                LongArrayList backgroundList = new LongArrayList();
+                LongArrayList foregroundList = new LongArrayList();
 
                 for(Figure f: figures)
                 {
@@ -163,7 +176,14 @@ public class HistogramToolAction extends AbstractApplicationAction
                                 Double d = realRandomAccess.get().getRealDouble();
                                 //System.out.println(d);
                                 sum += d;
-                                list.add(d.longValue());
+
+                                // Check the forground or background
+                                Color stroke = f.get(org.jhotdraw.draw.AttributeKeys.STROKE_COLOR);
+                                if(stroke.equals(foreground))
+                                    foregroundList.add(d.longValue());
+                                else if(stroke.equals(background))
+                                    backgroundList.add(d.longValue());
+
                             }
                         }
                     }
@@ -174,7 +194,7 @@ public class HistogramToolAction extends AbstractApplicationAction
                 System.out.println("Sum: " + sum);
                 System.out.println("MeanIntensity of selected regions: " + sum / size);
 
-                HistogramPlot plot = new HistogramPlot(list);
+                HistogramPlot plot = new HistogramPlot(foregroundList, backgroundList);
             }
             else
             {
@@ -184,7 +204,10 @@ public class HistogramToolAction extends AbstractApplicationAction
 
                 long size = 0;
                 long boundarySize = 0;
-                Set<Figure> figures = viewer.getJHotDrawDisplay().getSelectedFigures();
+                Set<Figure> figures = viewer.getJHotDrawDisplay().getAllFigures();
+
+                DoubleArrayList backgroundList = new DoubleArrayList();
+                DoubleArrayList foregroundList = new DoubleArrayList();
 
                 for(Figure f: figures)
                 {
@@ -207,7 +230,16 @@ public class HistogramToolAction extends AbstractApplicationAction
 
                         if(f.contains(point))
                         {
-                            sum += cur.get().getRealDouble();
+                            Double d = cur.get().getRealDouble();
+
+                            // Check the forground or background
+                            Color stroke = f.get(org.jhotdraw.draw.AttributeKeys.STROKE_COLOR);
+                            if(stroke.equals(foreground))
+                                foregroundList.add(d);
+                            else if(stroke.equals(background))
+                                backgroundList.add(d);
+
+                            sum += d;
                             size++;
                         }
                     }
@@ -216,6 +248,8 @@ public class HistogramToolAction extends AbstractApplicationAction
                 System.out.println("Pixels: " + size);
                 System.out.println("Boundary Pixels: " + boundarySize);
                 System.out.println("MeanIntensity of selected regions: " + sum / size);
+
+                HistogramPlot plot = new HistogramPlot(foregroundList, backgroundList);
             }
         }
     }

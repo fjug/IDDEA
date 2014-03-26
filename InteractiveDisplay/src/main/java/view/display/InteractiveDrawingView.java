@@ -151,6 +151,19 @@ public abstract class InteractiveDrawingView extends JComponent implements Drawi
             secondaryHandles.add(h);
     }
 
+    public Set<Figure> getAllFigures() {
+        Set<Figure> allFigures = new HashSet<Figure>();
+
+        for (Figure figure : drawing.getChildren()) {
+            if (figure.isSelectable()) {
+                allFigures.add(figure);
+            }
+
+        }
+
+        return allFigures;
+    }
+
     @Override
     public void repaintHandles() {
         validateHandles();
