@@ -19,23 +19,21 @@ public class InteractiveRealViewer2D< T > extends InteractiveRealViewer< T, Affi
 {
 	/**
 	 * Create an interactive viewer for a 2D {@link RealRandomAccessible}.
-	 *
-	 * @param width
+	 *  @param width
 	 *            window width.
 	 * @param height
 	 *            window height.
-	 * @param source
-	 *            The source image to display. It is assumed that the source is
-	 *            extended to infinity.
-	 * @param sourceTransform
-	 *            Transformation from source to global coordinates. This is
-	 *            useful for pre-scaling when showing anisotropic data, for
-	 *            example.
-	 * @param converter
-	 *            Converter from the source type to argb for rendering the
-	 *            source.
-	 */
-	public InteractiveRealViewer2D( final int width, final int height, final RealRandomAccessible< T > source, final AffineTransform2D sourceTransform, final Converter< T, ARGBType > converter )
+     * @param source
+ *            The source image to display. It is assumed that the source is
+ *            extended to infinity.
+     * @param sourceTransform
+*            Transformation from source to global coordinates. This is
+*            useful for pre-scaling when showing anisotropic data, for
+*            example.
+     * @param converter
+*            Converter from the source type to argb for rendering the
+     */
+	public InteractiveRealViewer2D( final int width, final int height, final RealRandomAccessible< T > source, final AffineTransform2D sourceTransform, final Converter<? super T, ARGBType> converter )
 	{
 		super( AffineTransformType2D.instance,
 				new JHotDrawInteractiveDisplay2D< AffineTransform2D >( width, height, sourceTransform, TransformEventHandler2D.factory() ),
@@ -43,14 +41,4 @@ public class InteractiveRealViewer2D< T > extends InteractiveRealViewer< T, Affi
 
         this.source = source;
 	}
-
-    public void updateSource(RealRandomAccessible< T > source)
-    {
-        super.updateRenderSource(source);
-    }
-
-    public void updateConverter(Converter< ? super T, ARGBType > converter)
-    {
-        super.updateRenderConverter(converter);
-    }
 }

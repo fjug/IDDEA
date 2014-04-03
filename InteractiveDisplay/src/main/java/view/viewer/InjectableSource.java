@@ -25,7 +25,11 @@ public class InjectableSource< T, A > implements RenderSource< T, A >, Injectabl
 
     protected Converter< ? super T, ARGBType > converter;
 
-    protected final A sourceTransform;
+    protected A sourceTransform;
+
+    public InjectableSource()
+    {
+    }
 
     /**
      * Create a {@link RenderSource}.

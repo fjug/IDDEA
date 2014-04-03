@@ -41,7 +41,7 @@ public class SamplePanel extends JPanel {
     {
         super(new BorderLayout());
 
-        File file = new File( "/Users/moon/Projects/ScientificPlatform/ImgLib2/imglib/examples/DrosophilaWing.tif" );
+        File file = new File( "/Users/moon/Documents/clown.tif" );
 
         // open a file with ImageJ
         final ImagePlus imp = new Opener().openImage( file.getAbsolutePath() );

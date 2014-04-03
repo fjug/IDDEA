@@ -2,10 +2,15 @@ package view.viewer;
 
 import javax.swing.JComponent;
 
+import net.imglib2.RandomAccessible;
 import net.imglib2.RealRandomAccessible;
 import net.imglib2.converter.Converter;
+import net.imglib2.interpolation.InterpolatorFactory;
+import net.imglib2.interpolation.randomaccess.NLinearInterpolatorFactory;
 import net.imglib2.type.numeric.ARGBType;
+import net.imglib2.type.numeric.NumericType;
 import net.imglib2.ui.*;
+import net.imglib2.view.Views;
 import view.display.JHotDrawInteractiveDisplay2D;
 import net.imglib2.concatenate.Concatenable;
 import net.imglib2.realtransform.AffineGet;
@@ -55,9 +60,14 @@ public abstract class InteractiveRealViewer< T, A extends AffineSet & AffineGet 
 	final protected PainterThread painterThread;
 
     /**
-     * Underlying source for accessing the data
+     * Underlying source for painting/accessing the data
      */
     protected RealRandomAccessible<T> source;
+
+    /**
+     * Underlying intervalSource for accessing the data
+     */
+    protected RandomAccessible<T> intervalSource;
 
     protected BufferedImageOverlayRenderer target;
 
@@ -116,6 +126,24 @@ public abstract class InteractiveRealViewer< T, A extends AffineSet & AffineGet 
         imageRenderer.paint( viewerTransform );
         display.repaint();
     }
+
+    public void updateSource(RealRandomAccessible<T> source)
+    {
+        this.updateRenderSource(source);
+    }
+
+    public void updateIntervalSource(RandomAccessible<T> interval)
+    {
+        this.intervalSource = interval;
+        RealRandomAccessible source = Views.interpolate(interval, new NLinearInterpolatorFactory());
+        this.updateRenderSource(source);
+    }
+
+    public void updateConverter(Converter< ? super T, ARGBType > converter)
+    {
+        this.updateRenderConverter(converter);
+    }
+
 	/**
 	 * Render the source using the current viewer transformation and
 	 */

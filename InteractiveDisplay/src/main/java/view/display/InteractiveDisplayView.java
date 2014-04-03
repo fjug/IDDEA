@@ -353,11 +353,14 @@ public class InteractiveDisplayView extends AbstractView {
 
         if(ARGBType.class.isInstance(interval.firstElement()))
         {
+//            iview = new InteractiveViewer2D(interval.getWidth(), interval.getHeight(),
+//                    new InterpolatingSource(
+//                            Views.extendZero((RandomAccessibleInterval<ARGBType>)(ImagePlusImg<?, ?>) interval),
+//                            transform,
+//                            new TypeIdentity<ARGBType>() ));
+
             iview = new InteractiveViewer2D(interval.getWidth(), interval.getHeight(),
-                    new InterpolatingSource(
-                            Views.extendZero((RandomAccessibleInterval<ARGBType>)(ImagePlusImg<?, ?>) interval),
-                            transform,
-                            new TypeIdentity<ARGBType>() ));
+                    Views.extendZero(interval), transform, new TypeIdentity<ARGBType>());
         }
         else if(interval.getChannels() > 1)
         {
