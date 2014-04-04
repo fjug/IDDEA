@@ -1,20 +1,13 @@
 package view.viewer;
 
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
-
-import view.display.JHotDrawInteractiveDisplay2D;
 import net.imglib2.RandomAccessible;
 import net.imglib2.converter.Converter;
 import net.imglib2.realtransform.AffineTransform2D;
 import net.imglib2.type.numeric.ARGBType;
 import net.imglib2.type.numeric.NumericType;
-import net.imglib2.ui.AffineTransformType2D;
-import net.imglib2.ui.TransformEventHandler2D;
-import net.imglib2.ui.util.InterpolatingSource;
 
 /**
- * Interactive viewer for a 2D {@link RandomAccessible}.
+ * Simplified Interactive viewer for a 2D {@link RandomAccessible}.
  *
  * @author Tobias Pietzsch <tobias.pietzsch@gmail.com>
  */
@@ -41,6 +34,7 @@ public class InteractiveViewer2D< T extends NumericType< T > > extends Interacti
 	public InteractiveViewer2D( final int width, final int height, final RandomAccessible< T > source, final AffineTransform2D sourceTransform, final Converter< ? super T, ARGBType > converter )
 	{
 		this( width, height, new InjectableInterpolatingSource< T, AffineTransform2D >( source, sourceTransform, converter ) );
+
         this.intervalSource = source;
 	}
 

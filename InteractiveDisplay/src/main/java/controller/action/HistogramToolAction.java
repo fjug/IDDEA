@@ -8,7 +8,7 @@ package controller.action;
  * @author HongKee Moon
  */
 
-import controller.plot.HistogramPlot;
+import view.plot.HistogramPlot;
 import model.util.DoubleArrayList;
 import model.util.LongArrayList;
 import net.imglib2.*;
@@ -30,7 +30,6 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
-import java.util.ArrayList;
 import java.util.Set;
 
 /**
@@ -66,6 +65,67 @@ public class HistogramToolAction extends AbstractApplicationAction
             InteractiveRealViewer viewer = ((InteractiveDisplayView) view).getCurrentInteractiveViewer2D();
 
             RealRandomAccessible<?> realSource = (RealRandomAccessible<?>) viewer.getSource();
+
+            if(viewer.isIntervalSourceAvailable())
+            {
+                RandomAccessible<ARGBType> source = (RandomAccessible<ARGBType>) viewer.getIntervalSource();
+
+                double sum = 0d;
+
+                long size = 0;
+                long boundarySize = 0;
+                Set<Figure> figures = viewer.getJHotDrawDisplay().getAllFigures();
+
+                DoubleArrayList backgroundList = new DoubleArrayList();
+                DoubleArrayList foregroundList = new DoubleArrayList();
+
+                for(Figure f: figures)
+                {
+                    Rectangle2D.Double rec = f.getBounds();
+
+                    RandomAccessibleInterval< ARGBType > viewSource = (RandomAccessibleInterval< ARGBType >) Views.offsetInterval( source,
+                            new long[] { (long)rec.getX(), (long)rec.getY() }, new long[]{ (long)rec.getWidth()+1, (long)rec.getHeight()+1 } );
+
+                    System.out.format("X=%f, Y=%f, W=%f, H=%f\n", rec.getX(), rec.getY(), rec.getWidth(), rec.getHeight());
+
+                    Cursor<ARGBType> cur = (Cursor<ARGBType>) Views.iterable(viewSource).localizingCursor();
+
+                    while(cur.hasNext())
+                    {
+                        cur.fwd();
+
+                        boundarySize++;
+                        Point2D.Double point = new Point2D.Double(Math.ceil(cur.getDoublePosition(0)) + rec.getX(),
+                                Math.ceil(cur.getDoublePosition(1)) + rec.getY());
+                        //System.out.format("CX=%f, CY=%f\n", cur.getDoublePosition(0) + rec.getX(), cur.getDoublePosition(1) + rec.getY());
+
+                        if(f.contains(point))
+                        {
+                            Double d = (double) cur.get().get();
+
+                            int pixel = cur.get().get();
+
+                            System.out.println("" + ARGBType.red(pixel) + "," + ARGBType.green(pixel) + "," + ARGBType.blue(pixel));
+
+                            // Check the forground or background
+                            Color stroke = f.get(org.jhotdraw.draw.AttributeKeys.STROKE_COLOR);
+                            if(stroke.equals(foreground))
+                                foregroundList.add(d);
+                            else if(stroke.equals(background))
+                                backgroundList.add(d);
+
+                            sum += d;
+                            size++;
+                        }
+                    }
+                }
+                System.out.println("ARGBType");
+                System.out.println("Pixels: " + size);
+                System.out.println("Boundary Pixels: " + boundarySize);
+                System.out.println("MeanIntensity of selected regions: " + sum / size);
+
+                HistogramPlot plot = new HistogramPlot(foregroundList, backgroundList);
+            }
 
             if(ARGBType.class.isInstance(Util.getTypeFromRealRandomAccess(realSource)))
             {

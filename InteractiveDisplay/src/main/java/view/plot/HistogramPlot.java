@@ -1,4 +1,4 @@
-package controller.plot;
+package view.plot;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -21,8 +21,6 @@ import de.erichseifert.gral.plots.areas.DefaultAreaRenderer2D;
 import de.erichseifert.gral.plots.areas.LineAreaRenderer2D;
 import de.erichseifert.gral.plots.lines.DefaultLineRenderer2D;
 import de.erichseifert.gral.plots.lines.LineRenderer;
-import de.erichseifert.gral.plots.points.DefaultPointRenderer2D;
-import de.erichseifert.gral.plots.points.PointRenderer;
 import de.erichseifert.gral.ui.InteractivePanel;
 import de.erichseifert.gral.util.GraphicsUtils;
 import de.erichseifert.gral.util.Insets2D;
@@ -132,7 +130,7 @@ public class HistogramPlot extends JPanel
 
         Number[] number = null;
 
-        if(min != max)
+        if(!min.equals(max))
         {
             number = new Number[bin + 1];
 
@@ -173,17 +171,19 @@ public class HistogramPlot extends JPanel
         Double max = Collections.max(list);
         Double min = Collections.min(list);
         Double gap = (max.doubleValue() - min.doubleValue()) / SAMPLE;
+        min -= gap;
 
-        System.out.println("Bin: " + SAMPLE);
+
+        System.out.println("NBin: " + SAMPLE);
         System.out.println("Max: " + max + " Min: " + min + " Gap:" + gap);
 
         Number[] number = null;
 
         if(min != max)
         {
-            number = new Number[SAMPLE + 1];
+            number = new Number[SAMPLE + 3];
 
-            for (int i = 0; i <= SAMPLE; i++)
+            for (int i = 0; i < number.length; i++)
                 number[i] = min + i * gap;
         }
         else
@@ -271,11 +271,11 @@ public class HistogramPlot extends JPanel
     }
 
     private static void formatLineArea(XYPlot plot, DataSource data, Color color) {
-        PointRenderer point = new DefaultPointRenderer2D();
-        point.setColor(new Color(1f, 1f, 1f, 1f));
-        //point.setValueVisible(true);
+//        PointRenderer point = new DefaultPointRenderer2D();
+//        point.setColor(new Color(1f, 1f, 1f, 1f));
+//        point.setValueVisible(true);
 
-        plot.setPointRenderer(data, point);
+        plot.setPointRenderer(data, null);
 
         plot.setLineRenderer(data, null);
 

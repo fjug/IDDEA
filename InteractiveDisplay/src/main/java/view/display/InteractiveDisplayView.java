@@ -359,6 +359,8 @@ public class InteractiveDisplayView extends AbstractView {
 //                            transform,
 //                            new TypeIdentity<ARGBType>() ));
 
+            System.out.println("ARGBType");
+
             iview = new InteractiveViewer2D(interval.getWidth(), interval.getHeight(),
                     Views.extendZero(interval), transform, new TypeIdentity<ARGBType>());
         }
@@ -400,6 +402,8 @@ public class InteractiveDisplayView extends AbstractView {
 //            RealRandomAccessible< T > interpolated = Views.interpolate( interval, new NLinearInterpolatorFactory<T>() );
             RealRandomAccessible< T > interpolated = Views.interpolate( Views.extendZero(interval), new NearestNeighborInterpolatorFactory<T>() );
             //final RealARGBConverter< T > converter = new RealARGBConverter< T >( min.getMinValue(), max.getMaxValue());
+
+            System.out.println("Other Type");
 
             final LUTConverter< T > converter = new LUTConverter< T >( min.getMinValue(), max.getMaxValue(), ColorTables.FIRE);
             iview = new InteractiveViewer2D<T>(interval.getWidth(), interval.getHeight(), Views.extendZero(interval), transform, converter);

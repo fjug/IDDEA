@@ -50,7 +50,7 @@ public abstract class InteractiveRealViewer< T, A extends AffineSet & AffineGet 
 	final protected A viewerTransform;
 
 	/**
-	 * Canvas used for displaying the rendered {@link #screenImages screen image}.
+	 * Canvas used for displaying the rendered.
 	 */
 	final protected C display;
 
@@ -191,10 +191,32 @@ public abstract class InteractiveRealViewer< T, A extends AffineSet & AffineGet 
     }
 
     /**
-     * Get the underlying source.
+     * Get the underlying RealRandomAccessible source.
      * @return RealRandomAccessible<T>
      */
     public RealRandomAccessible<T> getSource() {
         return source;
+    }
+
+    /**
+     * Get the underlying RandomAccessible source.
+     * @return RandomAccessible<T>
+     */
+    public RandomAccessible<T> getIntervalSource()
+    {
+        if(intervalSource == null)
+            throw new NullPointerException("IntervalSource does not exist.");
+
+        return intervalSource;
+    }
+
+    /**
+     * Check the underlying RandomAccessible source available.
+     * @return boolean
+     */
+    public boolean isIntervalSourceAvailable()
+    {
+        if(intervalSource == null) return false;
+        else return true;
     }
 }

@@ -7,15 +7,14 @@ import net.imglib2.realtransform.AffineTransform2D;
 import net.imglib2.type.numeric.ARGBType;
 import net.imglib2.ui.AffineTransformType2D;
 import net.imglib2.ui.TransformEventHandler2D;
-import net.imglib2.ui.util.Defaults;
-import net.imglib2.ui.util.FinalSource;
 
 /**
  * Interactive viewer for a 2D {@link RealRandomAccessible}.
  *
  * @author Tobias Pietzsch <tobias.pietzsch@gmail.com>
+ * @author HongKee
  */
-public class InteractiveRealViewer2D< T > extends InteractiveRealViewer< T, AffineTransform2D, JHotDrawInteractiveDisplay2D< AffineTransform2D > >
+public class InteractiveRealViewer2D<T> extends InteractiveRealViewer< T, AffineTransform2D, JHotDrawInteractiveDisplay2D< AffineTransform2D > >
 {
 	/**
 	 * Create an interactive viewer for a 2D {@link RealRandomAccessible}.
@@ -24,14 +23,14 @@ public class InteractiveRealViewer2D< T > extends InteractiveRealViewer< T, Affi
 	 * @param height
 	 *            window height.
      * @param source
- *            The source image to display. It is assumed that the source is
- *            extended to infinity.
+     *            The source image to display. It is assumed that the source is
+     *            extended to infinity.
      * @param sourceTransform
-*            Transformation from source to global coordinates. This is
-*            useful for pre-scaling when showing anisotropic data, for
-*            example.
+     *            Transformation from source to global coordinates. This is
+     *            useful for pre-scaling when showing anisotropic data, for
+     *            example.
      * @param converter
-*            Converter from the source type to argb for rendering the
+     *            Converter from the source type to argb for rendering the
      */
 	public InteractiveRealViewer2D( final int width, final int height, final RealRandomAccessible< T > source, final AffineTransform2D sourceTransform, final Converter<? super T, ARGBType> converter )
 	{

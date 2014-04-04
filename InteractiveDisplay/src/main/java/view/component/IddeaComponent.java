@@ -2,14 +2,15 @@ package view.component;
 
 import controller.tool.SpimTool;
 import edu.umd.cs.findbugs.annotations.Nullable;
+import ij.ImageJ;
 import ij.ImagePlus;
 import model.figure.DrawFigureFactory;
-import model.source.MandelbrotRealRandomAccessible;
 import net.imglib2.IterableInterval;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.RealRandomAccessible;
 import net.imglib2.converter.TypeIdentity;
 import net.imglib2.converter.RealARGBConverter;
+import net.imglib2.display.projector.Projector2D;
 import net.imglib2.exception.ImgLibException;
 import net.imglib2.img.ImagePlusAdapter;
 import net.imglib2.img.Img;
@@ -18,6 +19,7 @@ import net.imglib2.img.array.ArrayImgFactory;
 import net.imglib2.img.imageplus.ImagePlusImg;
 import net.imglib2.img.imageplus.ImagePlusImgs;
 import net.imglib2.interpolation.randomaccess.NearestNeighborInterpolatorFactory;
+import net.imglib2.meta.ImgPlus;
 import net.imglib2.realtransform.AffineTransform2D;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.Type;
@@ -30,6 +32,7 @@ import net.imglib2.type.numeric.real.FloatType;
 import net.imglib2.ui.util.InterpolatingSource;
 import net.imglib2.view.IntervalView;
 import net.imglib2.view.Views;
+
 import org.jhotdraw.draw.*;
 import org.jhotdraw.draw.action.ButtonFactory;
 import org.jhotdraw.draw.io.DOMStorableInputOutputFormat;
@@ -39,6 +42,7 @@ import org.jhotdraw.draw.tool.BezierTool;
 import org.jhotdraw.gui.URIChooser;
 import org.jhotdraw.net.URIUtil;
 import org.jhotdraw.util.ResourceBundleUtil;
+
 import view.converter.ColorTables;
 import view.converter.LUTConverter;
 import view.display.InteractiveDrawingView;
@@ -47,6 +51,7 @@ import view.viewer.InteractiveRealViewer2D;
 import view.viewer.InteractiveViewer2D;
 
 import javax.swing.*;
+
 import java.awt.*;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -65,61 +70,49 @@ import static org.jhotdraw.draw.AttributeKeys.STROKE_COLOR;
  */
 public class IddeaComponent extends JPanel {
 
-    private InteractiveRealViewer iview2d;
+    /**
+     * It holds the current interactive viewer 2d
+     */
+    private InteractiveRealViewer2D currentInteractiveViewer2D;
+    public InteractiveRealViewer2D getCurrentInteractiveViewer2D() {
+        return currentInteractiveViewer2D;
+    }
+
     private DrawingEditor editor;
     private String toolbarLocation;
     private boolean toolbarVisible = false;
-    private Img img = null;
+    private ImagePlus imgPlus = null;
+    private IntervalView<DoubleType> intervalViewDoubleType = null;
 
-    public InteractiveRealViewer getIview2d() {
-        return iview2d;
-    }
 
-    MandelbrotRealRandomAccessible mandelbrot;
-
-    public InteractiveDrawingView getInteractiveDrawingView()
+    public InteractiveDrawingView getInteractiveDrawingView(IntervalView< DoubleType > viewImg)
     {
-        final int width = 800;
-        final int height = 600;
-
-        final int maxIterations = 100;
-        mandelbrot = new MandelbrotRealRandomAccessible( maxIterations );
-
-        final AffineTransform2D transform = new AffineTransform2D();
-        transform.scale( 200 );
-        transform.translate( width / 2.0, height / 2.0 );
-
-        final LUTConverter< LongType > converter = new LUTConverter< LongType >( 0d, 50, ColorTables.FIRE);
-
-        InteractiveRealViewer2D iview = new InteractiveRealViewer2D<LongType>(width, height, mandelbrot, transform, converter);
-        iview2d = iview;
-
-        return iview.getJHotDrawDisplay();
-    }
-
-    public < T extends RealType< T > & NativeType< T >> InteractiveDrawingView getInteractiveDrawingView(Img<T> img)
-    {
-        final int width = (int) img.max(0);
-        final int height = (int) img.min(0);
-
-        final AffineTransform2D transform = new AffineTransform2D();
-        InteractiveViewer2D iview = null;
-
-        System.out.println(img.firstElement().getClass());
+        if(viewImg != null)
         {
-            final T min = Views.iterable( img ).firstElement().copy();
-            final T max = min.copy();
-            getMinMax( Views.iterable( img ), min, max );
+            final AffineTransform2D transform = new AffineTransform2D();
 
-            RealRandomAccessible< T > interpolated = Views.interpolate( Views.extendZero(img), new NearestNeighborInterpolatorFactory<T>() );
-            //final RealARGBConverter< T > converter = new RealARGBConverter< T >( min.getMinValue(), max.getMaxValue());
+            final DoubleType min = new DoubleType();
+            final DoubleType max = new DoubleType();
+            computeMinMax( viewImg, min, max );
 
-            final LUTConverter< T > converter = new LUTConverter< T >( min.getMinValue(), max.getMaxValue(), ColorTables.FIRE);
-            iview = new InteractiveViewer2D<T>(width, height, Views.extendZero(img), transform, converter);
+            RealRandomAccessible< DoubleType > interpolated = Views.interpolate( Views.extendZero(viewImg), new NearestNeighborInterpolatorFactory<DoubleType>() );
+            final RealARGBConverter< DoubleType > converter = new RealARGBConverter< DoubleType >( min.get(), max.get());
+
+            //final LUTConverter< T > converter = new LUTConverter< T >( min.getMinValue(), max.getMaxValue(), ColorTables.FIRE);
+            currentInteractiveViewer2D = new InteractiveViewer2D<DoubleType>((int)viewImg.max(0), (int)viewImg.max(1), Views.extendZero(viewImg), transform, converter);
+        }
+        else
+        {
+            final AffineTransform2D transform = new AffineTransform2D();
+            RealRandomAccessible< DoubleType > dummy = new DummyRealRandomAccessible();
+            final RealARGBConverter< DoubleType > converter = new RealARGBConverter< DoubleType >( 0, 0);
+
+            //final LUTConverter< T > converter = new LUTConverter< T >( min.getMinValue(), max.getMaxValue(), ColorTables.FIRE);
+            currentInteractiveViewer2D = new InteractiveRealViewer2D<DoubleType>(300, 200, dummy, transform, converter);
         }
 
-        iview2d = iview;
-        return iview.getJHotDrawDisplay();
+
+        return currentInteractiveViewer2D.getJHotDrawDisplay();
     }
 
 
@@ -139,9 +132,11 @@ public class IddeaComponent extends JPanel {
         view.setDrawing(createDrawing());
     }
 
-    public < T extends RealType< T > & NativeType< T >> IddeaComponent(Img<T> img) {
+    public IddeaComponent(ImagePlus img, IntervalView< DoubleType > viewImg) {
 
-        this.img = img;
+        this.imgPlus = img;
+        this.intervalViewDoubleType = viewImg;
+
         editor = new DefaultDrawingEditor();
         createToolbar();
 
@@ -220,10 +215,12 @@ public class IddeaComponent extends JPanel {
 
         HashMap<AttributeKey, Object> foreground = new HashMap< AttributeKey, Object>();
         org.jhotdraw.draw.AttributeKeys.STROKE_COLOR.put( foreground, new Color(1.0f, 0.0f, 0.0f, 0.33f) );
+        org.jhotdraw.draw.AttributeKeys.STROKE_WIDTH.put( foreground, 15d);
         ButtonFactory.addToolTo(tb, editor, new BezierTool(new BezierFigure(), foreground), "edit.scribbleForeground", labels);
 
         HashMap<AttributeKey, Object> background = new HashMap< AttributeKey, Object>();
         org.jhotdraw.draw.AttributeKeys.STROKE_COLOR.put( background, new Color( 0.0f, 0.0f, 1.0f, 0.33f) );
+        org.jhotdraw.draw.AttributeKeys.STROKE_WIDTH.put( background, 15d);
         ButtonFactory.addToolTo(tb, editor, new BezierTool(new BezierFigure(), background), "edit.scribbleBackground", labels);
 
         tb.add(ButtonFactory.createStrokeWidthButton(
@@ -238,14 +235,12 @@ public class IddeaComponent extends JPanel {
      * always regenerated by the Form Editor.
      */
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
+    @SuppressWarnings("unchecked")
     private void initComponents()
     {
         scrollPane = new javax.swing.JScrollPane();
 
-        if(img == null)
-            view = getInteractiveDrawingView();
-        else
-            view = getInteractiveDrawingView(img);
+        view = getInteractiveDrawingView(intervalViewDoubleType);
 
         setLayout(new java.awt.BorderLayout());
 
@@ -344,20 +339,80 @@ public class IddeaComponent extends JPanel {
         }
     }
 
-    public void setImg(Img img) {
-        iview2d = show(img);
+    public < T extends RealType< T > & NativeType< T >>
+    void updateScreenImage( final IntervalView< T > viewImg )
+    {
+        final T min = Views.iterable( viewImg ).firstElement().copy();
+        final T max = min.copy();
+        computeMinMax( viewImg, min, max );
 
-        editor.remove(view);
-        InteractiveDrawingView newView = getIview2d().getJHotDrawDisplay();
-        newView.copyFrom(view);
+        RealRandomAccessible< T > interpolated = null;
+        if(viewImg.numDimensions() > 2)
+            interpolated = Views.interpolate( Views.extendZero(Views.hyperSlice( viewImg, 2, 0 )), new NearestNeighborInterpolatorFactory<T>() );
+        else
+            interpolated = Views.interpolate( Views.extendZero(viewImg), new NearestNeighborInterpolatorFactory<T>() );
 
-        editor.add(newView);
-        view = newView;
+        final RealARGBConverter< T > converter = new RealARGBConverter< T >( min.getMinValue(), max.getMaxValue());
 
-        scrollPane.setViewportView(view);
+        updateDoubleTypeSourceAndConverter(interpolated, converter);
     }
 
-    private static < T extends Type< T > & Comparable< T > > void getMinMax( final IterableInterval< T > source, final T minValue, final T maxValue )
+    /**
+     * Sets the image data to be displayed when paintComponent is called.
+     *
+     * @param viewImg
+     *            an IntervalView<DoubleType> containing the desired view
+     *            onto the raw image data
+     */
+    public void setDoubleTypeScreenImage( final IntervalView< DoubleType > viewImg ) {
+        final DoubleType min = new DoubleType();
+        final DoubleType max = new DoubleType();
+        computeMinMax( viewImg, min, max );
+
+        RealRandomAccessible< DoubleType > interpolated = null;
+        if(viewImg.numDimensions() > 2)
+            interpolated = Views.interpolate( Views.extendZero(Views.hyperSlice( viewImg, 2, 0 )), new NearestNeighborInterpolatorFactory<DoubleType>() );
+        else
+            interpolated = Views.interpolate( Views.extendZero(viewImg), new NearestNeighborInterpolatorFactory<DoubleType>() );
+
+        final RealARGBConverter< DoubleType > converter = new RealARGBConverter< DoubleType >( min.get(), max.get());
+
+        updateDoubleTypeSourceAndConverter(interpolated, converter);
+    }
+
+    /**
+     * Sets the image data to be displayed when paintComponent is called.
+     *
+     * @param viewImg
+     *            an IntervalView<LongType> containing the desired view
+     *            onto the raw image data
+     */
+    public void setLongTypeScreenImage( final IntervalView< LongType > viewImg ) {
+
+        final LongType min = new LongType();
+        final LongType max = new LongType();
+        computeMinMax( viewImg, min, max );
+
+        RealRandomAccessible< LongType > interpolated = Views.interpolate( Views.extendZero(viewImg),
+                new NearestNeighborInterpolatorFactory<LongType>() );
+
+        final RealARGBConverter< LongType > converter = new RealARGBConverter< LongType >( min.get(), max.get() );
+
+        updateDoubleTypeSourceAndConverter(interpolated, converter);
+    }
+
+    /**
+     * Update the realRandomSource with new source.
+     * @param source
+     */
+    public void updateDoubleTypeSourceAndConverter(RealRandomAccessible source,
+                                                   RealARGBConverter converter)
+    {
+        currentInteractiveViewer2D.updateConverter(converter);
+        currentInteractiveViewer2D.updateSource(source);
+    }
+
+    private static < T extends Type< T > & Comparable< T > > void computeMinMax( final IterableInterval< T > source, final T minValue, final T maxValue )
     {
         for ( final T t : source )
             if ( minValue.compareTo( t ) > 0 )
@@ -366,31 +421,54 @@ public class IddeaComponent extends JPanel {
                 maxValue.set( t );
     }
 
-    public < T extends RealType< T > & NativeType< T >> InteractiveViewer2D show( final Img<T> interval ) {
-        final AffineTransform2D transform = new AffineTransform2D();
-        InteractiveViewer2D iview = null;
+    public static < T extends RealType< T > & NativeType< T > > void computeMinMax( final IntervalView< T > viewImg, final T minValue, final T maxValue )
+    {
+        // create a cursor for the image (the order does not matter)
+        final Iterator< T > iterator = Views.iterable( viewImg ).iterator();
 
-        System.out.println(interval.firstElement().getClass());
+        // initialize min and max with the first image value
+        T type = iterator.next();
 
-        {
-            final T min = Views.iterable( interval ).firstElement().copy();
-            final T max = min.copy();
-            getMinMax( Views.iterable( interval ), min, max );
+        minValue.set( type );
+        maxValue.set( type );
 
-//            RealRandomAccessible< T > interpolated = Views.interpolate( interval, new NLinearInterpolatorFactory<T>() );
-            RealRandomAccessible< T > interpolated = Views.interpolate( Views.extendZero(interval), new NearestNeighborInterpolatorFactory<T>() );
-            //final RealARGBConverter< T > converter = new RealARGBConverter< T >( min.getMinValue(), max.getMaxValue());
+        // loop over the rest of the data and determine min and max value
+        while ( iterator.hasNext() ) {
+            // we need this type more than once
+            type = iterator.next();
 
-            final LUTConverter< T > converter = new LUTConverter< T >( min.getMinValue(), max.getMaxValue(), ColorTables.FIRE);
-            iview = new InteractiveViewer2D<T>((int)interval.max(0), (int)interval.max(1), Views.extendZero(interval), transform, converter);
+            if ( type.compareTo( minValue ) < 0 ) minValue.set( type );
+
+            if ( type.compareTo( maxValue ) > 0 ) maxValue.set( type );
         }
-
-        return iview;
     }
+
+//    public < T extends RealType< T > & NativeType< T >> InteractiveViewer2D show( final Img<T> interval ) {
+//        final AffineTransform2D transform = new AffineTransform2D();
+//        InteractiveViewer2D iview = null;
+//
+//        System.out.println(interval.firstElement().getClass());
+//
+//
+//        {
+//            final T min = Views.iterable( interval ).firstElement().copy();
+//            final T max = min.copy();
+//            getMinMax( Views.iterable( interval ), min, max );
+//
+////            RealRandomAccessible< T > interpolated = Views.interpolate( interval, new NLinearInterpolatorFactory<T>() );
+//            RealRandomAccessible< T > interpolated = Views.interpolate( Views.extendZero(interval), new NearestNeighborInterpolatorFactory<T>() );
+//            //final RealARGBConverter< T > converter = new RealARGBConverter< T >( min.getMinValue(), max.getMaxValue());
+//
+//            final LUTConverter< T > converter = new LUTConverter< T >( min.getMinValue(), max.getMaxValue(), ColorTables.FIRE);
+//            iview = new InteractiveViewer2D<T>((int)interval.max(0), (int)interval.max(1), Views.extendZero(interval), transform, converter);
+//        }
+//
+//        return iview;
+//    }
 
     public void setPreferredSize(Dimension dim)
     {
-        iview2d.getJHotDrawDisplay().setPreferredSize(dim);
+        currentInteractiveViewer2D.getJHotDrawDisplay().setPreferredSize(dim);
     }
     // End of variables declaration//GEN-END:variables
 
