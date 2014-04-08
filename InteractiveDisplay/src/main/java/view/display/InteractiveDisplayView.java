@@ -7,9 +7,10 @@ import model.source.MandelbrotRealRandomAccessible;
 import net.imglib2.IterableInterval;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.RealRandomAccessible;
-import net.imglib2.converter.Converter;
-import net.imglib2.converter.TypeIdentity;
-import net.imglib2.converter.RealARGBConverter;
+import net.imglib2.converter.*;
+import view.component.DummyRealRandomAccessible;
+import view.converter.ChannelARGBConverter;
+import net.imglib2.display.projector.composite.CompositeXYRandomAccessibleProjector;
 import net.imglib2.exception.ImgLibException;
 import net.imglib2.img.ImagePlusAdapter;
 import net.imglib2.img.Img;
@@ -19,8 +20,11 @@ import net.imglib2.interpolation.randomaccess.NearestNeighborInterpolatorFactory
 import net.imglib2.type.NativeType;
 import net.imglib2.type.Type;
 import net.imglib2.type.numeric.ARGBType;
+import net.imglib2.type.numeric.NumericType;
 import net.imglib2.type.numeric.RealType;
 import net.imglib2.type.numeric.integer.LongType;
+import net.imglib2.type.numeric.integer.UnsignedByteType;
+import net.imglib2.type.numeric.integer.UnsignedShortType;
 import net.imglib2.type.numeric.real.DoubleType;
 import net.imglib2.type.numeric.real.FloatType;
 import net.imglib2.realtransform.AffineTransform2D;
@@ -30,6 +34,7 @@ import net.imglib2.ui.util.InterpolatingSource;
 import net.imglib2.view.IntervalView;
 import net.imglib2.view.Views;
 
+import net.imglib2.view.composite.CompositeIntervalView;
 import org.jhotdraw.draw.io.OutputFormat;
 import org.jhotdraw.draw.io.InputFormat;
 import org.jhotdraw.draw.print.DrawingPageable;
@@ -45,10 +50,14 @@ import java.awt.*;
 import java.beans.*;
 import java.io.*;
 import java.net.URI;
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.Set;
 
 import javax.swing.*;
 import javax.swing.border.*;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 
 import org.jhotdraw.app.AbstractView;
 import org.jhotdraw.app.action.edit.RedoAction;
@@ -64,6 +73,9 @@ import view.viewer.InteractiveRealViewer;
 import view.viewer.InteractiveRealViewer2D;
 import view.viewer.InteractiveViewer2D;
 
+import static view.converter.ChannelARGBConverter.Channel.B;
+import static view.converter.ChannelARGBConverter.Channel.G;
+import static view.converter.ChannelARGBConverter.Channel.R;
 
 
 /**
@@ -74,7 +86,12 @@ import view.viewer.InteractiveViewer2D;
  * @author HongKee Moon
  */
 
-public class InteractiveDisplayView extends AbstractView {
+public class InteractiveDisplayView extends AbstractView implements ChangeListener {
+
+    private javax.swing.JScrollPane scrollPane;
+    private JSlider sliderTime;
+    private JPanel leftPanel;
+    private InteractiveDrawingView view;
 
     /**
      * Each DrawView uses its own undo redo manager.
@@ -93,14 +110,22 @@ public class InteractiveDisplayView extends AbstractView {
      */
     private InteractiveRealViewer currentInteractiveViewer2D;
 
-    /**
-     * It holds the interactive real viewer 2d
-     */
-    private InteractiveRealViewer interactiveRealViewer2D;
-
     public InteractiveRealViewer getCurrentInteractiveViewer2D() {
         return currentInteractiveViewer2D;
     }
+
+    private RandomAccessibleInterval interval = null;
+
+    Img< ARGBType > argbImg = null;
+
+    CompositeXYRandomAccessibleProjector projector = null;
+
+    ArrayList< Converter< UnsignedShortType, ARGBType > > converterListARGB = null;
+
+    JCheckBox cbCh0;
+    JCheckBox cbCh1;
+    JCheckBox cbCh2;
+    JCheckBox cbCh3;
 
     /**
      * Creates a new view.
@@ -146,6 +171,27 @@ public class InteractiveDisplayView extends AbstractView {
 //        labels.configureToolBarButton(pButton, "view.toggleGrid.placard");
 //        placardPanel.add(pButton, BorderLayout.EAST);
 //        scrollPane.add(placardPanel, JScrollPane.LOWER_LEFT_CORNER);
+    }
+
+    private void initComponents()
+    {
+        scrollPane = new javax.swing.JScrollPane();
+
+        leftPanel = new javax.swing.JPanel();
+        leftPanel.setLayout(new BoxLayout(leftPanel, BoxLayout.Y_AXIS));
+        sliderTime = new JSlider( JSlider.HORIZONTAL, 0, 10 - 1, 0 );
+        sliderTime.addChangeListener(this);
+        view = getInteractiveDrawingView();
+
+        setLayout(new java.awt.BorderLayout());
+
+        scrollPane.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+        scrollPane.setVerticalScrollBarPolicy(javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
+        scrollPane.setViewportView(view);
+
+        add(scrollPane, java.awt.BorderLayout.CENTER);
+        add(sliderTime, java.awt.BorderLayout.SOUTH);
+        add(leftPanel, java.awt.BorderLayout.WEST);
     }
 
     /**
@@ -302,18 +348,171 @@ public class InteractiveDisplayView extends AbstractView {
             String filename = newValue.toString().substring(5);
 
             // Image import
-            final ImagePlus imp = new ImagePlus( filename );
-            ImagePlusImg<FloatType, ? > map = ImagePlusImgs.from( imp );
-            currentInteractiveViewer2D = show(map);
+            ImagePlus imp = new ImagePlus( filename );
 
-            editor.remove(view);
-            InteractiveDrawingView newView = getCurrentInteractiveViewer2D().getJHotDrawDisplay();
-            newView.copyFrom(view);
+            // wrap it into an ImgLib image (no copying)
+            final Img image = ImagePlusAdapter.wrapNumeric(imp);
+            this.interval = image;
 
-            editor.add(newView);
-            view = newView;
+            IntervalView intervalView = Views.interval(image, image);
 
-            scrollPane.setViewportView(view);
+            System.out.println("Type: " + image.firstElement().getClass());
+            System.out.println("Dims: " + image.numDimensions());
+
+            for(int i = 0; i < image.numDimensions(); i++)
+            {
+                System.out.println("Min: " + image.min(i) + ", Max: " + image.max(i));
+                if(i == 3)
+                {
+                    sliderTime.setMaximum((int) image.max(i) - 1);
+                }
+            }
+
+            if(!ARGBType.class.isInstance(image.firstElement()))
+            {
+                if(image.numDimensions() == 4) {
+
+                    intervalView = Views.hyperSlice(interval, 3, 0);
+
+                    final long[] dim = new long[ intervalView.numDimensions() - 1];
+                    for ( int d = 0; d < dim.length; ++d )
+                        dim[ d ] = intervalView.dimension( d );
+                    argbImg = new ArrayImgFactory< ARGBType >().create( dim, new ARGBType() );
+                    createCompositeProjector( intervalView, argbImg );
+
+                    cbCh0 = new JCheckBox("Ch-0", true);
+                    cbCh0.addChangeListener(this);
+                    leftPanel.add(cbCh0);
+
+                    cbCh1 = new JCheckBox("Ch-1", true);
+                    cbCh1.addChangeListener(this);
+                    leftPanel.add(cbCh1);
+
+                    cbCh2 = new JCheckBox("Ch-2", true);
+                    cbCh2.addChangeListener(this);
+                    leftPanel.add(cbCh2);
+
+                    cbCh3 = new JCheckBox("Ch-3", true);
+                    cbCh3.addChangeListener(this);
+                    leftPanel.add(cbCh3);
+
+                    leftPanel.updateUI();
+
+//                    intervalView = Views.hyperSlice(Views.hyperSlice(interval, 3, 0), 2, 0);
+//
+//                    final UnsignedShortType min = new UnsignedShortType();
+//                    final UnsignedShortType max = new UnsignedShortType();
+//                    computeMinMax(intervalView, min, max);
+//
+//                    final RealARGBConverter<UnsignedShortType> converter = new RealARGBConverter< UnsignedShortType >( min.get(), max.get() );
+//
+//                    currentInteractiveViewer2D.updateConverter(converter);
+//                    currentInteractiveViewer2D.updateIntervalSource(Views.extendZero(intervalView));
+
+                }
+                else
+                {
+                    RandomAccessibleInterval imgOrig = Converters.convert(intervalView,
+                            new RealDoubleConverter(), new DoubleType());
+
+                    setDoubleTypeScreenImage(Views.interval(imgOrig, imgOrig));
+                }
+
+            }
+            else
+            {
+                currentInteractiveViewer2D.updateConverter(new TypeIdentity<ARGBType>());
+                currentInteractiveViewer2D.updateIntervalSource(Views.extendZero(interval));
+            }
+        }
+    }
+
+    private void createCompositeProjector( final IntervalView in, final Img< ARGBType > out )
+    {
+//        final UnsignedShortType min = new UnsignedShortType();
+//        final UnsignedShortType max = new UnsignedShortType();
+//        computeMinMax(Views.hyperSlice(in, 2, 0), min, max);
+
+        converterListARGB = new ArrayList< Converter< UnsignedShortType, ARGBType > >();
+        converterListARGB.add( new RealARGBConverter< UnsignedShortType >( 0, 10000 ) );
+//        converterListARGB.add( new RealARGBConverter< UnsignedShortType >( min.get(), max.get() * 0.1 ) );
+        converterListARGB.add( new ChannelARGBConverter( G ) );
+        converterListARGB.add( new ChannelARGBConverter( R ) );
+        converterListARGB.add( new ChannelARGBConverter( B ) );
+
+        projector = new CompositeXYRandomAccessibleProjector( in, out, converterListARGB, 2 );
+
+        projector.setComposite( true );
+//		projector.setComposite( 0, false );
+//		projector.setComposite( 1, true );
+//		projector.setComposite( 2, false );
+        projector.map();
+
+        currentInteractiveViewer2D.updateConverter(new TypeIdentity<ARGBType>());
+        ARGBType t = new ARGBType();
+        t.set(150 << 16 | 150 << 8 | 150);
+        currentInteractiveViewer2D.updateIntervalSource(Views.extendValue(out, t));
+    }
+
+    private void updateCompositeProjector(final IntervalView in, final Img< ARGBType > out)
+    {
+//        final UnsignedShortType min = new UnsignedShortType();
+//        final UnsignedShortType max = new UnsignedShortType();
+//        computeMinMax(in, min, max);
+//
+//        converterListARGB.set(0,  new RealARGBConverter< UnsignedShortType >( min.get(), max.get() * 0.1 ));
+
+        projector = new CompositeXYRandomAccessibleProjector( in, out, converterListARGB, 2 );
+
+        projector.setComposite( true );
+        projector.setComposite( 0, cbCh0.isSelected() );
+        projector.setComposite( 1, cbCh1.isSelected() );
+        projector.setComposite( 2, cbCh2.isSelected() );
+        projector.setComposite( 3, cbCh3.isSelected() );
+
+        projector.map();
+
+        ARGBType t = new ARGBType();
+        t.set(150 << 16 | 150 << 8 | 150);
+        currentInteractiveViewer2D.updateIntervalSource(Views.extendValue(out, t));
+    }
+
+    private void setDoubleTypeScreenImage(final IntervalView< DoubleType > viewImg ) {
+        final DoubleType min = new DoubleType();
+        final DoubleType max = new DoubleType();
+        computeMinMax( viewImg, min, max );
+
+        RealRandomAccessible< DoubleType > interpolated =
+                Views.interpolate( Views.extendZero( viewImg ), new NearestNeighborInterpolatorFactory< DoubleType >() );
+
+        final RealARGBConverter< DoubleType > converter = new RealARGBConverter< DoubleType >( min.get(), max.get() );
+
+        updateDoubleTypeSourceAndConverter( interpolated, converter );
+    }
+
+    public void updateDoubleTypeSourceAndConverter( RealRandomAccessible source, RealARGBConverter converter ) {
+        currentInteractiveViewer2D.updateConverter( converter );
+        currentInteractiveViewer2D.updateSource( source );
+    }
+
+    public static < T extends Comparable< T > & NativeType< T > > void computeMinMax( final IntervalView< T > viewImg, final T minValue, final T maxValue ) {
+        // create a cursor for the image (the order does not matter)
+        final Iterator< T > iterator = Views.iterable( viewImg ).iterator();
+
+        // initialize min and max with the first image value
+        T type = iterator.next();
+
+        minValue.set( type );
+        maxValue.set( type );
+
+        // loop over the rest of the data and determine min and max value
+        while ( iterator.hasNext() ) {
+            // we need this type more than once
+            type = iterator.next();
+
+            if ( type.compareTo( minValue ) < 0 ) minValue.set( type );
+
+            if ( type.compareTo( maxValue ) > 0 ) maxValue.set( type );
         }
     }
 
@@ -333,8 +532,6 @@ public class InteractiveDisplayView extends AbstractView {
     }
 
 
-    private RandomAccessibleInterval interval = null;
-
     public RandomAccessibleInterval getInterval() {
         return interval;
     }
@@ -353,12 +550,6 @@ public class InteractiveDisplayView extends AbstractView {
 
         if(ARGBType.class.isInstance(interval.firstElement()))
         {
-//            iview = new InteractiveViewer2D(interval.getWidth(), interval.getHeight(),
-//                    new InterpolatingSource(
-//                            Views.extendZero((RandomAccessibleInterval<ARGBType>)(ImagePlusImg<?, ?>) interval),
-//                            transform,
-//                            new TypeIdentity<ARGBType>() ));
-
             System.out.println("ARGBType");
 
             iview = new InteractiveViewer2D(interval.getWidth(), interval.getHeight(),
@@ -403,9 +594,10 @@ public class InteractiveDisplayView extends AbstractView {
             RealRandomAccessible< T > interpolated = Views.interpolate( Views.extendZero(interval), new NearestNeighborInterpolatorFactory<T>() );
             //final RealARGBConverter< T > converter = new RealARGBConverter< T >( min.getMinValue(), max.getMaxValue());
 
-            System.out.println("Other Type");
+            System.out.println(min.getClass() + " Type");
 
             final LUTConverter< T > converter = new LUTConverter< T >( min.getMinValue(), max.getMaxValue(), ColorTables.FIRE);
+
             iview = new InteractiveViewer2D<T>(interval.getWidth(), interval.getHeight(), Views.extendZero(interval), transform, converter);
         }
 
@@ -435,23 +627,23 @@ public class InteractiveDisplayView extends AbstractView {
             // User doesn't load any picture
             ((InteractiveRealViewer2D) currentInteractiveViewer2D).updateSource(source);
         }
-        else
-        {
-            // In case that user loaded InteractiveViewer2D already,
-            // We're changing to InteractiveRealViewer2D for the updating source
-            currentInteractiveViewer2D = interactiveRealViewer2D;
-
-            editor.remove(view);
-            InteractiveDrawingView newView = getCurrentInteractiveViewer2D().getJHotDrawDisplay();
-            newView.copyFrom(view);
-
-            editor.add(newView);
-            view = newView;
-
-            scrollPane.setViewportView(view);
-
-            ((InteractiveRealViewer2D) currentInteractiveViewer2D).updateSource(source);
-        }
+//        else
+//        {
+//            // In case that user loaded InteractiveViewer2D already,
+//            // We're changing to InteractiveRealViewer2D for the updating source
+//            currentInteractiveViewer2D = interactiveRealViewer2D;
+//
+//            editor.remove(view);
+//            InteractiveDrawingView newView = getCurrentInteractiveViewer2D().getJHotDrawDisplay();
+//            newView.copyFrom(view);
+//
+//            editor.add(newView);
+//            view = newView;
+//
+//            scrollPane.setViewportView(view);
+//
+//            ((InteractiveRealViewer2D) currentInteractiveViewer2D).updateSource(source);
+//        }
     }
 
     /**
@@ -482,55 +674,78 @@ public class InteractiveDisplayView extends AbstractView {
 
     private InteractiveDrawingView getInteractiveDrawingView()
     {
-        final int width = 800;
-        final int height = 600;
-
-        final int maxIterations = 100;
-        MandelbrotRealRandomAccessible mandelbrot = new MandelbrotRealRandomAccessible( maxIterations );
+//        final int width = 800;
+//        final int height = 600;
+//
+//        final int maxIterations = 100;
+//        MandelbrotRealRandomAccessible mandelbrot = new MandelbrotRealRandomAccessible( maxIterations );
+//
+//        final AffineTransform2D transform = new AffineTransform2D();
+//        transform.scale( 200 );
+//        transform.translate( width / 2.0, height / 2.0 );
+//
+//        //final RealARGBConverter< LongType > converter = new RealARGBConverter< LongType >( 0, maxIterations );
+//
+//        final LUTConverter< LongType > converter = new LUTConverter< LongType >( 0d, 50, ColorTables.FIRE);
+//
+//        InteractiveRealViewer2D iview = new InteractiveRealViewer2D<LongType>(width, height, mandelbrot, transform, converter);
+//        currentInteractiveViewer2D = iview;
+//        interactiveRealViewer2D = iview;
+//
+//        return iview.getJHotDrawDisplay();
 
         final AffineTransform2D transform = new AffineTransform2D();
-        transform.scale( 200 );
-        transform.translate( width / 2.0, height / 2.0 );
+        RealRandomAccessible< DoubleType > dummy = new DummyRealRandomAccessible();
+        final RealARGBConverter< DoubleType > converter = new RealARGBConverter< DoubleType >( 0, 0);
 
-        //final RealARGBConverter< LongType > converter = new RealARGBConverter< LongType >( 0, maxIterations );
+        currentInteractiveViewer2D = new InteractiveRealViewer2D<DoubleType>(300, 200, dummy, transform, converter);
 
-        final LUTConverter< LongType > converter = new LUTConverter< LongType >( 0d, 50, ColorTables.FIRE);
-
-        InteractiveRealViewer2D iview = new InteractiveRealViewer2D<LongType>(width, height, mandelbrot, transform, converter);
-
-        currentInteractiveViewer2D = iview;
-        interactiveRealViewer2D = iview;
-
-        return iview.getJHotDrawDisplay();
+        return currentInteractiveViewer2D.getJHotDrawDisplay();
     }
 
-    /** This method is called from within the constructor to
-     * initialize the form.
-     * WARNING: Do NOT modify this code. The content of this method is
-     * always regenerated by the Form Editor.
-     */
-    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
-    private void initComponents()
+    @Override
+    public void stateChanged(ChangeEvent changeEvent)
     {
-        scrollPane = new javax.swing.JScrollPane();
+        if(sliderTime.equals(changeEvent.getSource()))
+        {
+            int index = sliderTime.getValue();
 
-        JSlider sliderTime = new JSlider( JSlider.HORIZONTAL, 0, 10 - 1, 0 );
-        view = getInteractiveDrawingView();
+            if(argbImg != null)
+                updateCompositeProjector(Views.hyperSlice( interval, 3, index ), argbImg);
 
-        setLayout(new java.awt.BorderLayout());
-
-        scrollPane.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-        scrollPane.setVerticalScrollBarPolicy(javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
-        scrollPane.setViewportView(view);
-
-        add(scrollPane, java.awt.BorderLayout.CENTER);
-        add(sliderTime, java.awt.BorderLayout.SOUTH);
-    }// </editor-fold>//GEN-END:initComponents
-
-    // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JScrollPane scrollPane;
-    private InteractiveDrawingView view;
-    // End of variables declaration//GEN-END:variables
-
+        }
+        else if(cbCh0.equals(changeEvent.getSource()))
+        {
+    		projector.setComposite( 0, cbCh0.isSelected() );
+            projector.map();
+            ARGBType t = new ARGBType();
+            t.set(150 << 16 | 150 << 8 | 150);
+            currentInteractiveViewer2D.updateIntervalSource(Views.extendValue(argbImg, t));
+        }
+        else if(cbCh1.equals(changeEvent.getSource()))
+        {
+            projector.setComposite( 1, cbCh1.isSelected() );
+            projector.map();
+            ARGBType t = new ARGBType();
+            t.set(150 << 16 | 150 << 8 | 150);
+            currentInteractiveViewer2D.updateIntervalSource(Views.extendValue(argbImg, t));
+        }
+        else if(cbCh2.equals(changeEvent.getSource()))
+        {
+            projector.setComposite( 2, cbCh2.isSelected() );
+            projector.map();
+            ARGBType t = new ARGBType();
+            t.set(150 << 16 | 150 << 8 | 150);
+            currentInteractiveViewer2D.updateIntervalSource(Views.extendValue(argbImg, t));
+        }
+        else if(cbCh3.equals(changeEvent.getSource()))
+        {
+            projector.setComposite( 3, cbCh3.isSelected() );
+            projector.map();
+            ARGBType t = new ARGBType();
+            t.set(150 << 16 | 150 << 8 | 150);
+            currentInteractiveViewer2D.updateIntervalSource(Views.extendValue(argbImg, t));
+        }
+    }
 }
 

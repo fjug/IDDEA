@@ -7,6 +7,7 @@ import net.imglib2.RealRandomAccessible;
 import net.imglib2.converter.Converter;
 import net.imglib2.interpolation.InterpolatorFactory;
 import net.imglib2.interpolation.randomaccess.NLinearInterpolatorFactory;
+import net.imglib2.interpolation.randomaccess.NearestNeighborInterpolatorFactory;
 import net.imglib2.type.numeric.ARGBType;
 import net.imglib2.type.numeric.NumericType;
 import net.imglib2.ui.*;
@@ -130,7 +131,7 @@ public abstract class InteractiveRealViewer< T, A extends AffineSet & AffineGet 
 
     public void updateIntervalSource( RandomAccessible< T > interval ) {
         this.intervalSource = interval;
-        RealRandomAccessible source = Views.interpolate( interval, new NLinearInterpolatorFactory() );
+        RealRandomAccessible source = Views.interpolate( interval, new NearestNeighborInterpolatorFactory() );
         this.updateRenderSource( source );
     }
 

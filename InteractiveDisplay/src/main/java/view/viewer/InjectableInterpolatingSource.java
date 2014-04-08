@@ -39,7 +39,7 @@ public class InjectableInterpolatingSource< T extends NumericType< T >, A > exte
     public void injectIntervalSource( RandomAccessible< T > source ) {
         this.intervalSource = source;
 
-        injectSource( Views.interpolate( source, new NLinearInterpolatorFactory< T >() ) );
+        injectSource( Views.interpolate( source, new NearestNeighborInterpolatorFactory< T >() ) );
     }
 
     public RandomAccessible< T > getIntervalSource() {
