@@ -21,13 +21,13 @@ import net.imglib2.ui.*;
  * @author Stephan Saalfeld
  * @author HongKee Moon
  */
-public class InjectableMultiResolutionRenderer< A extends AffineSet & AffineGet & Concatenable< AffineGet > > extends AbstractMultiResolutionRenderer< A >
-{
+public class InjectableMultiResolutionRenderer< A extends AffineSet & AffineGet & Concatenable< AffineGet > > extends AbstractMultiResolutionRenderer< A > {
+
     /**
      * Factory for creating {@link MultiResolutionRenderer}.
      */
-    public static class Factory< A extends AffineSet & AffineGet & Concatenable< AffineGet > > implements RendererFactory< A >
-    {
+    public static class Factory< A extends AffineSet & AffineGet & Concatenable< AffineGet > > implements RendererFactory< A > {
+
         final protected AffineTransformType< A > transformType;
 
         final protected RenderSource< ?, A > source;
@@ -69,14 +69,7 @@ public class InjectableMultiResolutionRenderer< A extends AffineSet & AffineGet 
          * @param numRenderingThreads
          *            How many threads to use for rendering.
          */
-        public Factory(
-                final AffineTransformType< A > transformType,
-                final RenderSource< ?, A > source,
-                final double[] screenScales,
-                final long targetRenderNanos,
-                final boolean doubleBuffered,
-                final int numRenderingThreads )
-        {
+        public Factory( final AffineTransformType< A > transformType, final RenderSource< ?, A > source, final double[] screenScales, final long targetRenderNanos, final boolean doubleBuffered, final int numRenderingThreads ) {
             this.transformType = transformType;
             this.source = source;
             this.screenScales = screenScales;
@@ -86,8 +79,7 @@ public class InjectableMultiResolutionRenderer< A extends AffineSet & AffineGet 
         }
 
         @Override
-        public AbstractRenderer< A > create( final RenderTarget display, final PainterThread painterThread )
-        {
+        public AbstractRenderer< A > create( final RenderTarget display, final PainterThread painterThread ) {
             return new InjectableMultiResolutionRenderer< A >( transformType, source, display, painterThread, screenScales, targetRenderNanos, doubleBuffered, numRenderingThreads );
         }
     }
@@ -125,43 +117,21 @@ public class InjectableMultiResolutionRenderer< A extends AffineSet & AffineGet 
      * @param numRenderingThreads
      *            How many threads to use for rendering.
      */
-    public InjectableMultiResolutionRenderer(
-            final AffineTransformType< A > transformType,
-            final RenderSource< ?, A > source,
-            final RenderTarget display,
-            final PainterThread painterThread,
-            final double[] screenScales,
-            final long targetRenderNanos,
-            final boolean doubleBuffered,
-            final int numRenderingThreads )
-    {
+    public InjectableMultiResolutionRenderer( final AffineTransformType< A > transformType, final RenderSource< ?, A > source, final RenderTarget display, final PainterThread painterThread, final double[] screenScales, final long targetRenderNanos, final boolean doubleBuffered, final int numRenderingThreads ) {
         super( transformType, display, painterThread, screenScales, targetRenderNanos, doubleBuffered, numRenderingThreads );
         this.source = source;
     }
 
     @Override
-    protected SimpleInterruptibleProjector< ?, ARGBType > createProjector( final A viewerTransform, final A screenScaleTransform, final ARGBScreenImage target )
-    {
+    protected SimpleInterruptibleProjector< ?, ARGBType > createProjector( final A viewerTransform, final A screenScaleTransform, final ARGBScreenImage target ) {
         return createProjector( transformType, source, viewerTransform, screenScaleTransform, target, numRenderingThreads );
     }
 
-    protected static < T, A extends AffineGet & Concatenable< AffineGet > > SimpleInterruptibleProjector< T, ARGBType > createProjector(
-            final AffineTransformType< A > transformType,
-            final RenderSource< T, A > source,
-            final A viewerTransform,
-            final A screenScaleTransform,
-            final ARGBScreenImage screenImage,
-            final int numRenderingThreads )
-    {
+    protected static < T, A extends AffineGet & Concatenable< AffineGet > > SimpleInterruptibleProjector< T, ARGBType > createProjector( final AffineTransformType< A > transformType, final RenderSource< T, A > source, final A viewerTransform, final A screenScaleTransform, final ARGBScreenImage screenImage, final int numRenderingThreads ) {
         return new SimpleInterruptibleProjector< T, ARGBType >( getTransformedSource( transformType, source, viewerTransform, screenScaleTransform ), source.getConverter(), screenImage, numRenderingThreads );
     }
 
-    protected static < T, A extends AffineGet & Concatenable< AffineGet > > RandomAccessible< T > getTransformedSource(
-            final AffineTransformType< A > transformType,
-            final RenderSource< T, A > source,
-            final A viewerTransform,
-            final A screenScaleTransform )
-    {
+    protected static < T, A extends AffineGet & Concatenable< AffineGet > > RandomAccessible< T > getTransformedSource( final AffineTransformType< A > transformType, final RenderSource< T, A > source, final A viewerTransform, final A screenScaleTransform ) {
         final RealRandomAccessible< T > img = source.getInterpolatedSource();
 
         final A sourceToScreen = transformType.createTransform();
@@ -172,13 +142,11 @@ public class InjectableMultiResolutionRenderer< A extends AffineSet & AffineGet 
         return RealViews.constantAffine( img, sourceToScreen );
     }
 
-    public void injectSource(final RealRandomAccessible source)
-    {
-        ((Injectable)this.source).injectSource(source);
+    public void injectSource( final RealRandomAccessible source ) {
+        ( ( Injectable ) this.source ).injectSource( source );
     }
 
-    public void injectConverter(final Converter converter)
-    {
-        ((Injectable)this.source).injectConverter(converter);
+    public void injectConverter( final Converter converter ) {
+        ( ( Injectable ) this.source ).injectConverter( converter );
     }
 }

@@ -1,35 +1,19 @@
 package view.component;
 
 import controller.tool.SpimTool;
-import edu.umd.cs.findbugs.annotations.Nullable;
-import ij.ImageJ;
-import ij.ImagePlus;
 import model.figure.DrawFigureFactory;
 import net.imglib2.IterableInterval;
-import net.imglib2.RandomAccessibleInterval;
+
 import net.imglib2.RealRandomAccessible;
-import net.imglib2.converter.TypeIdentity;
 import net.imglib2.converter.RealARGBConverter;
-import net.imglib2.display.projector.Projector2D;
-import net.imglib2.exception.ImgLibException;
-import net.imglib2.img.ImagePlusAdapter;
-import net.imglib2.img.Img;
-import net.imglib2.img.ImgFactory;
-import net.imglib2.img.array.ArrayImgFactory;
-import net.imglib2.img.imageplus.ImagePlusImg;
-import net.imglib2.img.imageplus.ImagePlusImgs;
+
 import net.imglib2.interpolation.randomaccess.NearestNeighborInterpolatorFactory;
-import net.imglib2.meta.ImgPlus;
 import net.imglib2.realtransform.AffineTransform2D;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.Type;
-import net.imglib2.type.numeric.ARGBType;
-import net.imglib2.type.numeric.NumericType;
 import net.imglib2.type.numeric.RealType;
 import net.imglib2.type.numeric.integer.LongType;
 import net.imglib2.type.numeric.real.DoubleType;
-import net.imglib2.type.numeric.real.FloatType;
-import net.imglib2.ui.util.InterpolatingSource;
 import net.imglib2.view.IntervalView;
 import net.imglib2.view.Views;
 
@@ -39,14 +23,9 @@ import org.jhotdraw.draw.io.DOMStorableInputOutputFormat;
 import org.jhotdraw.draw.io.InputFormat;
 import org.jhotdraw.draw.io.OutputFormat;
 import org.jhotdraw.draw.tool.BezierTool;
-import org.jhotdraw.gui.URIChooser;
-import org.jhotdraw.net.URIUtil;
 import org.jhotdraw.util.ResourceBundleUtil;
 
-import view.converter.ColorTables;
-import view.converter.LUTConverter;
 import view.display.InteractiveDrawingView;
-import view.viewer.InteractiveRealViewer;
 import view.viewer.InteractiveRealViewer2D;
 import view.viewer.InteractiveViewer2D;
 
@@ -56,13 +35,10 @@ import java.awt.*;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.net.URI;
 import java.util.*;
 
-import static org.jhotdraw.draw.AttributeKeys.STROKE_COLOR;
-
 /**
- * Created with IntelliJ IDEA.
+ * IddeaComponent provides better user interactions to handle image and annotate them with jhotdraw figures.
  *
  * @author HongKee Moon
  * @version 0.1beta
@@ -81,8 +57,12 @@ public class IddeaComponent extends JPanel {
     private DrawingEditor editor;
     private String toolbarLocation;
     private boolean toolbarVisible = false;
-    private ImagePlus imgPlus = null;
     private IntervalView<DoubleType> intervalViewDoubleType = null;
+
+    private JToolBar tb;
+    private JScrollPane scrollPane;
+    private InteractiveDrawingView view;
+
 
 
     public InteractiveDrawingView getInteractiveDrawingView(IntervalView< DoubleType > viewImg)
@@ -95,10 +75,8 @@ public class IddeaComponent extends JPanel {
             final DoubleType max = new DoubleType();
             computeMinMax( viewImg, min, max );
 
-            RealRandomAccessible< DoubleType > interpolated = Views.interpolate( Views.extendZero(viewImg), new NearestNeighborInterpolatorFactory<DoubleType>() );
             final RealARGBConverter< DoubleType > converter = new RealARGBConverter< DoubleType >( min.get(), max.get());
 
-            //final LUTConverter< T > converter = new LUTConverter< T >( min.getMinValue(), max.getMaxValue(), ColorTables.FIRE);
             currentInteractiveViewer2D = new InteractiveViewer2D<DoubleType>((int)viewImg.max(0), (int)viewImg.max(1), Views.extendZero(viewImg), transform, converter);
         }
         else
@@ -107,7 +85,6 @@ public class IddeaComponent extends JPanel {
             RealRandomAccessible< DoubleType > dummy = new DummyRealRandomAccessible();
             final RealARGBConverter< DoubleType > converter = new RealARGBConverter< DoubleType >( 0, 0);
 
-            //final LUTConverter< T > converter = new LUTConverter< T >( min.getMinValue(), max.getMaxValue(), ColorTables.FIRE);
             currentInteractiveViewer2D = new InteractiveRealViewer2D<DoubleType>(300, 200, dummy, transform, converter);
         }
 
@@ -117,25 +94,6 @@ public class IddeaComponent extends JPanel {
 
 
     public IddeaComponent() {
-
-        editor = new DefaultDrawingEditor();
-        createToolbar();
-
-        try{
-            initComponents();
-        } catch (Exception ex)
-        {
-            ex.printStackTrace();
-        }
-
-        setEditor(editor);
-        view.setDrawing(createDrawing());
-    }
-
-    public IddeaComponent(ImagePlus img, IntervalView< DoubleType > viewImg) {
-
-        this.imgPlus = img;
-        this.intervalViewDoubleType = viewImg;
 
         editor = new DefaultDrawingEditor();
         createToolbar();
@@ -229,12 +187,7 @@ public class IddeaComponent extends JPanel {
                 ResourceBundleUtil.getBundle("org.jhotdraw.draw.Labels")));
     }
 
-    /** This method is called from within the constructor to
-     * initialize the form.
-     * WARNING: Do NOT modify this code. The content of this method is
-     * always regenerated by the Form Editor.
-     */
-    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
+
     @SuppressWarnings("unchecked")
     private void initComponents()
     {
@@ -254,12 +207,8 @@ public class IddeaComponent extends JPanel {
         {
             add(tb, toolbarLocation);
         }
-    }// </editor-fold>//GEN-END:initComponents
+    }
 
-    // Variables declaration - do not modify//GEN-BEGIN:variables
-    private JToolBar tb;
-    private JScrollPane scrollPane;
-    private InteractiveDrawingView view;
 
     public void setToolBarLocation(String location) {
         if(location.equals(BorderLayout.WEST) || location.equals(BorderLayout.EAST) )
@@ -470,6 +419,4 @@ public class IddeaComponent extends JPanel {
     {
         currentInteractiveViewer2D.getJHotDrawDisplay().setPreferredSize(dim);
     }
-    // End of variables declaration//GEN-END:variables
-
 }

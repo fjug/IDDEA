@@ -1,6 +1,5 @@
 package view.viewer;
 
-
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 
@@ -24,8 +23,8 @@ import net.imglib2.ui.viewer.InteractiveViewer3D;
  * @author Tobias Pietzsch <tobias.pietzsch@gmail.com>
  * @author HongKee Moon
  */
-public class InjectableDefaults
-{
+public class InjectableDefaults {
+
     /**
      * Whether to discard the alpha components when drawing
      * {@link BufferedImage} to {@link Graphics}.
@@ -69,8 +68,7 @@ public class InjectableDefaults
      * @return a factory to construct the default {@link Renderer} for the given
      *         {@link RenderSource source data}.
      */
-    public static < A extends AffineSet & AffineGet & Concatenable< AffineGet > > RendererFactory< A > rendererFactory( final AffineTransformType< A > transformType, final RenderSource< ?, A > source )
-    {
+    public static < A extends AffineSet & AffineGet & Concatenable< AffineGet > > RendererFactory< A > rendererFactory( final AffineTransformType< A > transformType, final RenderSource< ?, A > source ) {
         return new InjectableMultiResolutionRenderer.Factory< A >( transformType, source, screenScales, targetRenderNanos, doubleBuffered, numRenderingThreads );
     }
 }

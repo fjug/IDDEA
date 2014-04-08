@@ -83,21 +83,21 @@ public class HistogramToolAction extends AbstractApplicationAction
                 {
                     Rectangle2D.Double rec = f.getBounds();
 
-                    RandomAccessibleInterval< ARGBType > viewSource = (RandomAccessibleInterval< ARGBType >) Views.offsetInterval( source,
-                            new long[] { (long)rec.getX(), (long)rec.getY() }, new long[]{ (long)rec.getWidth()+1, (long)rec.getHeight()+1 } );
+                    RandomAccessibleInterval< ARGBType > viewSource = Views.offsetInterval( source,
+                            new long[] { (long)rec.getX(), (long)rec.getY() },
+                            new long[]{ (long)rec.getWidth() + 1, (long)rec.getHeight() + 1 } );
 
                     System.out.format("X=%f, Y=%f, W=%f, H=%f\n", rec.getX(), rec.getY(), rec.getWidth(), rec.getHeight());
 
-                    Cursor<ARGBType> cur = (Cursor<ARGBType>) Views.iterable(viewSource).localizingCursor();
+                    Cursor<ARGBType> cur = Views.iterable(viewSource).localizingCursor();
 
                     while(cur.hasNext())
                     {
                         cur.fwd();
 
                         boundarySize++;
-                        Point2D.Double point = new Point2D.Double(Math.ceil(cur.getDoublePosition(0)) + rec.getX(),
-                                Math.ceil(cur.getDoublePosition(1)) + rec.getY());
-                        //System.out.format("CX=%f, CY=%f\n", cur.getDoublePosition(0) + rec.getX(), cur.getDoublePosition(1) + rec.getY());
+                        Point2D.Double point = new Point2D.Double(Math.ceil(cur.getDoublePosition(0) + rec.getX()),
+                                Math.ceil(cur.getDoublePosition(1) + rec.getY()));
 
                         if(f.contains(point))
                         {
@@ -105,7 +105,8 @@ public class HistogramToolAction extends AbstractApplicationAction
 
                             int pixel = cur.get().get();
 
-                            System.out.println("" + ARGBType.red(pixel) + "," + ARGBType.green(pixel) + "," + ARGBType.blue(pixel));
+                            System.out.format("CX=%f, CY=%f (", cur.getDoublePosition(0) + rec.getX(), cur.getDoublePosition(1) + rec.getY());
+                            System.out.println("" + ARGBType.red(pixel) + "," + ARGBType.green(pixel) + "," + ARGBType.blue(pixel) + ")");
 
                             // Check the forground or background
                             Color stroke = f.get(org.jhotdraw.draw.AttributeKeys.STROKE_COLOR);
@@ -145,10 +146,10 @@ public class HistogramToolAction extends AbstractApplicationAction
                 {
                     Rectangle2D.Double rec = f.getBounds();
 
-                    RandomAccessibleInterval< ARGBType > viewSource = (RandomAccessibleInterval< ARGBType >) Views.offsetInterval(
+                    RandomAccessibleInterval< ARGBType > viewSource = Views.offsetInterval(
                             source,
                             new long[]{ (long)rec.getX(), (long)rec.getY() },
-                            new long[]{ (long)rec.getWidth(), (long)rec.getHeight() }
+                            new long[]{ (long)rec.getWidth() + 1, (long)rec.getHeight() + 1 }
                     );
 
                     Cursor<ARGBType> cur = Views.iterable(viewSource).localizingCursor();
@@ -157,7 +158,8 @@ public class HistogramToolAction extends AbstractApplicationAction
                     {
                         cur.fwd();
 
-                        Point2D.Double point = new Point2D.Double(cur.getDoublePosition(0) + rec.getX(), cur.getDoublePosition(1) + rec.getY());
+                        Point2D.Double point = new Point2D.Double(Math.ceil(cur.getDoublePosition(0) + rec.getX()),
+                                Math.ceil(cur.getDoublePosition(1) + rec.getY()));
                         if(f.contains(point))
                         {
                             int pixel = cur.get().get();

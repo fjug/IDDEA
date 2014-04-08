@@ -35,7 +35,7 @@ import java.io.File;
 import java.util.*;
 
 /**
- * Created with IntelliJ IDEA.
+ * SamplePanel for demonstrating IDDEA component.
  *
  * @author HongKee Moon
  * @version 0.1beta

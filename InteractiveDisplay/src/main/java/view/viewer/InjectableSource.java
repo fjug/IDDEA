@@ -19,17 +19,15 @@ import net.imglib2.ui.RenderSource;
  * @author Tobias Pietzsch <tobias.pietzsch@gmail.com>
  * @author HongKee Moon
  */
-public class InjectableSource< T, A > implements RenderSource< T, A >, Injectable<T>
-{
+public class InjectableSource< T, A > implements RenderSource< T, A >, Injectable< T > {
+
     protected RealRandomAccessible< T > source;
 
     protected Converter< ? super T, ARGBType > converter;
 
     protected A sourceTransform;
 
-    public InjectableSource()
-    {
-    }
+    public InjectableSource() {}
 
     /**
      * Create a {@link RenderSource}.
@@ -44,40 +42,34 @@ public class InjectableSource< T, A > implements RenderSource< T, A >, Injectabl
      *            A converter from the {@link #source} type T to
      *            {@link ARGBType}.
      */
-    public InjectableSource( final RealRandomAccessible< T > source, final A sourceTransform, final Converter< ? super T, ARGBType > converter )
-    {
+    public InjectableSource( final RealRandomAccessible< T > source, final A sourceTransform, final Converter< ? super T, ARGBType > converter ) {
         this.source = source;
         this.sourceTransform = sourceTransform;
         this.converter = converter;
     }
 
     @Override
-    public RealRandomAccessible< T > getInterpolatedSource()
-    {
+    public RealRandomAccessible< T > getInterpolatedSource() {
         return source;
     }
 
     @Override
-    public A getSourceTransform()
-    {
+    public A getSourceTransform() {
         return sourceTransform;
     }
 
     @Override
-    public Converter< ? super T, ARGBType > getConverter()
-    {
+    public Converter< ? super T, ARGBType > getConverter() {
         return converter;
     }
 
     @Override
-    public void injectSource(RealRandomAccessible<T> source)
-    {
+    public void injectSource( RealRandomAccessible< T > source ) {
         this.source = source;
     }
 
     @Override
-    public void injectConverter(Converter< ? super T, ARGBType >  converter)
-    {
+    public void injectConverter( Converter< ? super T, ARGBType > converter ) {
         this.converter = converter;
     }
 }

@@ -181,12 +181,12 @@ public class InteractiveDisplayApplicationModel extends AbstractApplicationModel
 
         HashMap<AttributeKey, Object> foreground = new HashMap< AttributeKey, Object>();
         org.jhotdraw.draw.AttributeKeys.STROKE_COLOR.put( foreground, new Color(1.0f, 0.0f, 0.0f, 0.33f) );
-        org.jhotdraw.draw.AttributeKeys.STROKE_WIDTH.put( foreground, 1d);
+        org.jhotdraw.draw.AttributeKeys.STROKE_WIDTH.put( foreground, 0.5d);
         ButtonFactory.addToolTo(tb, editor, new BezierTool(new BezierFigure(), foreground), "edit.scribbleForeground", labels);
 
         HashMap<AttributeKey, Object> background = new HashMap< AttributeKey, Object>();
         org.jhotdraw.draw.AttributeKeys.STROKE_COLOR.put( background, new Color( 0.0f, 0.0f, 1.0f, 0.33f) );
-        org.jhotdraw.draw.AttributeKeys.STROKE_WIDTH.put( background, 1d);
+        org.jhotdraw.draw.AttributeKeys.STROKE_WIDTH.put( background, 0.5d);
         ButtonFactory.addToolTo(tb, editor, new BezierTool(new BezierFigure(), background), "edit.scribbleBackground", labels);
 
         tb.add(ButtonFactory.createStrokeWidthButton(
