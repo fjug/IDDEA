@@ -123,6 +123,12 @@
             <artifactId>gral-core</artifactId>
             <version>0.10</version>
         </dependency>
+
+        <dependency>
+            <groupId>org.xerial</groupId>
+            <artifactId>sqlite-jdbc</artifactId>
+            <version>3.7.15-M1</version>
+        </dependency>
 	</dependencies>
 
 	<build>
