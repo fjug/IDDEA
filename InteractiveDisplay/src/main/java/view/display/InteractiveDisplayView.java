@@ -44,6 +44,10 @@ import org.jhotdraw.draw.io.DOMStorableInputOutputFormat;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseMotionListener;
+import java.awt.geom.AffineTransform;
+import java.awt.geom.Point2D;
 import java.awt.print.Pageable;
 
 import org.jhotdraw.gui.*;
@@ -54,10 +58,7 @@ import java.awt.*;
 import java.beans.*;
 import java.io.*;
 import java.net.URI;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.Iterator;
-import java.util.Set;
+import java.util.*;
 
 import javax.swing.*;
 import javax.swing.border.*;
@@ -95,7 +96,7 @@ import static view.converter.ChannelARGBConverter.Channel.R;
  * @author HongKee Moon
  */
 
-public class InteractiveDisplayView extends AbstractView implements ChangeListener, ActionListener {
+public class InteractiveDisplayView extends AbstractView implements ChangeListener, ActionListener, MouseMotionListener {
 
     private javax.swing.JScrollPane scrollPane;
     private JSlider sliderTime;
@@ -789,6 +790,8 @@ public class InteractiveDisplayView extends AbstractView implements ChangeListen
                     // Green channel picked-up
                     objectLabel.setObjectList(detectEndpoints(Views.hyperSlice(intervalView, 2, 1)));
 
+                    currentInteractiveViewer2D.getJHotDrawDisplay().addMouseMotionListener(this);
+
 
                     currentInteractiveViewer2D.getJHotDrawDisplay().repaint();
                 }
@@ -796,8 +799,11 @@ public class InteractiveDisplayView extends AbstractView implements ChangeListen
         }
     }
 
+    LinkedHashMap<Point, ObjectInfo> objectMap = new LinkedHashMap<Point, ObjectInfo>();
+
     public < T extends RealType< T > & NativeType< T >> ArrayList<ObjectInfo> detectEndpoints(IntervalView<T> v)
     {
+        objectMap.clear();
         ArrayList<ObjectInfo> objLists = new ArrayList<ObjectInfo>();
 
         IterableInterval< T > input = Views.iterable(v);
@@ -816,20 +822,43 @@ public class InteractiveDisplayView extends AbstractView implements ChangeListen
                 net.imglib2.Point position = new net.imglib2.Point( v.numDimensions() );
                 position.setPosition(cursorInput);
 
-                ObjectInfo info = new ObjectInfo();
-                info.Label = "Endpoint-" + i;
-                info.X = position.getIntPosition(0);
-                info.Y = position.getIntPosition(1);
+                ObjectInfo info = new ObjectInfo(
+                        position.getIntPosition(0),
+                        position.getIntPosition(1),
+                        "Endpoint-" + i);
 //                System.out.print("" + position.getDoublePosition(0) + "," + position.getDoublePosition(1));
 //                System.out.println(val.getRealDouble());
                 objLists.add(info);
+                objectMap.put(new Point(position.getIntPosition(0), position.getIntPosition(1)), info);
                 i++;
             }
         }
 
-
         return objLists;
     }
 
+    @Override
+    public void mouseDragged(MouseEvent mouseEvent) {
+
+    }
+
+    @Override
+    public void mouseMoved(MouseEvent mouseEvent) {
+        Point2D.Double p = currentInteractiveViewer2D.getJHotDrawDisplay().viewToDrawing(mouseEvent.getPoint());
+
+        int x = (int)Math.round(p.getX());
+        int y = (int)Math.round(p.getY());
+
+        objectLabel.updateXY(x, y);
+        if(objectMap.containsKey(new Point(x, y))) {
+            ObjectInfo info = objectMap.get(new Point(x, y));
+            objectInfo.updateInfo(info.Label, "" + x + ", " + y);
+        }
+        else {
+            objectInfo.updateInfo("Mouse ", "" + x + ", " + y);
+        }
+
+        currentInteractiveViewer2D.getJHotDrawDisplay().repaint();
+    }
 }
 

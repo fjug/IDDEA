@@ -34,7 +34,7 @@ public class ObjectInfoOverlay implements OverlayRenderer {
 
         Color c = g.getColor();
         g.setColor(Color.white);
-        g.setFont( new Font( "Monospaced", Font.BOLD, 8 ) );
+        g.setFont( new Font( "Monospaced", Font.BOLD, 12 ) );
         g.drawString( sourceName, ( int ) g.getClipBounds().getWidth() / 2 - 100, 12 );
         g.drawString( timepointString, ( int ) g.getClipBounds().getWidth() - 240, 12 );
         g.setColor(c);

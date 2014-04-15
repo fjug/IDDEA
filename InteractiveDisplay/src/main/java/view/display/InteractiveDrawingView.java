@@ -847,8 +847,7 @@ public abstract class InteractiveDrawingView extends JComponent implements Drawi
      * @return A handle, null if no handle is found.
      */
     @Override
-    public Handle findHandle(
-            Point p) {
+    public Handle findHandle(Point p) {
         validateHandles();
 
         for (Handle handle : new ReversedList<Handle>(getSecondaryHandles())) {
@@ -861,7 +860,6 @@ public abstract class InteractiveDrawingView extends JComponent implements Drawi
             if (handle.contains(p)) {
                 return handle;
             }
-
         }
         return null;
     }
@@ -895,8 +893,7 @@ public abstract class InteractiveDrawingView extends JComponent implements Drawi
      * @return A figure, null if no figure is found.
      */
     @Override
-    public Figure findFigure(
-            Point p) {
+    public Figure findFigure(Point p) {
         return getDrawing().findFigure(viewToDrawing(p));
     }
 

@@ -15,12 +15,17 @@ import java.util.*;
 public abstract class TransformOverlay implements OverlayRenderer {
     protected AffineTransform preTransform;
 
+    public abstract void drawTransformedOverlays(Graphics g);
+
+    public AffineTransform getPreTransform()
+    {
+        return preTransform;
+    }
+
     public void setupTransform(AffineTransform transform)
     {
         preTransform = transform;
     }
-
-    public abstract void drawTransformedOverlays(Graphics g);
 
     @Override
     public void drawOverlays(Graphics gr) {
