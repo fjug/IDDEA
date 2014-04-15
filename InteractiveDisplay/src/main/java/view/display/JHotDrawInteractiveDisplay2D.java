@@ -6,6 +6,7 @@ import net.imglib2.ui.OverlayRenderer;
 import net.imglib2.ui.TransformEventHandler;
 import net.imglib2.ui.TransformEventHandlerFactory;
 import net.imglib2.ui.TransformListener;
+import view.overlay.TransformOverlay;
 
 import java.awt.*;
 import java.awt.event.*;
@@ -145,8 +146,13 @@ public class JHotDrawInteractiveDisplay2D<T> extends InteractiveDrawingView
             g.drawImage( bi, 0, 0, getWidth(), getHeight(), null );
         }
 
-        for ( final OverlayRenderer or : overlayRenderers )
-            or.drawOverlays( g );
+        for ( final OverlayRenderer or : overlayRenderers ) {
+            if(or instanceof TransformOverlay)
+            {
+                ((TransformOverlay) or).setupTransform(preTransform);
+            }
+            or.drawOverlays(g);
+        }
     }
 
 

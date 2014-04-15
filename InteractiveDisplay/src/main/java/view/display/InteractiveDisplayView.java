@@ -5,9 +5,11 @@ import ij.ImagePlus;
 import model.figure.DrawFigureFactory;
 import model.source.MandelbrotRealRandomAccessible;
 import net.imglib2.IterableInterval;
+import net.imglib2.RandomAccess;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.RealRandomAccessible;
 import net.imglib2.converter.*;
+import net.imglib2.type.numeric.IntegerType;
 import view.component.DummyRealRandomAccessible;
 import view.converter.ChannelARGBConverter;
 import net.imglib2.display.projector.composite.CompositeXYRandomAccessibleProjector;
@@ -40,6 +42,8 @@ import org.jhotdraw.draw.io.InputFormat;
 import org.jhotdraw.draw.print.DrawingPageable;
 import org.jhotdraw.draw.io.DOMStorableInputOutputFormat;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.print.Pageable;
 
 import org.jhotdraw.gui.*;
@@ -51,6 +55,7 @@ import java.beans.*;
 import java.io.*;
 import java.net.URI;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.Set;
 
@@ -69,6 +74,10 @@ import org.jhotdraw.net.URIUtil;
 
 import view.converter.ColorTables;
 import view.converter.LUTConverter;
+import view.overlay.ObjectInfo;
+import view.overlay.ObjectInfoOverlay;
+import view.overlay.ObjectInfoTransformOverlay;
+import view.overlay.SourceInfoTransformOverlay;
 import view.viewer.InteractiveRealViewer;
 import view.viewer.InteractiveRealViewer2D;
 import view.viewer.InteractiveViewer2D;
@@ -86,7 +95,7 @@ import static view.converter.ChannelARGBConverter.Channel.R;
  * @author HongKee Moon
  */
 
-public class InteractiveDisplayView extends AbstractView implements ChangeListener {
+public class InteractiveDisplayView extends AbstractView implements ChangeListener, ActionListener {
 
     private javax.swing.JScrollPane scrollPane;
     private JSlider sliderTime;
@@ -114,7 +123,7 @@ public class InteractiveDisplayView extends AbstractView implements ChangeListen
         return currentInteractiveViewer2D;
     }
 
-    private RandomAccessibleInterval interval = null;
+    private Img interval = null;
 
     Img< ARGBType > argbImg = null;
 
@@ -354,7 +363,7 @@ public class InteractiveDisplayView extends AbstractView implements ChangeListen
             final Img image = ImagePlusAdapter.wrapNumeric(imp);
             this.interval = image;
 
-            IntervalView intervalView = Views.interval(image, image);
+            //IntervalView intervalView = Views.interval(image, image);
 
             System.out.println("Type: " + image.firstElement().getClass());
             System.out.println("Dims: " + image.numDimensions());
@@ -395,6 +404,11 @@ public class InteractiveDisplayView extends AbstractView implements ChangeListen
                     cbCh3 = new JCheckBox("Ch-3", true);
                     cbCh3.addChangeListener(this);
                     leftPanel.add(cbCh3);
+
+                    JButton btn = new JButton("Find endpoint");
+                    btn.setName("btnEndpoint");
+                    btn.addActionListener(this);
+                    leftPanel.add(btn);
 
                     leftPanel.updateUI();
 
@@ -485,12 +499,13 @@ public class InteractiveDisplayView extends AbstractView implements ChangeListen
         RealRandomAccessible< DoubleType > interpolated =
                 Views.interpolate( Views.extendZero( viewImg ), new NearestNeighborInterpolatorFactory< DoubleType >() );
 
-        final RealARGBConverter< DoubleType > converter = new RealARGBConverter< DoubleType >( min.get(), max.get() );
+        //final RealARGBConverter< DoubleType > converter = new RealARGBConverter< DoubleType >( min.get(), max.get() );
+        final LUTConverter< DoubleType > converter = new LUTConverter< DoubleType >( min.getMinValue(), max.getMaxValue(), ColorTables.FIRE);
 
         updateDoubleTypeSourceAndConverter( interpolated, converter );
     }
 
-    public void updateDoubleTypeSourceAndConverter( RealRandomAccessible source, RealARGBConverter converter ) {
+    public void updateDoubleTypeSourceAndConverter( RealRandomAccessible source, Converter converter ) {
         currentInteractiveViewer2D.updateConverter( converter );
         currentInteractiveViewer2D.updateSource( source );
     }
@@ -688,11 +703,12 @@ public class InteractiveDisplayView extends AbstractView implements ChangeListen
 //
 //        final LUTConverter< LongType > converter = new LUTConverter< LongType >( 0d, 50, ColorTables.FIRE);
 //
-//        InteractiveRealViewer2D iview = new InteractiveRealViewer2D<LongType>(width, height, mandelbrot, transform, converter);
-//        currentInteractiveViewer2D = iview;
-//        interactiveRealViewer2D = iview;
+//        currentInteractiveViewer2D = new InteractiveRealViewer2D<LongType>(width, height, mandelbrot, transform, converter);
+//        currentInteractiveViewer2D.getJHotDrawDisplay().addOverlayRenderer(new SourceInfoOverlay());
 //
-//        return iview.getJHotDrawDisplay();
+////        interactiveRealViewer2D = iview;
+//
+//        return currentInteractiveViewer2D.getJHotDrawDisplay();
 
         final AffineTransform2D transform = new AffineTransform2D();
         RealRandomAccessible< DoubleType > dummy = new DummyRealRandomAccessible();
@@ -710,8 +726,10 @@ public class InteractiveDisplayView extends AbstractView implements ChangeListen
         {
             int index = sliderTime.getValue();
 
-            if(argbImg != null)
-                updateCompositeProjector(Views.hyperSlice( interval, 3, index ), argbImg);
+            if(argbImg != null) {
+                intervalView = Views.hyperSlice(interval, 3, index);
+                updateCompositeProjector(Views.hyperSlice(interval, 3, index), argbImg);
+            }
 
         }
         else if(cbCh0.equals(changeEvent.getSource()))
@@ -747,5 +765,71 @@ public class InteractiveDisplayView extends AbstractView implements ChangeListen
             currentInteractiveViewer2D.updateIntervalSource(Views.extendValue(argbImg, t));
         }
     }
+
+    IntervalView intervalView = null;
+    ObjectInfoTransformOverlay objectLabel = null;
+    ObjectInfoOverlay objectInfo = null;
+
+    @Override
+    public void actionPerformed(ActionEvent actionEvent) {
+
+        if(actionEvent.getSource() instanceof JButton)
+        {
+            JButton comp = (JButton) actionEvent.getSource();
+
+            if(comp.getName().equals("btnEndpoint"))
+            {
+                if(objectLabel == null) {
+                    objectLabel = new ObjectInfoTransformOverlay();
+                    objectInfo = new ObjectInfoOverlay();
+                    currentInteractiveViewer2D.getJHotDrawDisplay().addOverlayRenderer(objectLabel);
+                    objectInfo.updateInfo("Detecting started.", new Date().toString());
+                    currentInteractiveViewer2D.getJHotDrawDisplay().addOverlayRenderer(objectInfo);
+
+                    // Green channel picked-up
+                    objectLabel.setObjectList(detectEndpoints(Views.hyperSlice(intervalView, 2, 1)));
+
+
+                    currentInteractiveViewer2D.getJHotDrawDisplay().repaint();
+                }
+            }
+        }
+    }
+
+    public < T extends RealType< T > & NativeType< T >> ArrayList<ObjectInfo> detectEndpoints(IntervalView<T> v)
+    {
+        ArrayList<ObjectInfo> objLists = new ArrayList<ObjectInfo>();
+
+        IterableInterval< T > input = Views.iterable(v);
+        net.imglib2.Cursor< T > cursorInput = input.localizingCursor();
+
+        T val;
+
+        int i = 0;
+
+        while(cursorInput.hasNext())
+        {
+            val = cursorInput.next();
+
+            if(val.getRealDouble() > 0)
+            {
+                net.imglib2.Point position = new net.imglib2.Point( v.numDimensions() );
+                position.setPosition(cursorInput);
+
+                ObjectInfo info = new ObjectInfo();
+                info.Label = "Endpoint-" + i;
+                info.X = position.getIntPosition(0);
+                info.Y = position.getIntPosition(1);
+//                System.out.print("" + position.getDoublePosition(0) + "," + position.getDoublePosition(1));
+//                System.out.println(val.getRealDouble());
+                objLists.add(info);
+                i++;
+            }
+        }
+
+
+        return objLists;
+    }
+
 }
 
