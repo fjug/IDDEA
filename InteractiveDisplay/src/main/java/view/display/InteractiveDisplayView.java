@@ -1,91 +1,67 @@
 package view.display;
 
+import controller.action.LabelObjectAction;
 import edu.umd.cs.findbugs.annotations.Nullable;
 import ij.ImagePlus;
 import model.figure.DrawFigureFactory;
-import model.source.MandelbrotRealRandomAccessible;
 import net.imglib2.IterableInterval;
-import net.imglib2.RandomAccess;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.RealRandomAccessible;
 import net.imglib2.converter.*;
-import net.imglib2.type.numeric.IntegerType;
-import view.component.DummyRealRandomAccessible;
-import view.converter.ChannelARGBConverter;
 import net.imglib2.display.projector.composite.CompositeXYRandomAccessibleProjector;
 import net.imglib2.exception.ImgLibException;
 import net.imglib2.img.ImagePlusAdapter;
 import net.imglib2.img.Img;
 import net.imglib2.img.ImgFactory;
 import net.imglib2.img.array.ArrayImgFactory;
+import net.imglib2.img.imageplus.ImagePlusImg;
 import net.imglib2.interpolation.randomaccess.NearestNeighborInterpolatorFactory;
+import net.imglib2.realtransform.AffineTransform2D;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.Type;
 import net.imglib2.type.numeric.ARGBType;
-import net.imglib2.type.numeric.NumericType;
 import net.imglib2.type.numeric.RealType;
-import net.imglib2.type.numeric.integer.LongType;
-import net.imglib2.type.numeric.integer.UnsignedByteType;
 import net.imglib2.type.numeric.integer.UnsignedShortType;
 import net.imglib2.type.numeric.real.DoubleType;
-import net.imglib2.type.numeric.real.FloatType;
-import net.imglib2.realtransform.AffineTransform2D;
-import net.imglib2.img.imageplus.*;
 import net.imglib2.ui.InteractiveDisplayCanvas;
-import net.imglib2.ui.util.InterpolatingSource;
 import net.imglib2.view.IntervalView;
 import net.imglib2.view.Views;
-
-import net.imglib2.view.composite.CompositeIntervalView;
-import org.jhotdraw.draw.io.OutputFormat;
-import org.jhotdraw.draw.io.InputFormat;
-import org.jhotdraw.draw.print.DrawingPageable;
-import org.jhotdraw.draw.io.DOMStorableInputOutputFormat;
-
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseMotionListener;
-import java.awt.geom.AffineTransform;
-import java.awt.geom.Point2D;
-import java.awt.print.Pageable;
-
-import org.jhotdraw.gui.*;
-import org.jhotdraw.undo.*;
-import org.jhotdraw.util.*;
-
-import java.awt.*;
-import java.beans.*;
-import java.io.*;
-import java.net.URI;
-import java.util.*;
-
-import javax.swing.*;
-import javax.swing.border.*;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
-
 import org.jhotdraw.app.AbstractView;
 import org.jhotdraw.app.action.edit.RedoAction;
 import org.jhotdraw.app.action.edit.UndoAction;
 import org.jhotdraw.draw.*;
-import org.jhotdraw.draw.action.*;
+import org.jhotdraw.draw.io.DOMStorableInputOutputFormat;
+import org.jhotdraw.draw.io.InputFormat;
+import org.jhotdraw.draw.io.OutputFormat;
+import org.jhotdraw.draw.print.DrawingPageable;
+import org.jhotdraw.gui.PlacardScrollPaneLayout;
 import org.jhotdraw.gui.URIChooser;
 import org.jhotdraw.net.URIUtil;
-
+import org.jhotdraw.undo.UndoRedoManager;
+import org.jhotdraw.util.ResourceBundleUtil;
+import view.component.DummyRealRandomAccessible;
+import view.converter.ChannelARGBConverter;
 import view.converter.ColorTables;
 import view.converter.LUTConverter;
-import view.overlay.ObjectInfo;
-import view.overlay.ObjectInfoOverlay;
-import view.overlay.ObjectInfoTransformOverlay;
-import view.overlay.SourceInfoTransformOverlay;
 import view.viewer.InteractiveRealViewer;
 import view.viewer.InteractiveRealViewer2D;
 import view.viewer.InteractiveViewer2D;
 
-import static view.converter.ChannelARGBConverter.Channel.B;
-import static view.converter.ChannelARGBConverter.Channel.G;
-import static view.converter.ChannelARGBConverter.Channel.R;
+import javax.swing.*;
+import javax.swing.border.EmptyBorder;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
+import java.awt.print.Pageable;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+import java.io.File;
+import java.io.IOException;
+import java.net.URI;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.Set;
+
+import static view.converter.ChannelARGBConverter.Channel.*;
 
 
 /**
@@ -96,7 +72,7 @@ import static view.converter.ChannelARGBConverter.Channel.R;
  * @author HongKee Moon
  */
 
-public class InteractiveDisplayView extends AbstractView implements ChangeListener, ActionListener, MouseMotionListener {
+public class InteractiveDisplayView extends AbstractView implements ChangeListener {
 
     private javax.swing.JScrollPane scrollPane;
     private JSlider sliderTime;
@@ -136,6 +112,8 @@ public class InteractiveDisplayView extends AbstractView implements ChangeListen
     JCheckBox cbCh1;
     JCheckBox cbCh2;
     JCheckBox cbCh3;
+
+    IntervalView intervalView;
 
     /**
      * Creates a new view.
@@ -408,7 +386,7 @@ public class InteractiveDisplayView extends AbstractView implements ChangeListen
 
                     JButton btn = new JButton("Find endpoint");
                     btn.setName("btnEndpoint");
-                    btn.addActionListener(this);
+                    btn.addActionListener(new LabelObjectAction(currentInteractiveViewer2D.getJHotDrawDisplay(), intervalView));
                     leftPanel.add(btn);
 
                     leftPanel.updateUI();
@@ -765,100 +743,6 @@ public class InteractiveDisplayView extends AbstractView implements ChangeListen
             t.set(150 << 16 | 150 << 8 | 150);
             currentInteractiveViewer2D.updateIntervalSource(Views.extendValue(argbImg, t));
         }
-    }
-
-    IntervalView intervalView = null;
-    ObjectInfoTransformOverlay objectLabel = null;
-    ObjectInfoOverlay objectInfo = null;
-
-    @Override
-    public void actionPerformed(ActionEvent actionEvent) {
-
-        if(actionEvent.getSource() instanceof JButton)
-        {
-            JButton comp = (JButton) actionEvent.getSource();
-
-            if(comp.getName().equals("btnEndpoint"))
-            {
-                if(objectLabel == null) {
-                    objectLabel = new ObjectInfoTransformOverlay();
-                    objectInfo = new ObjectInfoOverlay();
-                    currentInteractiveViewer2D.getJHotDrawDisplay().addOverlayRenderer(objectLabel);
-                    objectInfo.updateInfo("Detecting started.", new Date().toString());
-                    currentInteractiveViewer2D.getJHotDrawDisplay().addOverlayRenderer(objectInfo);
-
-                    // Green channel picked-up
-                    objectLabel.setObjectList(detectEndpoints(Views.hyperSlice(intervalView, 2, 1)));
-
-                    currentInteractiveViewer2D.getJHotDrawDisplay().addMouseMotionListener(this);
-
-
-                    currentInteractiveViewer2D.getJHotDrawDisplay().repaint();
-                }
-            }
-        }
-    }
-
-    LinkedHashMap<Point, ObjectInfo> objectMap = new LinkedHashMap<Point, ObjectInfo>();
-
-    public < T extends RealType< T > & NativeType< T >> ArrayList<ObjectInfo> detectEndpoints(IntervalView<T> v)
-    {
-        objectMap.clear();
-        ArrayList<ObjectInfo> objLists = new ArrayList<ObjectInfo>();
-
-        IterableInterval< T > input = Views.iterable(v);
-        net.imglib2.Cursor< T > cursorInput = input.localizingCursor();
-
-        T val;
-
-        int i = 0;
-
-        while(cursorInput.hasNext())
-        {
-            val = cursorInput.next();
-
-            if(val.getRealDouble() > 0)
-            {
-                net.imglib2.Point position = new net.imglib2.Point( v.numDimensions() );
-                position.setPosition(cursorInput);
-
-                ObjectInfo info = new ObjectInfo(
-                        position.getIntPosition(0),
-                        position.getIntPosition(1),
-                        "Endpoint-" + i);
-//                System.out.print("" + position.getDoublePosition(0) + "," + position.getDoublePosition(1));
-//                System.out.println(val.getRealDouble());
-                objLists.add(info);
-                objectMap.put(new Point(position.getIntPosition(0), position.getIntPosition(1)), info);
-                i++;
-            }
-        }
-
-        return objLists;
-    }
-
-    @Override
-    public void mouseDragged(MouseEvent mouseEvent) {
-
-    }
-
-    @Override
-    public void mouseMoved(MouseEvent mouseEvent) {
-        Point2D.Double p = currentInteractiveViewer2D.getJHotDrawDisplay().viewToDrawing(mouseEvent.getPoint());
-
-        int x = (int)Math.round(p.getX());
-        int y = (int)Math.round(p.getY());
-
-        objectLabel.updateXY(x, y);
-        if(objectMap.containsKey(new Point(x, y))) {
-            ObjectInfo info = objectMap.get(new Point(x, y));
-            objectInfo.updateInfo(info.Label, "" + x + ", " + y);
-        }
-        else {
-            objectInfo.updateInfo("Mouse ", "" + x + ", " + y);
-        }
-
-        currentInteractiveViewer2D.getJHotDrawDisplay().repaint();
     }
 }
 
