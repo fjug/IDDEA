@@ -21,6 +21,9 @@ import view.overlay.ObjectInfoOverlay;
 import view.overlay.ObjectInfoTransformOverlay;
 import view.overlay.ObjectSetInfo;
 
+import javax.swing.*;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseEvent;
@@ -31,10 +34,11 @@ import java.util.*;
 /**
  * Created by moon on 16/04/14.
  */
-public class LabelObjectAction extends javax.swing.AbstractAction implements MouseMotionListener {
+public class LabelObjectAction extends javax.swing.AbstractAction implements MouseMotionListener, ChangeListener {
 
     final JHotDrawInteractiveDisplay2D display;
-    final IntervalView intervalView;
+
+    IntervalView intervalView;
 
     ObjectInfoTransformOverlay objectLabel = null;
     ObjectInfoOverlay objectInfo = null;
@@ -42,32 +46,37 @@ public class LabelObjectAction extends javax.swing.AbstractAction implements Mou
     LinkedHashMap<Point, Integer> junctionPoint = new LinkedHashMap<Point, Integer>();
     LinkedHashMap<Integer, ObjectSetInfo> junctionMap = new LinkedHashMap<Integer, ObjectSetInfo>();
 
+    ArrayList<ObjectSetInfo> objSetLists = null;
+    ArrayList<ObjectInfo> objLists = null;
+
     public LabelObjectAction(JHotDrawInteractiveDisplay2D display, IntervalView view) {
         this.display = display;
         this.intervalView = view;
+
+        objectLabel = new ObjectInfoTransformOverlay();
+        objectInfo = new ObjectInfoOverlay();
+
+        display.addOverlayRenderer(objectLabel);
+        objectInfo.updateInfo("Detecting started.", new Date().toString());
+        display.addOverlayRenderer(objectInfo);
+
+        display.addMouseMotionListener(this);
     }
 
     @Override
     public void actionPerformed(ActionEvent actionEvent) {
-        if(objectLabel == null) {
-            objectLabel = new ObjectInfoTransformOverlay();
-            objectInfo = new ObjectInfoOverlay();
-            display.addOverlayRenderer(objectLabel);
-            objectInfo.updateInfo("Detecting started.", new Date().toString());
-            display.addOverlayRenderer(objectInfo);
+        detect();
+    }
 
-            // Green channel picked-up (Endpoint)
-            objectLabel.setObjectList(detectEndpoints(Views.hyperSlice(intervalView, 2, 1)));
+    public void detect()
+    {
+        // Green channel picked-up (Endpoint)
+        objLists = detectEndpoints(Views.hyperSlice(intervalView, 2, 1));
+        setEndpointVisible(true);
 
-            // Red channel (Junction)
-            objectLabel.setObjectSetList(detectJunctions(Views.hyperSlice(intervalView, 2, 2)));
-            //AllConnectedComponents.labelAllConnectedComponents();
-
-            display.addMouseMotionListener(this);
-
-
-            display.repaint();
-        }
+        // Red channel (Junction)
+        objSetLists = detectJunctions(Views.hyperSlice(intervalView, 2, 2));
+        setJunctionVisible(true);
     }
 
     public < T extends RealType< T > & NativeType< T > & Comparable<T> > ArrayList<ObjectSetInfo> detectJunctions(IntervalView<T> v)
@@ -108,7 +117,7 @@ public class LabelObjectAction extends javax.swing.AbstractAction implements Mou
         }
 
         Iterator<Integer> names = AllConnectedComponents.getIntegerNames( 0 );
-        long[][] structuringElement = new long[][] { {-1, -1}, {-1, 0}, {1,0}, {0, -1}, {0, 1}, {1, 1}};
+        long[][] structuringElement = new long[][] { {-1, -1}, {-1, 0}, {-1, 1}, {1,0}, {1, -1}, {0, -1}, {0, 1}, {1, 1}};
         AllConnectedComponents.labelAllConnectedComponents( labeling, image, names, structuringElement );
 
         Cursor<LabelingType< Integer >> lc = labeling.localizingCursor();
@@ -138,6 +147,13 @@ public class LabelObjectAction extends javax.swing.AbstractAction implements Mou
                 map.get(value).add(pt);
                 junctionPoint.put(pt, value);
             }
+        }
+
+        Iterator<Integer> iter = map.keySet().iterator();
+        while(iter.hasNext())
+        {
+            Integer i = iter.next();
+            System.out.println("" + i + ":" + map.get(i).size());
         }
 
         return objLists;
@@ -206,5 +222,43 @@ public class LabelObjectAction extends javax.swing.AbstractAction implements Mou
 
 
         display.repaint();
+    }
+
+    public void setJunctionVisible(boolean b)
+    {
+        if(b)
+            objectLabel.setObjectSetList(objSetLists);
+        else
+            objectLabel.setObjectSetList(null);
+
+        display.repaint();
+    }
+
+    public void setEndpointVisible(boolean b)
+    {
+        if(b)
+            objectLabel.setObjectList(objLists);
+        else
+            objectLabel.setObjectList(null);
+
+        display.repaint();
+    }
+
+    public void updateIntervalView(IntervalView v)
+    {
+        this.intervalView = v;
+        detect();
+    }
+
+    @Override
+    public void stateChanged(ChangeEvent changeEvent) {
+        if(changeEvent.getSource() instanceof JCheckBox) {
+            JCheckBox cb = (JCheckBox) changeEvent.getSource();
+            if (cb.getName().equals("Endpoints")) {
+                setEndpointVisible(cb.isSelected());
+            } else if (cb.getName().equals("Junctions")) {
+                setJunctionVisible(cb.isSelected());
+            }
+        }
     }
 }

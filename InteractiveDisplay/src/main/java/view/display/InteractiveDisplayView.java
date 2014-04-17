@@ -114,6 +114,7 @@ public class InteractiveDisplayView extends AbstractView implements ChangeListen
     JCheckBox cbCh3;
 
     IntervalView intervalView;
+    LabelObjectAction labelObjectAction;
 
     /**
      * Creates a new view.
@@ -168,6 +169,7 @@ public class InteractiveDisplayView extends AbstractView implements ChangeListen
         leftPanel = new javax.swing.JPanel();
         leftPanel.setLayout(new BoxLayout(leftPanel, BoxLayout.Y_AXIS));
         sliderTime = new JSlider( JSlider.HORIZONTAL, 0, 10 - 1, 0 );
+        sliderTime.setName("T-Slider");
         sliderTime.addChangeListener(this);
         view = getInteractiveDrawingView();
 
@@ -386,8 +388,21 @@ public class InteractiveDisplayView extends AbstractView implements ChangeListen
 
                     JButton btn = new JButton("Find endpoint");
                     btn.setName("btnEndpoint");
-                    btn.addActionListener(new LabelObjectAction(currentInteractiveViewer2D.getJHotDrawDisplay(), intervalView));
+                    labelObjectAction = new LabelObjectAction(currentInteractiveViewer2D.getJHotDrawDisplay(), intervalView);
+                    btn.addActionListener(labelObjectAction);
                     leftPanel.add(btn);
+
+                    JCheckBox cbEndpoints = new JCheckBox("Endpoints", true);
+                    cbEndpoints.setName("Endpoints");
+                    cbEndpoints.addChangeListener(labelObjectAction);
+                    leftPanel.add(cbEndpoints);
+
+                    JCheckBox  cbJunctions = new JCheckBox("Junctions", true);
+                    cbJunctions.setName("Junctions");
+                    cbJunctions.addChangeListener(labelObjectAction);
+                    leftPanel.add(cbJunctions);
+
+                    sliderTime.addChangeListener(labelObjectAction);
 
                     leftPanel.updateUI();
 
@@ -709,6 +724,9 @@ public class InteractiveDisplayView extends AbstractView implements ChangeListen
                 intervalView = Views.hyperSlice(interval, 3, index);
                 updateCompositeProjector(Views.hyperSlice(interval, 3, index), argbImg);
             }
+
+            if(labelObjectAction != null)
+                labelObjectAction.updateIntervalView(intervalView);
 
         }
         else if(cbCh0.equals(changeEvent.getSource()))

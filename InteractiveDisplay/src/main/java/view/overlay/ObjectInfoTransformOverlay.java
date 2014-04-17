@@ -2,7 +2,6 @@ package view.overlay;
 
 import java.awt.*;
 import java.util.ArrayList;
-import java.util.Date;
 
 /**
  * Created by moon on 14/04/14.
