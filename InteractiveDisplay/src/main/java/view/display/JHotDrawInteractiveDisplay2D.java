@@ -119,8 +119,41 @@ public class JHotDrawInteractiveDisplay2D<T> extends InteractiveDrawingView
         handler.setCanvasSize( width, height, false );
 
         //transformChanged(sourceTransform);
-        //activateHandler will call addHandler(handler) in case of changing to SpimTool
+        //activateHandler will call addHandler(handler) in case of changing to DisplayTool
         //addHandler( handler );
+    }
+
+    protected Dimension imageDim;
+
+    public void setImageDim(Dimension dim)
+    {
+        imageDim = dim;
+    }
+
+    public void resetTransform()
+    {
+        AffineTransform2D reset = new AffineTransform2D();
+        handler.setTransform((T) reset);
+        handler.setCanvasSize( imageDim.width, imageDim.height, false );
+
+        final int w = getWidth();
+        final int h = getHeight();
+
+        handler.setCanvasSize( w, h, true );
+        for ( final OverlayRenderer or : overlayRenderers )
+            or.setCanvasSize( w, h );
+    }
+
+    public void updateTransform(T trf)
+    {
+        if(trf != null)
+        {
+            AffineTransform2D trsf = (AffineTransform2D)trf;
+            double[] tr = trsf.getRowPackedCopy();
+            this.originTransform = new AffineTransform(tr[0], tr[3], tr[1], tr[4], tr[2], tr[5]);
+        }
+
+        transformChanged(trf);
     }
 
     public void activateHandler()
@@ -341,5 +374,12 @@ public class JHotDrawInteractiveDisplay2D<T> extends InteractiveDrawingView
     {
         for ( final TransformListener< T > l : transformListeners )
             l.transformChanged( transform );
+    }
+
+    @Override
+    public void setPreferredSize( Dimension dim )
+    {
+        super.setPreferredSize(dim);
+        setImageDim(dim);
     }
 }

@@ -19,7 +19,7 @@ import net.imglib2.ui.RenderSource;
  * @author Tobias Pietzsch <tobias.pietzsch@gmail.com>
  * @author HongKee Moon
  */
-public class InjectableSource< T, A > implements RenderSource< T, A >, Injectable< T > {
+public class InjectableSource< T, A > implements RenderSource< T, A >, Injectable< T, A > {
 
     protected RealRandomAccessible< T > source;
 
@@ -71,5 +71,11 @@ public class InjectableSource< T, A > implements RenderSource< T, A >, Injectabl
     @Override
     public void injectConverter( Converter< ? super T, ARGBType > converter ) {
         this.converter = converter;
+    }
+
+    @Override
+    public void injectSourceTransform( A transform )
+    {
+        this.sourceTransform = transform;
     }
 }

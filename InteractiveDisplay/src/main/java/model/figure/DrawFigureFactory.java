@@ -6,7 +6,14 @@ import org.jhotdraw.draw.BezierFigure;
 import org.jhotdraw.draw.DefaultDrawing;
 import org.jhotdraw.draw.GroupFigure;
 import org.jhotdraw.draw.QuadTreeDrawing;
-import org.jhotdraw.draw.connector.ChopBezierConnector;
+import org.jhotdraw.draw.LineFigure;
+import org.jhotdraw.draw.EllipseFigure;
+import org.jhotdraw.draw.TriangleFigure;
+import org.jhotdraw.draw.RoundRectangleFigure;
+import org.jhotdraw.draw.TextFigure;
+import org.jhotdraw.draw.RectangleFigure;
+import org.jhotdraw.draw.TextAreaFigure;
+import org.jhotdraw.draw.ImageFigure;
 
 /**
  * DrawFingureFactory provides how to store DOM model for the drawing objects.
@@ -23,9 +30,15 @@ public class DrawFigureFactory extends DefaultDOMFactory {
         { BezierFigure.class, "b" },
         { BezierFigure.class, "bezier" },
         { GroupFigure.class, "g" },
-        { java.awt.Color.class, "color" },
-        
-        { ChopBezierConnector.class, "bezierConnector" },        
+        { java.awt.Color.class, "color" },  // for storing color.
+        { LineFigure.class, "l" },
+        { EllipseFigure.class, "e" },
+        { TriangleFigure.class, "triangle" },
+        { RectangleFigure.class, "r" },
+        { RoundRectangleFigure.class, "rr" },
+        { TextFigure.class, "t" },
+        { TextAreaFigure.class, "ta" },
+        { ImageFigure.class, "image" },
     };
     
     private final static Object[][] enumTagArray = {

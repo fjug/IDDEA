@@ -51,6 +51,9 @@ import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.print.Pageable;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -423,14 +426,18 @@ public class InteractiveDisplayView extends AbstractView implements ChangeListen
                     RandomAccessibleInterval imgOrig = Converters.convert(intervalView,
                             new RealDoubleConverter(), new DoubleType());
 
+                    currentInteractiveViewer2D.getJHotDrawDisplay().setImageDim(new Dimension(imp.getWidth(), imp.getHeight()));
                     setDoubleTypeScreenImage(Views.interval(imgOrig, imgOrig));
+                    currentInteractiveViewer2D.getJHotDrawDisplay().resetTransform();
                 }
 
             }
             else
             {
+                currentInteractiveViewer2D.getJHotDrawDisplay().setImageDim(new Dimension(imp.getWidth(), imp.getHeight()));
                 currentInteractiveViewer2D.updateConverter(new TypeIdentity<ARGBType>());
                 currentInteractiveViewer2D.updateIntervalSource(Views.extendZero(interval));
+                currentInteractiveViewer2D.getJHotDrawDisplay().resetTransform();
             }
         }
     }
@@ -456,10 +463,12 @@ public class InteractiveDisplayView extends AbstractView implements ChangeListen
 //		projector.setComposite( 2, false );
         projector.map();
 
+        currentInteractiveViewer2D.getJHotDrawDisplay().setImageDim(new Dimension((int)in.max(0), (int)in.max(1)));
         currentInteractiveViewer2D.updateConverter(new TypeIdentity<ARGBType>());
         ARGBType t = new ARGBType();
         t.set(150 << 16 | 150 << 8 | 150);
         currentInteractiveViewer2D.updateIntervalSource(Views.extendValue(out, t));
+        currentInteractiveViewer2D.getJHotDrawDisplay().resetTransform();
     }
 
     private void updateCompositeProjector(final IntervalView in, final Img< ARGBType > out)

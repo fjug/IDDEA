@@ -1,38 +1,20 @@
 package view.component;
 
-import controller.tool.SpimTool;
 import ij.ImagePlus;
 import ij.io.Opener;
-import model.figure.DrawFigureFactory;
-import model.source.MandelbrotRealRandomAccessible;
-import net.imglib2.RandomAccessible;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.converter.Converters;
 import net.imglib2.converter.RealDoubleConverter;
 import net.imglib2.img.ImagePlusAdapter;
 import net.imglib2.img.Img;
-import net.imglib2.realtransform.AffineTransform2D;
-import net.imglib2.type.numeric.integer.LongType;
 import net.imglib2.type.numeric.real.DoubleType;
-import net.imglib2.type.numeric.real.FloatType;
 import net.imglib2.view.Views;
-import org.jhotdraw.draw.*;
-import org.jhotdraw.draw.action.ButtonFactory;
-import org.jhotdraw.draw.io.DOMStorableInputOutputFormat;
-import org.jhotdraw.draw.tool.BezierTool;
-import org.jhotdraw.util.ResourceBundleUtil;
-import view.converter.ColorTables;
-import view.converter.LUTConverter;
-import view.display.InteractiveDrawingView;
-import view.viewer.InteractiveRealViewer;
-import view.viewer.InteractiveRealViewer2D;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
-import java.util.*;
 
 /**
  * SamplePanel for demonstrating IDDEA component.
@@ -46,22 +28,43 @@ public class SamplePanel extends JPanel implements ActionListener {
     IddeaComponent annotator;
 
     private JButton bLoad;
+    private JButton bLoad2;
 
     public SamplePanel()
     {
         super(new BorderLayout());
 
+//        File file = new File( "/Users/moon/Documents/t63-head-1.tif" );
+//
+//        // open a file with ImageJ
+//        final ImagePlus imp = new Opener().openImage( file.getAbsolutePath() );
+//
+//        // wrap it into an ImgLib image (no copying)
+//        final Img<DoubleType> image = ImagePlusAdapter.wrap(imp);
+//
+//        RandomAccessibleInterval imgOrig = Converters.convert(Views.interval(image, image),
+//                new RealDoubleConverter(), new DoubleType());
+//
+//        annotator = new IddeaComponent(Views.interval(imgOrig, imgOrig));
         annotator = new IddeaComponent();
         annotator.setToolBarLocation(BorderLayout.WEST);
         annotator.setToolBarVisible(true);
+        annotator.setPreferredSize(new Dimension(300, 200));
 
-        annotator.setPreferredSize(new Dimension(30, 20));
+        JPanel p = new JPanel();
+        p.setLayout(new FlowLayout());
 
         bLoad = new JButton("Load");
         bLoad.addActionListener(this);
+        p.add(bLoad);
+
+        bLoad2 = new JButton("Load");
+        bLoad2.addActionListener(this);
+        p.add(bLoad2);
+
 
         add(annotator, BorderLayout.CENTER);
-        add(bLoad, BorderLayout.NORTH);
+        add(p, BorderLayout.NORTH);
 
         //Working
 //        annotator.loadAnnotations("/Users/moon/Desktop/1.xml");
@@ -91,6 +94,23 @@ public class SamplePanel extends JPanel implements ActionListener {
         if(actionEvent.getSource().equals(bLoad))
         {
             File file = new File( "/Users/moon/Documents/clown.tif" );
+
+            // open a file with ImageJ
+            final ImagePlus imp = new Opener().openImage( file.getAbsolutePath() );
+
+            // wrap it into an ImgLib image (no copying)
+            final Img<DoubleType> image = ImagePlusAdapter.wrap(imp);
+
+            RandomAccessibleInterval imgOrig = Converters.convert(Views.interval(image, image),
+                    new RealDoubleConverter(), new DoubleType());
+
+            //Views.interval(imgOrig, imgOrig)
+
+            annotator.setDoubleTypeScreenImage(Views.interval(imgOrig, imgOrig));
+        }
+        else if(actionEvent.getSource().equals(bLoad2))
+        {
+            File file = new File( "/Users/moon/Documents/t63-head-1.tif" );
 
             // open a file with ImageJ
             final ImagePlus imp = new Opener().openImage( file.getAbsolutePath() );

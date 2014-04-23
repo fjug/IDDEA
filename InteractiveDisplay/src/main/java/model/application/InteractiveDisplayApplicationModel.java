@@ -19,7 +19,7 @@ import org.jhotdraw.draw.action.*;
 import org.jhotdraw.gui.JFileURIChooser;
 import org.jhotdraw.gui.filechooser.ExtensionFileFilter;
 
-import controller.tool.SpimTool;
+import controller.tool.DisplayTool;
 import controller.action.*;
 import view.display.InteractiveDisplayView;
 
@@ -158,7 +158,7 @@ public class InteractiveDisplayApplicationModel extends AbstractApplicationModel
         ButtonFactory.addSelectionToolTo(tb, editor, drawingActions, selectionActions);
 
         labels = ResourceBundleUtil.getBundle("model.Labels");
-        ButtonFactory.addToolTo(tb, editor, new SpimTool(),  "edit.createSpim", labels);
+        ButtonFactory.addToolTo(tb, editor, new DisplayTool(),  "edit.createSpim", labels);
 
         labels = ResourceBundleUtil.getBundle("org.jhotdraw.draw.Labels");
 

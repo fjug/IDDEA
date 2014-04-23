@@ -149,4 +149,9 @@ public class InjectableMultiResolutionRenderer< A extends AffineSet & AffineGet 
     public void injectConverter( final Converter converter ) {
         ( ( Injectable ) this.source ).injectConverter( converter );
     }
+
+    public void injectSourceTransform( final A transform )
+    {
+        ( ( Injectable ) this.source ).injectSourceTransform( transform );
+    }
 }

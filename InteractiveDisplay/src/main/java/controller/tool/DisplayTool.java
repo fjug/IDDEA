@@ -1,5 +1,6 @@
 package controller.tool;
 
+import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 
@@ -10,14 +11,14 @@ import view.display.JHotDrawInteractiveDisplay2D;
 
 
 /**
- * SpimTool provides a default bezier drawing.
+ * DisplayTool provides a default bezier drawing.
  *
  * @version 0.1beta
  * @since 8/12/13 5:12 PM
  * @author HongKee Moon
  */
 
-public class SpimTool extends AbstractTool {
+public class DisplayTool extends AbstractTool {
 
     public void mouseDragged(MouseEvent arg0) {
         // TODO Auto-generated method stub
@@ -50,6 +51,18 @@ public class SpimTool extends AbstractTool {
         if ( JHotDrawInteractiveDisplay2D.class.isInstance( view ) )
         {
             ((JHotDrawInteractiveDisplay2D) view).deactivateHandler();
+        }
+    }
+
+    @Override
+    public void mouseClicked( final MouseEvent evt ) {
+        if (evt.getClickCount() == 2) {
+            // reset the transformation
+            DrawingView view = this.editor.getActiveView();
+            if ( JHotDrawInteractiveDisplay2D.class.isInstance( view ) )
+            {
+                ((JHotDrawInteractiveDisplay2D) view).resetTransform();
+            }
         }
     }
 

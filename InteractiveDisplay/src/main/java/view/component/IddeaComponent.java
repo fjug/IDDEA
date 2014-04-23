@@ -1,6 +1,6 @@
 package view.component;
 
-import controller.tool.SpimTool;
+import controller.tool.DisplayTool;
 import model.figure.DrawFigureFactory;
 import net.imglib2.IterableInterval;
 
@@ -63,13 +63,11 @@ public class IddeaComponent extends JPanel {
     private JScrollPane scrollPane;
     private InteractiveDrawingView view;
 
-
-
     public InteractiveDrawingView getInteractiveDrawingView(IntervalView< DoubleType > viewImg)
     {
         if(viewImg != null)
         {
-            final AffineTransform2D transform = new AffineTransform2D();
+            AffineTransform2D transform = new AffineTransform2D();
 
             final DoubleType min = new DoubleType();
             final DoubleType max = new DoubleType();
@@ -81,19 +79,22 @@ public class IddeaComponent extends JPanel {
         }
         else
         {
-            final AffineTransform2D transform = new AffineTransform2D();
+            AffineTransform2D transform = new AffineTransform2D();
             RealRandomAccessible< DoubleType > dummy = new DummyRealRandomAccessible();
             final RealARGBConverter< DoubleType > converter = new RealARGBConverter< DoubleType >( 0, 0);
 
-            currentInteractiveViewer2D = new InteractiveRealViewer2D<DoubleType>(300, 200, dummy, transform, converter);
+            if(getWidth() > 0)
+                currentInteractiveViewer2D = new InteractiveRealViewer2D<DoubleType>(getWidth(), getHeight(), dummy, transform, converter);
+            else
+                currentInteractiveViewer2D = new InteractiveRealViewer2D<DoubleType>(300, 200, dummy, transform, converter);
         }
-
 
         return currentInteractiveViewer2D.getJHotDrawDisplay();
     }
 
+    public IddeaComponent(IntervalView< DoubleType > viewImg) {
 
-    public IddeaComponent() {
+        intervalViewDoubleType = viewImg;
 
         editor = new DefaultDrawingEditor();
         createToolbar();
@@ -107,6 +108,29 @@ public class IddeaComponent extends JPanel {
 
         setEditor(editor);
         view.setDrawing(createDrawing());
+    }
+
+    public IddeaComponent() {
+
+        editor = new DefaultDrawingEditor();
+        createToolbar();
+
+        scrollPane = new javax.swing.JScrollPane();
+
+        view = getInteractiveDrawingView(intervalViewDoubleType);
+
+        setLayout(new java.awt.BorderLayout());
+
+        scrollPane.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+        scrollPane.setVerticalScrollBarPolicy(javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
+        scrollPane.setViewportView(view);
+
+        add(scrollPane, java.awt.BorderLayout.CENTER);
+
+        if(toolbarVisible)
+        {
+            add(tb, toolbarLocation);
+        }
     }
 
     /**
@@ -161,7 +185,7 @@ public class IddeaComponent extends JPanel {
         ButtonFactory.addSelectionToolTo(tb, editor, drawingActions, selectionActions);
 
         ResourceBundleUtil labels = ResourceBundleUtil.getBundle("model.Labels");
-        ButtonFactory.addToolTo(tb, editor, new SpimTool(), "edit.createSpim", labels);
+        ButtonFactory.addToolTo(tb, editor, new DisplayTool(), "edit.createSpim", labels);
 
         tb.addSeparator();
 
@@ -326,7 +350,31 @@ public class IddeaComponent extends JPanel {
 
         final RealARGBConverter< DoubleType > converter = new RealARGBConverter< DoubleType >( min.get(), max.get());
 
+        // resize the canvas
+//        int viewWidth = view.getWidth();
+//        int viewHeight = view.getHeight();
+//
+//        int width = (int)viewImg.dimension(0);
+//        int height = (int) viewImg.dimension(1);
+//        double ratio = 1f;
+//
+//        if(width > height)
+//        {
+//            ratio = viewWidth / width;
+//        }
+//        else
+//        {
+//            ratio = viewHeight / height;
+//        }
+//
+//        transform.set(ratio, 0, 0);
+//        transform.set(ratio, 1, 1);
+
+//        currentInteractiveViewer2D.getJHotDrawDisplay().setPreferredSize(new Dimension(width, height));
+        //transform = new AffineTransform2D();
+        //currentInteractiveViewer2D.updateTransform(transform);
         updateDoubleTypeSourceAndConverter(interpolated, converter);
+        System.out.println("update");
     }
 
     /**
@@ -415,8 +463,19 @@ public class IddeaComponent extends JPanel {
 //        return iview;
 //    }
 
+    @Override
     public void setPreferredSize(Dimension dim)
     {
-        currentInteractiveViewer2D.getJHotDrawDisplay().setPreferredSize(dim);
+        AffineTransform2D transform = new AffineTransform2D();
+        RealRandomAccessible< DoubleType > dummy = new DummyRealRandomAccessible();
+        final RealARGBConverter< DoubleType > converter = new RealARGBConverter< DoubleType >( 0, 0);
+
+        currentInteractiveViewer2D = new InteractiveRealViewer2D<DoubleType>((int) dim.getWidth(), (int) dim.getHeight(), dummy, transform, converter);
+        view = currentInteractiveViewer2D.getJHotDrawDisplay();
+
+        scrollPane.setViewportView(view);
+
+        setEditor(editor);
+        view.setDrawing(createDrawing());
     }
 }

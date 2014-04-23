@@ -10,9 +10,11 @@ import net.imglib2.type.numeric.ARGBType;
  * @param <T> the generic type
  * @author HongKee Moon
  */
-public interface Injectable< T > {
+public interface Injectable< T, A > {
 
     public void injectSource( RealRandomAccessible< T > source );
 
     public void injectConverter( Converter< ? super T, ARGBType > converter );
+
+    public void injectSourceTransform( A transform );
 }

@@ -6,7 +6,6 @@ import net.imglib2.converter.Converter;
 import net.imglib2.realtransform.AffineTransform2D;
 import net.imglib2.type.numeric.ARGBType;
 import net.imglib2.ui.AffineTransformType2D;
-import net.imglib2.ui.TransformEventHandler2D;
 
 /**
  * Interactive viewer for a 2D using JHotDrawInteractiveDisplay2D {@link RealRandomAccessible}.
@@ -34,7 +33,7 @@ public class InteractiveRealViewer2D< T > extends InteractiveRealViewer< T, Affi
      *            Converter from the source type to argb for rendering the
      */
     public InteractiveRealViewer2D( final int width, final int height, final RealRandomAccessible< T > source, final AffineTransform2D sourceTransform, final Converter< ? super T, ARGBType > converter ) {
-        super( AffineTransformType2D.instance, new JHotDrawInteractiveDisplay2D< AffineTransform2D >( width, height, sourceTransform, TransformEventHandler2D.factory() ), InjectableDefaults.rendererFactory( AffineTransformType2D.instance, new InjectableSource< T, AffineTransform2D >( source, sourceTransform, converter ) ) );
+        super( AffineTransformType2D.instance, new JHotDrawInteractiveDisplay2D< AffineTransform2D >( width, height, sourceTransform, InteractiveTransformEventHandler2D.factory() ), InjectableDefaults.rendererFactory( AffineTransformType2D.instance, new InjectableSource< T, AffineTransform2D >( source, sourceTransform, converter ) ) );
 
         this.source = source;
     }
