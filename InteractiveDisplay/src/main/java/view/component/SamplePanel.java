@@ -29,23 +29,12 @@ public class SamplePanel extends JPanel implements ActionListener {
 
     private JButton bLoad;
     private JButton bLoad2;
+    private JButton bLoad3;
 
     public SamplePanel()
     {
         super(new BorderLayout());
-
-//        File file = new File( "/Users/moon/Documents/t63-head-1.tif" );
-//
-//        // open a file with ImageJ
-//        final ImagePlus imp = new Opener().openImage( file.getAbsolutePath() );
-//
-//        // wrap it into an ImgLib image (no copying)
-//        final Img<DoubleType> image = ImagePlusAdapter.wrap(imp);
-//
-//        RandomAccessibleInterval imgOrig = Converters.convert(Views.interval(image, image),
-//                new RealDoubleConverter(), new DoubleType());
-//
-//        annotator = new IddeaComponent(Views.interval(imgOrig, imgOrig));
+        
         annotator = new IddeaComponent();
         annotator.setToolBarLocation(BorderLayout.WEST);
         annotator.setToolBarVisible(true);
@@ -54,28 +43,21 @@ public class SamplePanel extends JPanel implements ActionListener {
         JPanel p = new JPanel();
         p.setLayout(new FlowLayout());
 
-        bLoad = new JButton("Load");
+        bLoad = new JButton("Load clown");
         bLoad.addActionListener(this);
         p.add(bLoad);
 
-        bLoad2 = new JButton("Load");
+        bLoad2 = new JButton("Load t1-head");
         bLoad2.addActionListener(this);
         p.add(bLoad2);
+
+        bLoad3 = new JButton("Load confocal-series");
+        bLoad3.addActionListener(this);
+        p.add(bLoad3);
 
 
         add(annotator, BorderLayout.CENTER);
         add(p, BorderLayout.NORTH);
-
-        //Working
-//        annotator.loadAnnotations("/Users/moon/Desktop/1.xml");
-//        annotator.saveAnnotations("/Users/moon/Desktop/4.xml");
-//        annotator.setImg(image);
-
-        // Doing
-//        annotator.enableTool(HongKeeViewer.HAND_TOOL);
-//        annotator.enableTool(HongKeeViewer.ZOOM_TOOL);
-//        annotator.enableTool(HongKeeViewer.BEZIER_TOOL);
-//
     }
 
     public static void main( final String[] args ) {
@@ -104,13 +86,13 @@ public class SamplePanel extends JPanel implements ActionListener {
             RandomAccessibleInterval imgOrig = Converters.convert(Views.interval(image, image),
                     new RealDoubleConverter(), new DoubleType());
 
-            //Views.interval(imgOrig, imgOrig)
+            annotator.setPreferredSize(new Dimension(imp.getWidth(), imp.getHeight()));
+            annotator.setDoubleTypeSourceImage(Views.interval(imgOrig, imgOrig));
 
-            annotator.setDoubleTypeScreenImage(Views.interval(imgOrig, imgOrig));
         }
         else if(actionEvent.getSource().equals(bLoad2))
         {
-            File file = new File( "/Users/moon/Documents/t63-head-1.tif" );
+            File file = new File( "/Users/moon/Pictures/t1-head.tif" );
 
             // open a file with ImageJ
             final ImagePlus imp = new Opener().openImage( file.getAbsolutePath() );
@@ -121,9 +103,24 @@ public class SamplePanel extends JPanel implements ActionListener {
             RandomAccessibleInterval imgOrig = Converters.convert(Views.interval(image, image),
                     new RealDoubleConverter(), new DoubleType());
 
-            //Views.interval(imgOrig, imgOrig)
+            annotator.setPreferredSize(new Dimension(imp.getWidth(), imp.getHeight()));
+            annotator.setDoubleTypeSourceImage(Views.interval(imgOrig, imgOrig));
+        }
+        else if(actionEvent.getSource().equals(bLoad3))
+        {
+            File file = new File( "/Users/moon/Pictures/confocal-series.tif" );
 
-            annotator.setDoubleTypeScreenImage(Views.interval(imgOrig, imgOrig));
+            // open a file with ImageJ
+            final ImagePlus imp = new Opener().openImage( file.getAbsolutePath() );
+
+            // wrap it into an ImgLib image (no copying)
+            final Img<DoubleType> image = ImagePlusAdapter.wrap(imp);
+
+            RandomAccessibleInterval imgOrig = Converters.convert(Views.interval(image, image),
+                    new RealDoubleConverter(), new DoubleType());
+
+            annotator.setPreferredSize(new Dimension(imp.getWidth(), imp.getHeight()));
+            annotator.setDoubleTypeSourceImage(Views.interval(imgOrig, imgOrig));
         }
     }
 }

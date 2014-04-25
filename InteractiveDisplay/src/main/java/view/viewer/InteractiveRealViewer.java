@@ -226,4 +226,11 @@ public abstract class InteractiveRealViewer< T, A extends AffineSet & AffineGet 
         else
             return true;
     }
+
+    /**
+     * @return the viewerTransform
+     */
+    public A getViewerTransform() {
+        return viewerTransform;
+    }
 }

@@ -60,7 +60,7 @@ import static org.jhotdraw.draw.AttributeKeys.*;
  */
 
 public abstract class InteractiveDrawingView extends JComponent implements DrawingView,
-		EditableComponent {
+        EditableComponent {
 
     /**
      * Set this to true to turn on debugging output on System.out.
@@ -96,7 +96,7 @@ public abstract class InteractiveDrawingView extends JComponent implements Drawi
             invalidateHandles();
         }
     };
-    
+
     @Nullable
     private transient Rectangle2D.Double cachedDrawingArea;
     public final static String DRAWING_DOUBLE_BUFFERED_PROPERTY = "drawingDoubleBuffered";
@@ -105,7 +105,7 @@ public abstract class InteractiveDrawingView extends JComponent implements Drawi
 
     private boolean paintEnabled = true;
     public final static boolean isWindows;
-    
+
     /**
      * The {@link AffineTransform} stores the previous transform to restore in the next transformation.
      */
@@ -362,7 +362,7 @@ public abstract class InteractiveDrawingView extends JComponent implements Drawi
     public String getEmptyDrawingMessage() {
         return (emptyDrawingLabel == null) ? null : emptyDrawingLabel.getText();
     }
-    
+
     public abstract void drawImage(Graphics2D g);
 
     /**
@@ -374,9 +374,9 @@ public abstract class InteractiveDrawingView extends JComponent implements Drawi
     public void paintComponent(Graphics gr) {
         Graphics2D g = (Graphics2D) gr;
         setViewRenderingHints(g);
-        
+
         drawImage(g);
-        
+
         drawCanvas(g);
         drawConstrainer(g);
 
@@ -454,7 +454,7 @@ public abstract class InteractiveDrawingView extends JComponent implements Drawi
     protected void drawCanvas(Graphics2D gr) {
         if (drawing != null) {
             Graphics2D g = (Graphics2D) gr.create();
-            
+
             AffineTransform tx = g.getTransform();
             tx.concatenate(preTransform);
             g.setTransform(preTransform);
@@ -464,7 +464,7 @@ public abstract class InteractiveDrawingView extends JComponent implements Drawi
             g.dispose();
         }
     }
-    
+
     protected void drawConstrainer(Graphics2D g) {
         Shape clip = g.getClip();
 
@@ -483,11 +483,11 @@ public abstract class InteractiveDrawingView extends JComponent implements Drawi
                 emptyDrawingLabel.paint(gr);
             } else {
                 Graphics2D g = (Graphics2D) gr.create();
-                
+
                 AffineTransform tx = g.getTransform();
                 tx.concatenate(preTransform);
                 g.setTransform(tx);
-                
+
                 drawing.setFontRenderContext(g.getFontRenderContext());
                 drawing.draw(g);
 
@@ -847,7 +847,8 @@ public abstract class InteractiveDrawingView extends JComponent implements Drawi
      * @return A handle, null if no handle is found.
      */
     @Override
-    public Handle findHandle(Point p) {
+    public Handle findHandle(
+            Point p) {
         validateHandles();
 
         for (Handle handle : new ReversedList<Handle>(getSecondaryHandles())) {
@@ -860,6 +861,7 @@ public abstract class InteractiveDrawingView extends JComponent implements Drawi
             if (handle.contains(p)) {
                 return handle;
             }
+
         }
         return null;
     }
@@ -893,7 +895,8 @@ public abstract class InteractiveDrawingView extends JComponent implements Drawi
      * @return A figure, null if no figure is found.
      */
     @Override
-    public Figure findFigure(Point p) {
+    public Figure findFigure(
+            Point p) {
         return getDrawing().findFigure(viewToDrawing(p));
     }
 
@@ -935,7 +938,7 @@ public abstract class InteractiveDrawingView extends JComponent implements Drawi
             // those that are interested in this event
             for (int i = listeners.length - 2; i
                     >= 0; i -=
-                            2) {
+                         2) {
                 if (listeners[i] == FigureSelectionListener.class) {
                     // Lazily create the event:
                     if (event == null) {
@@ -1014,34 +1017,34 @@ public abstract class InteractiveDrawingView extends JComponent implements Drawi
     @Override
     public Point drawingToView(
             Point2D.Double p) {
-    	 Point2D po = preTransform.transform(p, null);
-    	return new Point((int) po.getX(), (int) po.getY());
+        Point2D po = preTransform.transform(p, null);
+        return new Point((int) po.getX(), (int) po.getY());
     }
 
     @Override
     public Rectangle drawingToView(
             Rectangle2D.Double r) {
-    	double[] drawing = {r.x, r.y, r.x + r.width, r.y, r.x + r.width, r.y + r.height, r.x, r.y + r.height};
-    	double[] view = new double[8];
-    	preTransform.transform(drawing, 0, view, 0, 4);
+        double[] drawing = {r.x, r.y, r.x + r.width, r.y, r.x + r.width, r.y + r.height, r.x, r.y + r.height};
+        double[] view = new double[8];
+        preTransform.transform(drawing, 0, view, 0, 4);
 
-    	int x1 = Math.min((int)view[0], (int)view[2]);
-    	x1 = Math.min(x1, (int)view[4]);
-    	x1 = Math.min(x1, (int)view[6]);
-    
-    	int x2 = Math.max((int)view[0], (int)view[2]);
-    	x2 = Math.max(x2, (int)view[4]);
-    	x2 = Math.max(x2, (int)view[6]);
+        int x1 = Math.min((int)view[0], (int)view[2]);
+        x1 = Math.min(x1, (int)view[4]);
+        x1 = Math.min(x1, (int)view[6]);
 
-    	int y1 = Math.min((int)view[1], (int)view[3]);
-    	y1 = Math.min(y1, (int)view[5]);
-    	y1 = Math.min(y1, (int)view[7]);
-    	
-    	int y2 = Math.max((int)view[1], (int)view[3]);
-    	y2 = Math.max(y2, (int)view[5]);
-    	y2 = Math.max(y2, (int)view[7]);
+        int x2 = Math.max((int)view[0], (int)view[2]);
+        x2 = Math.max(x2, (int)view[4]);
+        x2 = Math.max(x2, (int)view[6]);
 
-    	return new Rectangle(x1, y1, x2 - x1, y2 - y1);
+        int y1 = Math.min((int)view[1], (int)view[3]);
+        y1 = Math.min(y1, (int)view[5]);
+        y1 = Math.min(y1, (int)view[7]);
+
+        int y2 = Math.max((int)view[1], (int)view[3]);
+        y2 = Math.max(y2, (int)view[5]);
+        y2 = Math.max(y2, (int)view[7]);
+
+        return new Rectangle(x1, y1, x2 - x1, y2 - y1);
     }
 
     /**
@@ -1049,56 +1052,56 @@ public abstract class InteractiveDrawingView extends JComponent implements Drawi
      */
     @Override
     public Point2D.Double viewToDrawing(Point p) {
-    	Point2D point = null;
+        Point2D point = null;
 
-    	try {
-			point = preTransform.inverseTransform(new Point2D.Double((double)p.x, (double)p.y), null);
-		} catch (NoninvertibleTransformException e) {
-			e.printStackTrace();
-		}
-    	
-    	return (Point2D.Double) point;
+        try {
+            point = preTransform.inverseTransform(new Point2D.Double((double)p.x, (double)p.y), null);
+        } catch (NoninvertibleTransformException e) {
+            e.printStackTrace();
+        }
+
+        return (Point2D.Double) point;
     }
 
     @Override
     public Rectangle2D.Double viewToDrawing(Rectangle r) {
-    	double[] drawing = {r.x, r.y, r.x + r.width, r.y, r.x + r.width, r.y + r.height, r.x, r.y + r.height};
-    	double[] view = new double[8];
-    	//preTransform.transform(drawing, 0, view, 0, 4);
+        double[] drawing = {r.x, r.y, r.x + r.width, r.y, r.x + r.width, r.y + r.height, r.x, r.y + r.height};
+        double[] view = new double[8];
+        //preTransform.transform(drawing, 0, view, 0, 4);
 
-    	try {
-        	preTransform.inverseTransform(drawing, 0, view, 0, 4);
-		} catch (NoninvertibleTransformException e) {
-			e.printStackTrace();
-		}
-    	
-    	double x1 = Math.min(view[0], view[2]);
-    	x1 = Math.min(x1, view[4]);
-    	x1 = Math.min(x1, view[6]);
-    
-    	double x2 = Math.max(view[0], view[2]);
-    	x2 = Math.max(x2, view[4]);
-    	x2 = Math.max(x2, view[6]);
+        try {
+            preTransform.inverseTransform(drawing, 0, view, 0, 4);
+        } catch (NoninvertibleTransformException e) {
+            e.printStackTrace();
+        }
 
-    	double y1 = Math.min(view[1], view[3]);
-    	y1 = Math.min(y1, view[5]);
-    	y1 = Math.min(y1, view[7]);
-    	
-    	double y2 = Math.max(view[1], view[3]);
-    	y2 = Math.max(y2, view[5]);
-    	y2 = Math.max(y2, view[7]);
-    	
-    	return new Rectangle2D.Double(x1, y1, x2 - x1, y2 - y1);
+        double x1 = Math.min(view[0], view[2]);
+        x1 = Math.min(x1, view[4]);
+        x1 = Math.min(x1, view[6]);
+
+        double x2 = Math.max(view[0], view[2]);
+        x2 = Math.max(x2, view[4]);
+        x2 = Math.max(x2, view[6]);
+
+        double y1 = Math.min(view[1], view[3]);
+        y1 = Math.min(y1, view[5]);
+        y1 = Math.min(y1, view[7]);
+
+        double y2 = Math.max(view[1], view[3]);
+        y2 = Math.max(y2, view[5]);
+        y2 = Math.max(y2, view[7]);
+
+        return new Rectangle2D.Double(x1, y1, x2 - x1, y2 - y1);
     }
 
-    
+
     @Override
     public AffineTransform getDrawingToViewTransform() {
         AffineTransform t = new AffineTransform();
         t.setTransform(preTransform);
         return t;
     }
-    
+
     @Override
     public JComponent getComponent() {
         return this;
