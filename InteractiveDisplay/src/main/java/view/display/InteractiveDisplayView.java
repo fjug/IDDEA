@@ -357,7 +357,7 @@ public class InteractiveDisplayView extends AbstractView implements ChangeListen
                 System.out.println("Min: " + image.min(i) + ", Max: " + image.max(i));
                 if(i == 3)
                 {
-                    sliderTime.setMaximum((int) image.max(i) - 1);
+                    sliderTime.setMaximum((int) image.max(i));
                 }
             }
 
