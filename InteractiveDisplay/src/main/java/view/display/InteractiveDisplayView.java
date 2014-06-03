@@ -623,6 +623,30 @@ public class InteractiveDisplayView extends AbstractView implements ChangeListen
     }
 
     /**
+     * Update the affineTransform2D with new transform.
+     * @param affine
+     */
+    public void updatePreferedTransform(AffineTransform2D affine)
+    {
+        if(InteractiveRealViewer2D.class.isInstance(currentInteractiveViewer2D))
+        {
+            currentInteractiveViewer2D.getJHotDrawDisplay().updateTransform(affine);
+        }
+    }
+
+    /**
+     * Update the PreferedCanvasSize with new Dimension.
+     * @param dim
+     */
+    public void updatePreferedCanvasSize(Dimension dim)
+    {
+        if(InteractiveRealViewer2D.class.isInstance(currentInteractiveViewer2D))
+        {
+            currentInteractiveViewer2D.getJHotDrawDisplay().setImageDim(dim);
+        }
+    }
+
+    /**
      * Update the realConverter with new converter.
      * @param converter
      */

@@ -62,7 +62,6 @@ public class SourceDesigner extends AbstractDesigner {
         if(plugin != null)
         {
             final ModelPlugin pluginModel = (ModelPlugin)plugin;
-            RealRandomAccessible random = pluginModel.getSource();
 
             timer = new Timer(100, new ActionListener() {
                 @Override
@@ -93,7 +92,11 @@ public class SourceDesigner extends AbstractDesigner {
             System.out.println(random.toString());
 
             InteractiveDisplayView view = model.getDisplayView();
+
+            view.updatePreferedCanvasSize(pluginModel.getDimension());
+            view.updateRealConverter(pluginModel.getConverter());
             view.updateRealRandomSource(pluginModel.getSource());
+            view.updatePreferedTransform(pluginModel.getAffineTransform2D());
         }
 //        else
 //        {

@@ -5,12 +5,16 @@ import net.imglib2.RealPoint;
 import net.imglib2.RealRandomAccess;
 import net.imglib2.RealRandomAccessible;
 import net.imglib2.type.numeric.integer.LongType;
+import view.converter.ColorTables;
+import view.converter.LUTConverter;
 import plugin.ModelPlugin;
+
 
 import net.imglib2.ui.OverlayRenderer;
 
 import java.awt.*;
 import java.util.*;
+
 
 /**
  * Sample Mandelbrot model plugin for IDDEA
@@ -29,6 +33,12 @@ public class MandelbrotModel extends ModelPlugin<LongType> {
     {
         // Overlay painters are added here
         painters.add(new SourceInfoOverlay());
+        converter = new LUTConverter< LongType >( 0d, 50, ColorTables.FIRE);
+        int width = 800;
+        int height = 600;
+        dimension = new Dimension(width, height);
+        transform.scale( 200 );
+        transform.translate( width / 2.0, height / 2.0 );
     }
 
     boolean go = true;
@@ -72,21 +82,21 @@ public class MandelbrotModel extends ModelPlugin<LongType> {
     }
 
     public class SourceInfoOverlay implements OverlayRenderer {
-        protected String sourceName = "Mandelbrot Source Example";
+        protected String sourceName = "Mandelbrot Example";
 
         protected String timepointString = new Date().toString();
 
         /**
          * Update data to show in the overlay.
          */
-        public synchronized void updateInfo( final String source, final String time )
+        public synchronized void updateInfo(final String source, final String time )
         {
             sourceName = source;
             timepointString = time;
         }
 
-        @Override
-        public void drawOverlays(Graphics g) {
+        public void drawOverlays(Graphics g)
+        {
             Color c = g.getColor();
             g.setColor(Color.white);
             g.setFont( new Font( "Monospaced", Font.PLAIN, 12 ) );
@@ -95,7 +105,7 @@ public class MandelbrotModel extends ModelPlugin<LongType> {
             g.setColor(c);
         }
 
-        @Override
+
         public void setCanvasSize(int width, int height) {
             // Change canvas size
         }
