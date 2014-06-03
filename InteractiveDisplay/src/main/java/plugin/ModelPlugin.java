@@ -1,6 +1,9 @@
 package plugin;
 
 import net.imglib2.RealRandomAccessible;
+import net.imglib2.converter.Converter;
+import net.imglib2.converter.TypeIdentity;
+import net.imglib2.type.numeric.ARGBType;
 import net.imglib2.ui.OverlayRenderer;
 
 import java.util.LinkedList;
@@ -16,6 +19,7 @@ public abstract class ModelPlugin<T> implements IPlugin {
 
     public abstract RealRandomAccessible<T> getSource();
     protected LinkedList<OverlayRenderer> painters = new LinkedList<OverlayRenderer>();
+    protected Converter converter = new TypeIdentity<ARGBType>();
 
     @Override
     public PluginType getPluginType() {
@@ -28,4 +32,6 @@ public abstract class ModelPlugin<T> implements IPlugin {
     {
         return painters;
     }
+
+    public Converter getConverter() { return converter; }
 }
