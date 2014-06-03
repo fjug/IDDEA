@@ -93,8 +93,10 @@ public class SourceDesigner extends AbstractDesigner {
 
             InteractiveDisplayView view = model.getDisplayView();
 
+            view.updatePreferedCanvasSize(pluginModel.getDimension());
             view.updateRealConverter(pluginModel.getConverter());
             view.updateRealRandomSource(pluginModel.getSource());
+            view.updatePreferedTransform(pluginModel.getAffineTransform2D());
         }
 //        else
 //        {

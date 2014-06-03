@@ -151,9 +151,17 @@ public class JHotDrawInteractiveDisplay2D<T> extends InteractiveDrawingView
             AffineTransform2D trsf = (AffineTransform2D)trf;
             double[] tr = trsf.getRowPackedCopy();
             this.originTransform = new AffineTransform(tr[0], tr[3], tr[1], tr[4], tr[2], tr[5]);
-        }
 
-        transformChanged(trf);
+            handler.setTransform((T) trsf);
+            handler.setCanvasSize( imageDim.width, imageDim.height, false );
+
+            final int w = getWidth();
+            final int h = getHeight();
+
+            handler.setCanvasSize( w, h, true );
+            for ( final OverlayRenderer or : overlayRenderers )
+                or.setCanvasSize( w, h );
+        }
     }
 
     public void activateHandler()
