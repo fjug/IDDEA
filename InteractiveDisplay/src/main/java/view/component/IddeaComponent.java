@@ -87,8 +87,8 @@ public class IddeaComponent extends JPanel implements ActionListener, ChangeList
 
     // JSlider for time series
     private final boolean isTimeSliderVisible = false;
-    private JSlider timeSlider;
-    private int tIndex = 0;
+    protected JSlider timeSlider;
+    protected int tIndex = 0;
 
     // JSlider for volume stack
     private final boolean isStackSliderVisible = false;
@@ -96,10 +96,10 @@ public class IddeaComponent extends JPanel implements ActionListener, ChangeList
     private int zIndex = 0;
 
     // InteractiveViewer2D for the imglib2 data to be shown.
-    private InteractiveRealViewer interactiveViewer2D;
+    protected InteractiveRealViewer interactiveViewer2D;
 
     // The imglib2 image data container
-    private IntervalView< DoubleType > ivSourceImage = null;
+    protected IntervalView< DoubleType > ivSourceImage = null;
 
     // JHotDraw related stuff
     private DrawingEditor editor;
