@@ -43,14 +43,14 @@ public class ObjectInfoTransformOverlay extends TransformOverlay {
                 if(oi.X == x && oi.Y == y)
                 {
                     g.setColor( highlightColor );
-                    g.drawString( oi.Label, oi.X, oi.Y );
-                    g.drawString( "" + oi.X + ", " + oi.Y, oi.X, oi.Y + 4);
+                    g.drawString( oi.Label + oi.Next, oi.X, oi.Y );
+                    //g.drawString( "" + oi.X + ", " + oi.Y, oi.X, oi.Y + 4);
                     g.setColor( labelColor );
                 }
                 else
                 {
-                    g.drawString( oi.Label, oi.X, oi.Y );
-                    g.drawString( "" + oi.X + ", " + oi.Y, oi.X, oi.Y + 4);
+                    g.drawString( oi.Label + oi.Next, oi.X, oi.Y );
+                    //g.drawString( "" + oi.X + ", " + oi.Y, oi.X, oi.Y + 4);
                 }
             }
         }
@@ -64,14 +64,14 @@ public class ObjectInfoTransformOverlay extends TransformOverlay {
                 if(oi.Set.contains(new Point(x, y)))
                 {
                     g.setColor( highlightColor );
-                    g.drawString( oi.Label, xy.x, xy.y );
-                    g.drawString( "" + xy.x + ", " + xy.y, xy.x, xy.y + 4);
+                    g.drawString( oi.Label + oi.Next, xy.x, xy.y );
+                    //g.drawString( "" + xy.x + ", " + xy.y, xy.x, xy.y + 4);
                     g.setColor( labelColor );
                 }
                 else
                 {
-                    g.drawString( oi.Label, xy.x, xy.y );
-                    g.drawString( "" + xy.x + ", " + xy.y, xy.x, xy.y + 4);
+                    g.drawString( oi.Label + oi.Next, xy.x, xy.y );
+                    //g.drawString( "" + xy.x + ", " + xy.y, xy.x, xy.y + 4);
                 }
             }
         }

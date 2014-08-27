@@ -64,8 +64,8 @@ import org.jhotdraw.undo.UndoRedoManager;
 import org.jhotdraw.util.ResourceBundleUtil;
 
 import view.display.InteractiveDrawingView;
+import view.viewer.InteractiveRealViewer;
 import view.viewer.InteractiveRealViewer2D;
-
 import controller.tool.DisplayTool;
 
 /**
@@ -96,7 +96,7 @@ public class IddeaComponent extends JPanel implements ActionListener, ChangeList
     private int zIndex = 0;
 
     // InteractiveViewer2D for the imglib2 data to be shown.
-    private InteractiveRealViewer2D< DoubleType > interactiveViewer2D;
+    private InteractiveRealViewer interactiveViewer2D;
 
     // The imglib2 image data container
     private IntervalView< DoubleType > ivSourceImage = null;
@@ -261,7 +261,7 @@ public class IddeaComponent extends JPanel implements ActionListener, ChangeList
      *         of the <code>ivSourceImage</code> on screen.
      */
     public AffineTransform2D getViewerTransform() {
-        return interactiveViewer2D.getViewerTransform();
+        return ( AffineTransform2D ) interactiveViewer2D.getViewerTransform();
     }
 
     /**

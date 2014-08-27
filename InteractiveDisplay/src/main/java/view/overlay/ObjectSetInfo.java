@@ -9,11 +9,13 @@ import java.util.HashSet;
 public class ObjectSetInfo {
     public HashSet<Point> Set;
     public String Label;
+    public String Next;
 
-    public ObjectSetInfo(HashSet<Point> set, String label)
+    public ObjectSetInfo(HashSet<Point> set, String label, String next)
     {
         this.Set = set;
         this.Label = label;
+        this.Next = next;
     }
 
     @Override

@@ -17,6 +17,7 @@ import org.jhotdraw.draw.ImageFigure;
 
 /**
  * DrawFingureFactory provides how to store DOM model for the drawing objects.
+ * Color store information is added.
  *
  * @version 0.1beta
  * @since 8/12/13 5:03 PM
@@ -30,7 +31,7 @@ public class DrawFigureFactory extends DefaultDOMFactory {
         { BezierFigure.class, "b" },
         { BezierFigure.class, "bezier" },
         { GroupFigure.class, "g" },
-        { java.awt.Color.class, "color" },  // for storing color.
+        { java.awt.Color.class, "color" },	// for storing color.
         { LineFigure.class, "l" },
         { EllipseFigure.class, "e" },
         { TriangleFigure.class, "triangle" },
@@ -57,5 +58,4 @@ public class DrawFigureFactory extends DefaultDOMFactory {
             addEnumClass((String) o[1], (Class) o[0]);
         }
     }
-
 }
