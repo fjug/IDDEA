@@ -29,6 +29,7 @@ import de.erichseifert.gral.util.Orientation;
 import javax.swing.*;
 
 import model.util.DoubleArrayList;
+import model.util.LongArrayList;
 
 /**
  * Draw HistogramPlot Panel with Foreground list and Background list
@@ -51,6 +52,33 @@ public class HistogramPlot extends JPanel
     XYPlot background = null;
 
     /**
+     * Performs basic initialization of HistogramPlot for LongArrayList
+     */
+    public HistogramPlot(LongArrayList foregroundList, LongArrayList backgroundList) {
+        super(new BorderLayout());
+        setPreferredSize(new Dimension(800, 600));
+        setBackground(Color.WHITE);
+
+        if(foregroundList.size() > 0)
+            foreground = createXYPlot("Foreground", foregroundList, COLOR1, Long.class);
+
+        if(backgroundList.size() > 0)
+            background = createXYPlot("Background", backgroundList, COLOR2, Long.class);
+
+        DrawableContainer plots = new DrawableContainer(new TableLayout(1));
+        if(foreground != null) plots.add(foreground);
+        if(background != null) plots.add(background);
+
+        // Connect the two plots, i.e. user (mouse) actions affect both plots
+        //foreground.getNavigator().connect(background.getNavigator());
+
+        // Add plot to Swing component
+        InteractivePanel panel = new InteractivePanel(plots);
+        add(panel);
+        showInFrame();
+    }
+
+    /**
      * Performs basic initialization of HistogramPlot for DoubleArrayList
      */
     public HistogramPlot(DoubleArrayList foregroundList, DoubleArrayList backgroundList) {
@@ -59,22 +87,75 @@ public class HistogramPlot extends JPanel
         setBackground(Color.WHITE);
 
         if(foregroundList.size() > 0)
-            foreground = createXYPlot("Euclidean Distance based Distribution", foregroundList, COLOR1, Double.class);
+            foreground = createXYPlot("Foreground", foregroundList, COLOR1, Double.class);
 
         if(backgroundList.size() > 0)
-            background = createXYPlot("Pixel Counts based Distribution", backgroundList, COLOR2, Double.class);
+            background = createXYPlot("Background", backgroundList, COLOR2, Double.class);
 
         DrawableContainer plots = new DrawableContainer(new TableLayout(1));
         if(foreground != null) plots.add(foreground);
         if(background != null) plots.add(background);
 
         // Connect the two plots, i.e. user (mouse) actions affect both plots
-        foreground.getNavigator().connect(background.getNavigator());
+        //foreground.getNavigator().connect(background.getNavigator());
 
         // Add plot to Swing component
         InteractivePanel panel = new InteractivePanel(plots);
         add(panel);
         showInFrame();
+    }
+
+    /**
+     * Get a DataSource from Long type ArrayList
+     * @param list
+     * @return data
+     */
+    private DataSource getLongHistogramDataSource(ArrayList<Long> list)
+    {
+        // Create example data
+        Long max = Collections.max(list);
+        Long min = Collections.min(list);
+        int bin = max.intValue() - min.intValue() + 1;
+        Double gap = 1d;
+
+        DataTable data = new DataTable(Long.class);
+
+        System.out.println("Bin: " + bin + " SAMPLE:" + SAMPLE);
+        System.out.println("Max: " + max + " Min: " + min + " Gap:" + 1);
+
+        if(bin > SAMPLE) {
+            bin = SAMPLE;
+            gap = (max.doubleValue() - min.doubleValue()) / bin;
+        }
+
+        Number[] number = null;
+
+        if(!min.equals(max))
+        {
+            number = new Number[bin + 1];
+
+            for (int i = 0; i <= bin; i++)
+                number[i] = min + i * gap;
+        }
+        else
+        {
+            number = new Number[3];
+            min =  min - 1;
+
+            number[0] = min;
+            number[1] = min + 1;
+            number[2] = min + 2;
+        }
+
+        for (Long d : list)
+        {
+            data.add(d);
+        }
+
+        // Create histogram from data
+        Histogram1D histogram = new Histogram1D(data, Orientation.VERTICAL, number);
+        // Create a second dimension (x axis) for plotting
+        return new EnumeratedData(histogram, min, gap);
     }
 
     /**
@@ -139,7 +220,11 @@ public class HistogramPlot extends JPanel
         // Create example data
         DataSource histogram2d = null;
 
-        if(clazz == Double.class)
+        if(clazz == Long.class)
+        {
+            histogram2d = getLongHistogramDataSource((ArrayList<Long>)list);
+        }
+        else if(clazz == Double.class)
         {
             histogram2d = getDoubleHistogramDataSource((ArrayList<Double>)list);
         }
