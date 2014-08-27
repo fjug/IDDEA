@@ -2,6 +2,7 @@ package controller.action;
 
 import net.imglib2.Cursor;
 import net.imglib2.IterableInterval;
+import net.imglib2.algorithm.labeling.AllConnectedComponents;
 import net.imglib2.img.array.ArrayImg;
 import net.imglib2.img.array.ArrayImgFactory;
 import net.imglib2.img.sparse.NtreeImgFactory;
@@ -14,7 +15,6 @@ import net.imglib2.type.numeric.RealType;
 import net.imglib2.type.numeric.integer.IntType;
 import net.imglib2.view.IntervalView;
 import net.imglib2.view.Views;
-import net.imglib2.algorithm.labeling.AllConnectedComponents;
 import view.display.JHotDrawInteractiveDisplay2D;
 import view.overlay.ObjectInfo;
 import view.overlay.ObjectInfoOverlay;
@@ -24,17 +24,18 @@ import view.overlay.ObjectSetInfo;
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
-import java.awt.Point;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionListener;
 import java.awt.geom.Point2D;
 import java.util.*;
+import java.util.List;
 
 /**
  * Created by moon on 16/04/14.
  */
-public class LabelObjectAction extends javax.swing.AbstractAction implements MouseMotionListener, ChangeListener {
+public class LabelObjectAction extends AbstractAction implements MouseMotionListener, ChangeListener {
 
     final JHotDrawInteractiveDisplay2D display;
 
@@ -117,7 +118,7 @@ public class LabelObjectAction extends javax.swing.AbstractAction implements Mou
         }
 
         Iterator<Integer> names = AllConnectedComponents.getIntegerNames( 0 );
-        long[][] structuringElement = new long[][] { {-1, -1}, {-1, 0}, {-1, 1}, {1,0}, {1, -1}, {0, -1}, {0, 1}, {1, 1}};
+        long[][] structuringElement = new long[][] { {-1, -1}, {-1, 0}, {-1, 1}, {1, 0}, {1, -1}, {0, -1}, {0, 1}, {1, 1}};
         AllConnectedComponents.labelAllConnectedComponents( labeling, image, names, structuringElement );
 
         Cursor<LabelingType< Integer >> lc = labeling.localizingCursor();
@@ -138,7 +139,7 @@ public class LabelObjectAction extends javax.swing.AbstractAction implements Mou
 
                     ObjectSetInfo info = new ObjectSetInfo(
                             hashMap,
-                            "Junction-" + value);
+                            "Junction-" + value, "");
                     objLists.add(info);
                     junctionMap.put(value, info);
                 }
@@ -153,7 +154,7 @@ public class LabelObjectAction extends javax.swing.AbstractAction implements Mou
         while(iter.hasNext())
         {
             Integer i = iter.next();
-            System.out.println("" + i + ":" + map.get(i).size());
+            //System.out.println("" + i + ":" + map.get(i).size());
         }
 
         return objLists;
@@ -183,7 +184,7 @@ public class LabelObjectAction extends javax.swing.AbstractAction implements Mou
                 ObjectInfo info = new ObjectInfo(
                         position.getIntPosition(0),
                         position.getIntPosition(1),
-                        "Endpoint-" + i);
+                        "Endpoint-" + i, "");
 //                System.out.print("" + position.getDoublePosition(0) + "," + position.getDoublePosition(1));
 //                System.out.println(val.getRealDouble());
                 objLists.add(info);

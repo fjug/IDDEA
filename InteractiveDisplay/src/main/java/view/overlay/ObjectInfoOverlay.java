@@ -16,6 +16,8 @@ import java.util.*;
  * @since 9/10/13
  */
 public class ObjectInfoOverlay implements OverlayRenderer {
+    protected String timePoint = "";
+
     protected String sourceName = "Object";
 
     protected String timepointString = new Date().toString();
@@ -29,12 +31,18 @@ public class ObjectInfoOverlay implements OverlayRenderer {
         timepointString = time;
     }
 
+    public synchronized void updateTimepoint( final int time )
+    {
+        timePoint = "" + time;
+    }
+
     @Override
     public void drawOverlays(Graphics g) {
 
         Color c = g.getColor();
         g.setColor(Color.white);
         g.setFont( new Font( "Monospaced", Font.BOLD, 12 ) );
+        g.drawString( "t=" + timePoint, ( int ) g.getClipBounds().getWidth() / 2 - 300, 12 );
         g.drawString( sourceName, ( int ) g.getClipBounds().getWidth() / 2 - 100, 12 );
         g.drawString( timepointString, ( int ) g.getClipBounds().getWidth() - 240, 12 );
         g.setColor(c);

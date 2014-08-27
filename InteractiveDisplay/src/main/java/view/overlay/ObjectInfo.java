@@ -6,12 +6,14 @@ package view.overlay;
 public class ObjectInfo{
     public int X, Y;
     public String Label;
+    public String Next;
 
-    public ObjectInfo(int x, int y, String label)
+    public ObjectInfo(int x, int y, String label, String next)
     {
         this.X = x;
         this.Y = y;
         this.Label = label;
+        this.Next = next;
     }
 
     @Override
