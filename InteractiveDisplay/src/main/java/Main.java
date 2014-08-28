@@ -4,9 +4,6 @@ import org.jhotdraw.app.MDIApplication;
 import org.jhotdraw.app.OSXApplication;
 import org.jhotdraw.app.SDIApplication;
 import org.jhotdraw.util.ResourceBundleUtil;
-import plugin.PluginRuntime;
-import plugin.desginer.ProcessDesigner;
-import plugin.desginer.SourceDesigner;
 import view.console.ConsolePanel;
 
 import javax.swing.*;
@@ -44,7 +41,6 @@ public class Main {
             }
         });
 
-
         final InteractiveDisplayApplicationModel model = new InteractiveDisplayApplicationModel();
 //        model.setViewClass(InteractiveDisplayView.class);
         model.setViewClassName("view.display.InteractiveDisplayView");
@@ -55,21 +51,5 @@ public class Main {
                 "This software is licensed under LGPL or Creative Commons 3.0 Attribution.");
         app.setModel(model);
         app.launch(args);
-
-        SwingUtilities.invokeLater(new Runnable() {
-            public void run() {
-                SourceDesigner designer = new SourceDesigner();
-                designer.setModel(model);
-                designer.setVisible(true);
-            }
-        });
-
-        SwingUtilities.invokeLater(new Runnable() {
-            public void run() {
-                ProcessDesigner designer = new ProcessDesigner();
-                designer.setModel(model);
-                designer.setVisible(true);
-            }
-        });
     }
 }
