@@ -98,7 +98,7 @@ public class IddeaComponent extends JPanel implements ActionListener, ChangeList
 	private int zMax = 0;
 
     // InteractiveViewer2D for the imglib2 data to be shown.
-    protected InteractiveRealViewer2D< DoubleType > interactiveViewer2D;
+    protected InteractiveRealViewer2D interactiveViewer2D;
 
 	// The imglib2 image data container
 	protected IntervalView ivSourceImage = null;
@@ -269,7 +269,7 @@ public class IddeaComponent extends JPanel implements ActionListener, ChangeList
 	 *         of the <code>ivSourceImage</code> on screen.
 	 */
 	public AffineTransform2D getViewerTransform() {
-		return interactiveViewer2D.getViewerTransform();
+		return ( AffineTransform2D ) interactiveViewer2D.getViewerTransform();
 	}
 
     /**
