@@ -1,13 +1,40 @@
 package view.display;
 
-import controller.action.LabelObjectAction;
-import edu.umd.cs.findbugs.annotations.Nullable;
+import static view.converter.ChannelARGBConverter.Channel.B;
+import static view.converter.ChannelARGBConverter.Channel.G;
+import static view.converter.ChannelARGBConverter.Channel.R;
 import ij.ImagePlus;
+
+import java.awt.Dimension;
+import java.awt.print.Pageable;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+import java.io.File;
+import java.io.IOException;
+import java.net.URI;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.Set;
+
+import javax.swing.BoxLayout;
+import javax.swing.JButton;
+import javax.swing.JCheckBox;
+import javax.swing.JPanel;
+import javax.swing.JSlider;
+import javax.swing.SwingUtilities;
+import javax.swing.border.EmptyBorder;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
+
 import model.figure.DrawFigureFactory;
 import net.imglib2.IterableInterval;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.RealRandomAccessible;
-import net.imglib2.converter.*;
+import net.imglib2.converter.Converter;
+import net.imglib2.converter.Converters;
+import net.imglib2.converter.RealARGBConverter;
+import net.imglib2.converter.RealDoubleConverter;
+import net.imglib2.converter.TypeIdentity;
 import net.imglib2.display.projector.composite.CompositeXYRandomAccessibleProjector;
 import net.imglib2.exception.ImgLibException;
 import net.imglib2.img.ImagePlusAdapter;
@@ -26,10 +53,15 @@ import net.imglib2.type.numeric.real.DoubleType;
 import net.imglib2.ui.InteractiveDisplayCanvas;
 import net.imglib2.view.IntervalView;
 import net.imglib2.view.Views;
+
 import org.jhotdraw.app.AbstractView;
 import org.jhotdraw.app.action.edit.RedoAction;
 import org.jhotdraw.app.action.edit.UndoAction;
-import org.jhotdraw.draw.*;
+import org.jhotdraw.draw.DefaultDrawingEditor;
+import org.jhotdraw.draw.Drawing;
+import org.jhotdraw.draw.DrawingEditor;
+import org.jhotdraw.draw.Figure;
+import org.jhotdraw.draw.QuadTreeDrawing;
 import org.jhotdraw.draw.io.DOMStorableInputOutputFormat;
 import org.jhotdraw.draw.io.InputFormat;
 import org.jhotdraw.draw.io.OutputFormat;
@@ -39,6 +71,7 @@ import org.jhotdraw.gui.URIChooser;
 import org.jhotdraw.net.URIUtil;
 import org.jhotdraw.undo.UndoRedoManager;
 import org.jhotdraw.util.ResourceBundleUtil;
+
 import view.component.DummyRealRandomAccessible;
 import view.converter.ChannelARGBConverter;
 import view.converter.ColorTables;
@@ -46,25 +79,8 @@ import view.converter.LUTConverter;
 import view.viewer.InteractiveRealViewer;
 import view.viewer.InteractiveRealViewer2D;
 import view.viewer.InteractiveViewer2D;
-
-import javax.swing.*;
-import javax.swing.border.EmptyBorder;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
-import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.print.Pageable;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
-import java.io.File;
-import java.io.IOException;
-import java.net.URI;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.Set;
-
-import static view.converter.ChannelARGBConverter.Channel.*;
+import controller.action.LabelObjectAction;
+import edu.umd.cs.findbugs.annotations.Nullable;
 
 
 /**
@@ -86,7 +102,7 @@ public class InteractiveDisplayView extends AbstractView implements ChangeListen
      * Each DrawView uses its own undo redo manager.
      * This allows for undoing and redoing actions per view.
      */
-    private UndoRedoManager undo;
+    private final UndoRedoManager undo;
 
     /**
      * Depending on the type of an application, there may be one editor per
@@ -126,7 +142,7 @@ public class InteractiveDisplayView extends AbstractView implements ChangeListen
 
         try{
             initComponents();
-        } catch (Exception ex)
+        } catch (final Exception ex)
         {
             ex.printStackTrace();
         }
@@ -142,7 +158,7 @@ public class InteractiveDisplayView extends AbstractView implements ChangeListen
         initActions();
         undo.addPropertyChangeListener(new PropertyChangeListener() {
             @Override
-            public void propertyChange(PropertyChangeEvent evt) {
+            public void propertyChange(final PropertyChangeEvent evt) {
                 setHasUnsavedChanges(undo.hasSignificantEdits());
             }
         });
@@ -191,8 +207,8 @@ public class InteractiveDisplayView extends AbstractView implements ChangeListen
      * Creates a new Drawing for this view.
      */
     protected Drawing createDrawing() {
-        Drawing drawing = new QuadTreeDrawing();
-        DOMStorableInputOutputFormat ioFormat =
+        final Drawing drawing = new QuadTreeDrawing();
+        final DOMStorableInputOutputFormat ioFormat =
                 new DOMStorableInputOutputFormat(new DrawFigureFactory());
 
         drawing.addInputFormat(ioFormat);
@@ -219,7 +235,7 @@ public class InteractiveDisplayView extends AbstractView implements ChangeListen
         getActionMap().put(RedoAction.ID, undo.getRedoAction());
     }
     @Override
-    protected void setHasUnsavedChanges(boolean newValue) {
+    protected void setHasUnsavedChanges(final boolean newValue) {
         super.setHasUnsavedChanges(newValue);
         undo.setHasSignificantEdits(newValue);
     }
@@ -228,9 +244,9 @@ public class InteractiveDisplayView extends AbstractView implements ChangeListen
      * Writes the view to the specified uri.
      */
     @Override
-    public void write(URI f, URIChooser fc) throws IOException {
-        Drawing drawing = view.getDrawing();
-        OutputFormat outputFormat = drawing.getOutputFormats().get(0);
+    public void write(final URI f, final URIChooser fc) throws IOException {
+        final Drawing drawing = view.getDrawing();
+        final OutputFormat outputFormat = drawing.getOutputFormats().get(0);
         outputFormat.write(f, drawing);
     }
 
@@ -238,7 +254,7 @@ public class InteractiveDisplayView extends AbstractView implements ChangeListen
      * Reads the view from the specified uri.
      */
     @Override
-    public void read(URI f, URIChooser fc) throws IOException {
+    public void read(final URI f, final URIChooser fc) throws IOException {
         try {
             if(f.toString().lastIndexOf("xml") > 0)
             {
@@ -246,17 +262,17 @@ public class InteractiveDisplayView extends AbstractView implements ChangeListen
                 final Drawing drawing = createDrawing();
 
                 boolean success = false;
-                for (InputFormat sfi : drawing.getInputFormats()) {
+                for (final InputFormat sfi : drawing.getInputFormats()) {
                     try {
                         sfi.read(f, drawing, true);
                         success = true;
                         break;
-                    } catch (Exception e) {
+                    } catch (final Exception e) {
                         // try with the next input format
                     }
                 }
                 if (!success) {
-                    ResourceBundleUtil labels = ResourceBundleUtil.getBundle("org.jhotdraw.app.Labels");
+                    final ResourceBundleUtil labels = ResourceBundleUtil.getBundle("org.jhotdraw.app.Labels");
                     throw new IOException(labels.getFormatted("file.open.unsupportedFileFormat.message", URIUtil.getName(f)));
                 }
 
@@ -270,12 +286,12 @@ public class InteractiveDisplayView extends AbstractView implements ChangeListen
                     }
                 });
             }
-        } catch (InterruptedException e) {
-            InternalError error = new InternalError();
+        } catch (final InterruptedException e) {
+            final InternalError error = new InternalError();
             e.initCause(e);
             throw error;
-        } catch (java.lang.reflect.InvocationTargetException e) {
-            InternalError error = new InternalError();
+        } catch (final java.lang.reflect.InvocationTargetException e) {
+            final InternalError error = new InternalError();
             error.initCause(e);
             throw error;
         }
@@ -285,7 +301,7 @@ public class InteractiveDisplayView extends AbstractView implements ChangeListen
     /**
      * Sets a drawing editor for the view.
      */
-    public void setEditor(DrawingEditor newValue) {
+    public void setEditor(final DrawingEditor newValue) {
         if (editor != null) {
             editor.remove(view);
         }
@@ -318,30 +334,30 @@ public class InteractiveDisplayView extends AbstractView implements ChangeListen
                     undo.discardAllEdits();
                 }
             });
-        } catch (java.lang.reflect.InvocationTargetException ex) {
+        } catch (final java.lang.reflect.InvocationTargetException ex) {
             ex.printStackTrace();
-        } catch (InterruptedException ex) {
+        } catch (final InterruptedException ex) {
             ex.printStackTrace();
         }
     }
 
     @Override
-    public boolean canSaveTo(URI file) {
+    public boolean canSaveTo(final URI file) {
         return new File(file).getName().endsWith(".xml");
     }
 
     @Override
-    public void setURI(@Nullable URI newValue) {
+    public void setURI(@Nullable final URI newValue) {
         if(newValue.toString().lastIndexOf("xml") > 0)
         {
             super.setURI(newValue);
         }
         else
         {
-            String filename = newValue.toString().substring(5);
+            final String filename = newValue.toString().substring(5);
 
             // Image import
-            ImagePlus imp = new ImagePlus( filename );
+            final ImagePlus imp = new ImagePlus( filename );
 
             // wrap it into an ImgLib image (no copying)
             final Img image = ImagePlusAdapter.wrapNumeric(imp);
@@ -389,18 +405,18 @@ public class InteractiveDisplayView extends AbstractView implements ChangeListen
                     cbCh3.addChangeListener(this);
                     leftPanel.add(cbCh3);
 
-                    JButton btn = new JButton("Find endpoint");
+                    final JButton btn = new JButton("Find endpoint");
                     btn.setName("btnEndpoint");
                     labelObjectAction = new LabelObjectAction(currentInteractiveViewer2D.getJHotDrawDisplay(), intervalView);
                     btn.addActionListener(labelObjectAction);
                     leftPanel.add(btn);
 
-                    JCheckBox cbEndpoints = new JCheckBox("Endpoints", true);
+                    final JCheckBox cbEndpoints = new JCheckBox("Endpoints", true);
                     cbEndpoints.setName("Endpoints");
                     cbEndpoints.addChangeListener(labelObjectAction);
                     leftPanel.add(cbEndpoints);
 
-                    JCheckBox  cbJunctions = new JCheckBox("Junctions", true);
+                    final JCheckBox  cbJunctions = new JCheckBox("Junctions", true);
                     cbJunctions.setName("Junctions");
                     cbJunctions.addChangeListener(labelObjectAction);
                     leftPanel.add(cbJunctions);
@@ -423,7 +439,7 @@ public class InteractiveDisplayView extends AbstractView implements ChangeListen
                 }
                 else
                 {
-                    RandomAccessibleInterval imgOrig = Converters.convert(intervalView,
+                    final RandomAccessibleInterval imgOrig = Converters.convert( (RandomAccessibleInterval) intervalView,
                             new RealDoubleConverter(), new DoubleType());
 
                     currentInteractiveViewer2D.getJHotDrawDisplay().setImageDim(new Dimension(imp.getWidth(), imp.getHeight()));
@@ -465,7 +481,7 @@ public class InteractiveDisplayView extends AbstractView implements ChangeListen
 
         currentInteractiveViewer2D.getJHotDrawDisplay().setImageDim(new Dimension((int)in.max(0), (int)in.max(1)));
         currentInteractiveViewer2D.updateConverter(new TypeIdentity<ARGBType>());
-        ARGBType t = new ARGBType();
+        final ARGBType t = new ARGBType();
         t.set(150 << 16 | 150 << 8 | 150);
         currentInteractiveViewer2D.updateIntervalSource(Views.extendValue(out, t));
         currentInteractiveViewer2D.getJHotDrawDisplay().resetTransform();
@@ -489,7 +505,7 @@ public class InteractiveDisplayView extends AbstractView implements ChangeListen
 
         projector.map();
 
-        ARGBType t = new ARGBType();
+        final ARGBType t = new ARGBType();
         t.set(150 << 16 | 150 << 8 | 150);
         currentInteractiveViewer2D.updateIntervalSource(Views.extendValue(out, t));
     }
@@ -499,7 +515,7 @@ public class InteractiveDisplayView extends AbstractView implements ChangeListen
         final DoubleType max = new DoubleType();
         computeMinMax( viewImg, min, max );
 
-        RealRandomAccessible< DoubleType > interpolated =
+        final RealRandomAccessible< DoubleType > interpolated =
                 Views.interpolate( Views.extendZero( viewImg ), new NearestNeighborInterpolatorFactory< DoubleType >() );
 
         //final RealARGBConverter< DoubleType > converter = new RealARGBConverter< DoubleType >( min.get(), max.get() );
@@ -508,7 +524,7 @@ public class InteractiveDisplayView extends AbstractView implements ChangeListen
         updateDoubleTypeSourceAndConverter( interpolated, converter );
     }
 
-    public void updateDoubleTypeSourceAndConverter( RealRandomAccessible source, Converter converter ) {
+    public void updateDoubleTypeSourceAndConverter( final RealRandomAccessible source, final Converter converter ) {
         currentInteractiveViewer2D.updateConverter( converter );
         currentInteractiveViewer2D.updateSource( source );
     }
@@ -578,7 +594,7 @@ public class InteractiveDisplayView extends AbstractView implements ChangeListen
             Img< T > srcImg = null;
             try {
                 srcImg = ImagePlusAdapter.wrap(interval.getImagePlus());
-            } catch (ImgLibException e) {
+            } catch (final ImgLibException e) {
                 e.printStackTrace();
             }
 
@@ -609,7 +625,7 @@ public class InteractiveDisplayView extends AbstractView implements ChangeListen
             getMinMax( Views.iterable( interval ), min, max );
 
 //            RealRandomAccessible< T > interpolated = Views.interpolate( interval, new NLinearInterpolatorFactory<T>() );
-            RealRandomAccessible< T > interpolated = Views.interpolate( Views.extendZero(interval), new NearestNeighborInterpolatorFactory<T>() );
+            final RealRandomAccessible< T > interpolated = Views.interpolate( Views.extendZero(interval), new NearestNeighborInterpolatorFactory<T>() );
             //final RealARGBConverter< T > converter = new RealARGBConverter< T >( min.getMinValue(), max.getMaxValue());
 
             System.out.println(min.getClass() + " Type");
@@ -626,7 +642,7 @@ public class InteractiveDisplayView extends AbstractView implements ChangeListen
      * Update the affineTransform2D with new transform.
      * @param affine
      */
-    public void updatePreferedTransform(AffineTransform2D affine)
+    public void updatePreferedTransform(final AffineTransform2D affine)
     {
         if(InteractiveRealViewer2D.class.isInstance(currentInteractiveViewer2D))
         {
@@ -638,7 +654,7 @@ public class InteractiveDisplayView extends AbstractView implements ChangeListen
      * Update the PreferedCanvasSize with new Dimension.
      * @param dim
      */
-    public void updatePreferedCanvasSize(Dimension dim)
+    public void updatePreferedCanvasSize(final Dimension dim)
     {
         if(InteractiveRealViewer2D.class.isInstance(currentInteractiveViewer2D))
         {
@@ -650,7 +666,7 @@ public class InteractiveDisplayView extends AbstractView implements ChangeListen
      * Update the realConverter with new converter.
      * @param converter
      */
-    public void updateRealConverter(Converter converter)
+    public void updateRealConverter(final Converter converter)
     {
         if(InteractiveRealViewer2D.class.isInstance(currentInteractiveViewer2D))
         {
@@ -662,7 +678,7 @@ public class InteractiveDisplayView extends AbstractView implements ChangeListen
      * Update the realRandomSource with new source.
      * @param source
      */
-    public void updateRealRandomSource(RealRandomAccessible source)
+    public void updateRealRandomSource(final RealRandomAccessible source)
     {
         if(InteractiveRealViewer2D.class.isInstance(currentInteractiveViewer2D))
         {
@@ -738,7 +754,7 @@ public class InteractiveDisplayView extends AbstractView implements ChangeListen
 //        return currentInteractiveViewer2D.getJHotDrawDisplay();
 
         final AffineTransform2D transform = new AffineTransform2D();
-        RealRandomAccessible< DoubleType > dummy = new DummyRealRandomAccessible();
+        final RealRandomAccessible< DoubleType > dummy = new DummyRealRandomAccessible();
         final RealARGBConverter< DoubleType > converter = new RealARGBConverter< DoubleType >( 0, 0);
 
         currentInteractiveViewer2D = new InteractiveRealViewer2D<DoubleType>(300, 200, dummy, transform, converter);
@@ -747,11 +763,11 @@ public class InteractiveDisplayView extends AbstractView implements ChangeListen
     }
 
     @Override
-    public void stateChanged(ChangeEvent changeEvent)
+    public void stateChanged(final ChangeEvent changeEvent)
     {
         if(sliderTime.equals(changeEvent.getSource()))
         {
-            int index = sliderTime.getValue();
+            final int index = sliderTime.getValue();
 
             if(argbImg != null) {
                 intervalView = Views.hyperSlice(interval, 3, index);
@@ -766,7 +782,7 @@ public class InteractiveDisplayView extends AbstractView implements ChangeListen
         {
     		projector.setComposite( 0, cbCh0.isSelected() );
             projector.map();
-            ARGBType t = new ARGBType();
+            final ARGBType t = new ARGBType();
             t.set(150 << 16 | 150 << 8 | 150);
             currentInteractiveViewer2D.updateIntervalSource(Views.extendValue(argbImg, t));
         }
@@ -774,7 +790,7 @@ public class InteractiveDisplayView extends AbstractView implements ChangeListen
         {
             projector.setComposite( 1, cbCh1.isSelected() );
             projector.map();
-            ARGBType t = new ARGBType();
+            final ARGBType t = new ARGBType();
             t.set(150 << 16 | 150 << 8 | 150);
             currentInteractiveViewer2D.updateIntervalSource(Views.extendValue(argbImg, t));
         }
@@ -782,7 +798,7 @@ public class InteractiveDisplayView extends AbstractView implements ChangeListen
         {
             projector.setComposite( 2, cbCh2.isSelected() );
             projector.map();
-            ARGBType t = new ARGBType();
+            final ARGBType t = new ARGBType();
             t.set(150 << 16 | 150 << 8 | 150);
             currentInteractiveViewer2D.updateIntervalSource(Views.extendValue(argbImg, t));
         }
@@ -790,7 +806,7 @@ public class InteractiveDisplayView extends AbstractView implements ChangeListen
         {
             projector.setComposite( 3, cbCh3.isSelected() );
             projector.map();
-            ARGBType t = new ARGBType();
+            final ARGBType t = new ARGBType();
             t.set(150 << 16 | 150 << 8 | 150);
             currentInteractiveViewer2D.updateIntervalSource(Views.extendValue(argbImg, t));
         }

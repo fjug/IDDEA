@@ -9,7 +9,17 @@ import net.imglib2.realtransform.AffineGet;
 import net.imglib2.realtransform.AffineSet;
 import net.imglib2.realtransform.RealViews;
 import net.imglib2.type.numeric.ARGBType;
-import net.imglib2.ui.*;
+import net.imglib2.ui.AbstractMultiResolutionRenderer;
+import net.imglib2.ui.AbstractRenderer;
+import net.imglib2.ui.AffineTransformType;
+import net.imglib2.ui.AffineTransformType2D;
+import net.imglib2.ui.AffineTransformType3D;
+import net.imglib2.ui.MultiResolutionRenderer;
+import net.imglib2.ui.PainterThread;
+import net.imglib2.ui.RenderSource;
+import net.imglib2.ui.RenderTarget;
+import net.imglib2.ui.RendererFactory;
+import net.imglib2.ui.SimpleInterruptibleProjector;
 
 /**
  * An {@link AbstractMultiResolutionRenderer} for a single {@link RenderSource}.
@@ -139,7 +149,7 @@ public class InjectableMultiResolutionRenderer< A extends AffineSet & AffineGet 
         sourceToScreen.concatenate( viewerTransform );
         sourceToScreen.concatenate( source.getSourceTransform() );
 
-        return RealViews.constantAffine( img, sourceToScreen );
+        return RealViews.affine( img, sourceToScreen );
     }
 
     public void injectSource( final RealRandomAccessible source ) {

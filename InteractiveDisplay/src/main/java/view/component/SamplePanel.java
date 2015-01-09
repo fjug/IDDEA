@@ -2,6 +2,18 @@ package view.component;
 
 import ij.ImagePlus;
 import ij.io.Opener;
+
+import java.awt.BorderLayout;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.File;
+
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.converter.Converters;
 import net.imglib2.converter.RealDoubleConverter;
@@ -9,12 +21,6 @@ import net.imglib2.img.ImagePlusAdapter;
 import net.imglib2.img.Img;
 import net.imglib2.type.numeric.real.DoubleType;
 import net.imglib2.view.Views;
-
-import javax.swing.*;
-import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.io.File;
 
 /**
  * SamplePanel for demonstrating IDDEA component.
@@ -27,20 +33,20 @@ public class SamplePanel extends JPanel implements ActionListener {
 
     IddeaComponent annotator;
 
-    private JButton bLoad;
-    private JButton bLoad2;
-    private JButton bLoad3;
+    private final JButton bLoad;
+    private final JButton bLoad2;
+    private final JButton bLoad3;
 
     public SamplePanel()
     {
         super(new BorderLayout());
-        
+
         annotator = new IddeaComponent();
         annotator.setToolBarLocation(BorderLayout.WEST);
         annotator.setToolBarVisible(true);
         annotator.setPreferredSize(new Dimension(300, 200));
 
-        JPanel p = new JPanel();
+        final JPanel p = new JPanel();
         p.setLayout(new FlowLayout());
 
         bLoad = new JButton("Load clown");
@@ -62,7 +68,7 @@ public class SamplePanel extends JPanel implements ActionListener {
 
     public static void main( final String[] args ) {
 
-        SamplePanel panel = new SamplePanel();
+        final SamplePanel panel = new SamplePanel();
 
         final JFrame f = new JFrame();
         f.setDefaultCloseOperation( JFrame.EXIT_ON_CLOSE );
@@ -72,10 +78,10 @@ public class SamplePanel extends JPanel implements ActionListener {
     }
 
     @Override
-    public void actionPerformed(ActionEvent actionEvent) {
+    public void actionPerformed(final ActionEvent actionEvent) {
         if(actionEvent.getSource().equals(bLoad))
         {
-            File file = new File( "/Users/moon/Documents/clown.tif" );
+            final File file = new File( "/Users/moon/Documents/clown.tif" );
 
             // open a file with ImageJ
             final ImagePlus imp = new Opener().openImage( file.getAbsolutePath() );
@@ -83,7 +89,7 @@ public class SamplePanel extends JPanel implements ActionListener {
             // wrap it into an ImgLib image (no copying)
             final Img<DoubleType> image = ImagePlusAdapter.wrap(imp);
 
-            RandomAccessibleInterval imgOrig = Converters.convert(Views.interval(image, image),
+            final RandomAccessibleInterval imgOrig = Converters.convert( ( RandomAccessibleInterval ) Views.interval(image, image),
                     new RealDoubleConverter(), new DoubleType());
 
             annotator.setPreferredSize(new Dimension(imp.getWidth(), imp.getHeight()));
@@ -92,7 +98,7 @@ public class SamplePanel extends JPanel implements ActionListener {
         }
         else if(actionEvent.getSource().equals(bLoad2))
         {
-            File file = new File( "/Users/moon/Pictures/t1-head.tif" );
+            final File file = new File( "/Users/moon/Pictures/t1-head.tif" );
 
             // open a file with ImageJ
             final ImagePlus imp = new Opener().openImage( file.getAbsolutePath() );
@@ -100,7 +106,7 @@ public class SamplePanel extends JPanel implements ActionListener {
             // wrap it into an ImgLib image (no copying)
             final Img<DoubleType> image = ImagePlusAdapter.wrap(imp);
 
-            RandomAccessibleInterval imgOrig = Converters.convert(Views.interval(image, image),
+            final RandomAccessibleInterval imgOrig = Converters.convert( ( RandomAccessibleInterval ) Views.interval(image, image),
                     new RealDoubleConverter(), new DoubleType());
 
             annotator.setPreferredSize(new Dimension(imp.getWidth(), imp.getHeight()));
@@ -108,7 +114,7 @@ public class SamplePanel extends JPanel implements ActionListener {
         }
         else if(actionEvent.getSource().equals(bLoad3))
         {
-            File file = new File( "/Users/moon/Pictures/confocal-series.tif" );
+            final File file = new File( "/Users/moon/Pictures/confocal-series.tif" );
 
             // open a file with ImageJ
             final ImagePlus imp = new Opener().openImage( file.getAbsolutePath() );
@@ -116,7 +122,7 @@ public class SamplePanel extends JPanel implements ActionListener {
             // wrap it into an ImgLib image (no copying)
             final Img<DoubleType> image = ImagePlusAdapter.wrap(imp);
 
-            RandomAccessibleInterval imgOrig = Converters.convert(Views.interval(image, image),
+            final RandomAccessibleInterval imgOrig = Converters.convert( ( RandomAccessibleInterval ) Views.interval(image, image),
                     new RealDoubleConverter(), new DoubleType());
 
             annotator.setPreferredSize(new Dimension(imp.getWidth(), imp.getHeight()));
