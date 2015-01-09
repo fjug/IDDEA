@@ -296,9 +296,8 @@ public class IddeaComponent extends JPanel implements ActionListener, ChangeList
 	 * @return The <code>AffineTransform2D</code> describing the transformation
 	 *         of the <code>ivSourceImage</code> on screen.
 	 */
-	public AffineTransform2D getViewerTransform()
-	{
-		return interactiveViewer2D.getViewerTransform();
+	public AffineTransform2D getViewerTransform() {
+		return ( AffineTransform2D ) interactiveViewer2D.getViewerTransform();
 	}
 
 	/**
