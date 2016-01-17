@@ -1,46 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
+
+	<parent>
+		<groupId>net.imagej</groupId>
+		<artifactId>pom-imagej</artifactId>
+		<version>14.4.1</version>
+	</parent>
 
 	<groupId>InteractiveDisplay</groupId>
 	<artifactId>InteractiveDisplay</artifactId>
 	<version>1.0-SNAPSHOT</version>
 
-	<!-- NB: for project parent, in case of partial checkout -->
-	<repositories>
-		<repository>
-			<id>devzendo-org-repository-releases</id>
-			<name>DevZendo.org Maven2 releases Repository on Google Code</name>
-			<url>http://devzendo-org-repo.googlecode.com/svn/trunk/releases</url>
-			<snapshots>
-				<enabled>false</enabled>
-			</snapshots>
-			<releases>
-				<enabled>true</enabled>
-			</releases>
-		</repository>
-		<repository>
-			<id>devzendo-org-repository-snapshots</id>
-			<name>DevZendo.org Maven2 Snapshots Repository on Google Code</name>
-			<url>http://devzendo-org-repo.googlecode.com/svn/trunk/snapshots</url>
-			<snapshots>
-				<enabled>true</enabled>
-			</snapshots>
-			<releases>
-				<enabled>false</enabled>
-			</releases>
-		</repository>
-		<repository>
-			<id>erichseifert.de</id>
-			<url>http://mvn.erichseifert.de/maven2</url>
-		</repository>
-		<repository>
-			<id>imagej.public</id>
-			<url>http://maven.imagej.net/content/groups/public</url>
-		</repository>
-	</repositories>
+	<properties>
+		<enforcer.skip>true</enforcer.skip>
+	</properties>
 
 	<dependencies>
 		<dependency>
@@ -51,27 +25,22 @@
         <dependency>
             <groupId>net.imglib2</groupId>
             <artifactId>imglib2-ij</artifactId>
-            <version>2.0.0-beta-29</version>
         </dependency>
         <dependency>
             <groupId>net.imglib2</groupId>
             <artifactId>imglib2</artifactId>
-            <version>2.2.0</version>
         </dependency>
         <dependency>
             <groupId>net.imglib2</groupId>
             <artifactId>imglib2-realtransform</artifactId>
-            <version>2.0.0-beta-28</version>
         </dependency>
         <dependency>
             <groupId>net.imglib2</groupId>
-            <artifactId>imglib2-algorithms</artifactId>
-            <version>2.0.0-beta-26</version>
+            <artifactId>imglib2-algorithm</artifactId>
         </dependency>
         <dependency>
             <groupId>net.imglib2</groupId>
             <artifactId>imglib2-ui</artifactId>
-            <version>2.0.0-beta-28</version>
         </dependency>
 		<dependency>
 			<groupId>org.jhotdraw</groupId>
@@ -79,70 +48,30 @@
 			<version>7.6.0</version>
 		</dependency>
 		<dependency>
-			<groupId>ch.randelshofer</groupId>
-			<artifactId>quaqua</artifactId>
+			<groupId>org.devzendo</groupId>
+			<artifactId>Quaqua</artifactId>
 			<version>7.3.4</version>
-		</dependency>
-		<dependency>
-			<groupId>gov.nih.imagej</groupId>
-			<artifactId>imagej</artifactId>
-			<version>1.47</version>
-		</dependency>
-		<dependency>
-			<groupId>loci</groupId>
-			<artifactId>bio-formats</artifactId>
-			<version>4.4.7</version>
 		</dependency>
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
-            <version>4.9</version>
             <scope>test</scope>
         </dependency>
-        <dependency>
-            <groupId>com.fifesoft</groupId>
-            <artifactId>rsyntaxtextarea</artifactId>
-            <version>2.0.7</version>
-        </dependency>
-        <dependency>
-            <groupId>de.erichseifert.vectorgraphics2d</groupId>
-            <artifactId>VectorGraphics2D</artifactId>
-            <version>0.9.1</version>
-        </dependency>
-
         <dependency>
             <groupId>de.erichseifert.gral</groupId>
             <artifactId>gral-core</artifactId>
             <version>0.10</version>
         </dependency>
-
-        <dependency>
-            <groupId>org.xerial</groupId>
-            <artifactId>sqlite-jdbc</artifactId>
-            <version>3.7.15-M1</version>
-        </dependency>
 	</dependencies>
 
-	<build>
-		<plugins>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-surefire-plugin</artifactId>
-				<configuration>
-					<forkMode>once</forkMode>
-					<workingDirectory>target</workingDirectory>
-					<argLine>-Djava.library.path=${basedir}/src/main/resources/lib</argLine>
-				</configuration>
-			</plugin>
-			<plugin>
-				<artifactId>maven-compiler-plugin</artifactId>
-				<version>2.5</version>
-				<configuration>
-					<source>1.6</source>
-					<target>1.6</target>
-				</configuration>
-			</plugin>
-		</plugins>
-	</build>
-
+	<repositories>
+		<repository>
+			<id>imagej.public</id>
+			<url>http://maven.imagej.net/content/groups/public</url>
+		</repository>
+		<repository>
+			<id>erichseifert.de</id>
+			<url>http://mvn.erichseifert.de/maven2</url>
+		</repository>
+	</repositories>
 </project>
