@@ -31,19 +31,6 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.filechooser.FileFilter;
 
-import model.figure.DrawFigureFactory;
-import net.imglib2.RandomAccessibleInterval;
-import net.imglib2.RealRandomAccessible;
-import net.imglib2.converter.RealARGBConverter;
-import net.imglib2.img.Img;
-import net.imglib2.interpolation.randomaccess.NearestNeighborInterpolatorFactory;
-import net.imglib2.realtransform.AffineTransform2D;
-import net.imglib2.type.NativeType;
-import net.imglib2.type.numeric.RealType;
-import net.imglib2.type.numeric.real.DoubleType;
-import net.imglib2.view.IntervalView;
-import net.imglib2.view.Views;
-
 import org.jhotdraw.app.action.edit.RedoAction;
 import org.jhotdraw.app.action.edit.UndoAction;
 import org.jhotdraw.draw.DefaultDrawingEditor;
@@ -61,14 +48,26 @@ import org.jhotdraw.gui.filechooser.ExtensionFileFilter;
 import org.jhotdraw.undo.UndoRedoManager;
 import org.jhotdraw.util.ResourceBundleUtil;
 
+import controller.tool.NullTool;
+import model.figure.DrawFigureFactory;
+import net.imglib2.RandomAccessibleInterval;
+import net.imglib2.RealRandomAccessible;
+import net.imglib2.converter.RealARGBConverter;
+import net.imglib2.img.Img;
+import net.imglib2.interpolation.randomaccess.NearestNeighborInterpolatorFactory;
+import net.imglib2.realtransform.AffineTransform2D;
+import net.imglib2.type.NativeType;
+import net.imglib2.type.numeric.RealType;
+import net.imglib2.type.numeric.real.DoubleType;
+import net.imglib2.view.IntervalView;
+import net.imglib2.view.Views;
 import view.display.InteractiveDrawingView;
 import view.viewer.InteractiveRealViewer2D;
-import controller.tool.NullTool;
 
 /**
  * A swing panel that can show imglib2 image data and annotate them using
  * JHotDraw figures.
- * 
+ *
  * @author HongKee Moon, Florian Jug, Tobias Pietzsch
  * @since 9/4/13
  */
@@ -311,7 +310,7 @@ public class IddeaComponent extends JPanel implements ActionListener, ChangeList
 
 	/**
 	 * Returns the current screen image.
-	 * 
+	 *
 	 * @return
 	 */
 	public RandomAccessibleInterval getSourceImage()
@@ -329,7 +328,7 @@ public class IddeaComponent extends JPanel implements ActionListener, ChangeList
 
 	/**
 	 * Sets the location of the toolbar.
-	 * 
+	 *
 	 * @param location
 	 *            Either <code>BorderLayout.NORTH</code>,
 	 *            <code>BorderLayout.EAST</code>,
@@ -358,7 +357,7 @@ public class IddeaComponent extends JPanel implements ActionListener, ChangeList
 
 	/**
 	 * Replaces the current
-	 * 
+	 *
 	 * @param viewImg
 	 */
 	public < T extends RealType< T > & NativeType< T >> void setSourceImage( final RandomAccessibleInterval< T > viewImg )
@@ -401,7 +400,7 @@ public class IddeaComponent extends JPanel implements ActionListener, ChangeList
 
 	/**
 	 * Sets the image data to be displayed.
-	 * 
+	 *
 	 * @param sourceImage
 	 *            an IntervalView<DoubleType> containing the desired view onto
 	 *            the raw image data
@@ -413,7 +412,7 @@ public class IddeaComponent extends JPanel implements ActionListener, ChangeList
 
 	/**
 	 * Updates the only sourceImage without updating converter
-	 * 
+	 *
 	 * @param sourceImage
 	 *            an IntervalView<T> containing the desired view onto the raw
 	 *            image data
@@ -455,7 +454,7 @@ public class IddeaComponent extends JPanel implements ActionListener, ChangeList
 	 * Set the {@link Dimension} that contains the input image's dimension
 	 * information and propagate the dimension information to the
 	 * JHotDrawDisplay.
-	 * 
+	 *
 	 * @see javax.swing.JComponent#setPreferredSize(java.awt.Dimension)
 	 */
 	@Override
@@ -627,7 +626,7 @@ public class IddeaComponent extends JPanel implements ActionListener, ChangeList
 
 	/**
 	 * Shows or hides the currently installed toolbar.
-	 * 
+	 *
 	 * @param visible
 	 */
 	public void setToolBarVisible( final boolean visible )
@@ -665,7 +664,7 @@ public class IddeaComponent extends JPanel implements ActionListener, ChangeList
 	 * Builds an Interactive Drawing view from a given <code>sourceImage</code>
 	 * Caution: this function also creates a new
 	 * <code>interactiveViewer2D</code>.
-	 * 
+	 *
 	 * @param sourceImage
 	 * @return
 	 */
@@ -717,7 +716,7 @@ public class IddeaComponent extends JPanel implements ActionListener, ChangeList
 	/**
 	 * Builds default Interactive Drawing view Caution: this function also
 	 * creates a new <code>interactiveViewer2D</code>.
-	 * 
+	 *
 	 * @return
 	 */
 	private InteractiveDrawingView buildInteractiveDrawingView()
@@ -736,7 +735,7 @@ public class IddeaComponent extends JPanel implements ActionListener, ChangeList
 	 * Builds an Interactive Drawing view from a given Dimension
 	 * <code>dim</code> Caution: this function also creates a new
 	 * <code>interactiveViewer2D</code>.
-	 * 
+	 *
 	 * @param dim
 	 * @return
 	 */
@@ -796,7 +795,7 @@ public class IddeaComponent extends JPanel implements ActionListener, ChangeList
 
 	/**
 	 * Adds a <code>Tool</code> to the toolbar.
-	 * 
+	 *
 	 * @param tool
 	 *            The tool to be added to the currently installed toolbar.
 	 * @param labelKey
@@ -811,7 +810,7 @@ public class IddeaComponent extends JPanel implements ActionListener, ChangeList
 
 	/**
 	 * Adds a <code>JToogleButton</code> to the toolbar.
-	 * 
+	 *
 	 * @param button
 	 *            the button
 	 */
@@ -839,7 +838,7 @@ public class IddeaComponent extends JPanel implements ActionListener, ChangeList
 
 	/**
 	 * Update the realRandomSource with new source.
-	 * 
+	 *
 	 * @param source
 	 */
 	private void updateSourceAndConverter( final RealRandomAccessible source, final RealARGBConverter converter )
@@ -851,7 +850,7 @@ public class IddeaComponent extends JPanel implements ActionListener, ChangeList
 
 	/**
 	 * Update the realRandomSource with new source.
-	 * 
+	 *
 	 * @param source
 	 */
 	private void updateSource( final RealRandomAccessible source )
@@ -1110,7 +1109,7 @@ public class IddeaComponent extends JPanel implements ActionListener, ChangeList
 
 	/**
 	 * States of TimeSlider or StackSlider are changed.
-	 * 
+	 *
 	 * @param changeEvent
 	 *            the change event
 	 */
@@ -1161,12 +1160,12 @@ public class IddeaComponent extends JPanel implements ActionListener, ChangeList
 
 	/**
 	 * Compute the min and max for any {@link Iterable}, like an {@link Img}.
-	 * 
+	 *
 	 * The only functionality we need for that is to iterate. Therefore we need
 	 * no {@link Cursor} that can localize itself, neither do we need a
 	 * {@link RandomAccess}. So we simply use the most simple interface in the
 	 * hierarchy.
-	 * 
+	 *
 	 * @param viewImg
 	 *            - the input that has to just be {@link Iterable}
 	 * @param min

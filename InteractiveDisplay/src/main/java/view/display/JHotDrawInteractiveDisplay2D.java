@@ -1,5 +1,23 @@
 package view.display;
 
+import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.Graphics2D;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
+import java.awt.event.KeyListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionListener;
+import java.awt.event.MouseWheelListener;
+import java.awt.geom.AffineTransform;
+import java.awt.geom.NoninvertibleTransformException;
+import java.awt.geom.Point2D;
+import java.awt.geom.Rectangle2D;
+import java.awt.image.BufferedImage;
+import java.util.concurrent.CopyOnWriteArrayList;
+
 import net.imglib2.realtransform.AffineTransform2D;
 import net.imglib2.ui.InteractiveDisplayCanvas;
 import net.imglib2.ui.OverlayRenderer;
@@ -7,15 +25,6 @@ import net.imglib2.ui.TransformEventHandler;
 import net.imglib2.ui.TransformEventHandlerFactory;
 import net.imglib2.ui.TransformListener;
 import view.overlay.TransformOverlay;
-
-import java.awt.*;
-import java.awt.event.*;
-import java.awt.geom.AffineTransform;
-import java.awt.geom.NoninvertibleTransformException;
-import java.awt.geom.Point2D;
-import java.awt.geom.Rectangle2D;
-import java.awt.image.BufferedImage;
-import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
  * JHotDrawInteractiveDisplay2D gives 2D display view with the buffered image.
@@ -62,8 +71,8 @@ public class JHotDrawInteractiveDisplay2D<T> extends InteractiveDrawingView
 
         if(sourceTransform != null)
         {
-            AffineTransform2D trsf = (AffineTransform2D)sourceTransform;
-            double[] tr = trsf.getRowPackedCopy();
+            final AffineTransform2D trsf = (AffineTransform2D)sourceTransform;
+            final double[] tr = trsf.getRowPackedCopy();
             this.originTransform = new AffineTransform(tr[0], tr[3], tr[1], tr[4], tr[2], tr[5]);
         }
 
@@ -73,17 +82,17 @@ public class JHotDrawInteractiveDisplay2D<T> extends InteractiveDrawingView
         this.bufferedImage = null;
         this.overlayRenderers = new CopyOnWriteArrayList< OverlayRenderer >();
         this.transformListeners = new CopyOnWriteArrayList< TransformListener< T > >();
-        
+
         addTransformListener(new TransformListener<T>(){
             @Override
-            public void transformChanged(T transform) {
+            public void transformChanged(final T transform) {
 
                 if(AffineTransform2D.class.isInstance(transform))
                 {
                     // Convert AffineTransform2D to java.awt.geo.AffineTransform object
-                    AffineTransform2D trsf = (AffineTransform2D)transform;
+                    final AffineTransform2D trsf = (AffineTransform2D)transform;
                     // array design is different
-                    double[] tr = trsf.getRowPackedCopy();
+                    final double[] tr = trsf.getRowPackedCopy();
                     preTransform = new AffineTransform(tr[0], tr[3], tr[1], tr[4], tr[2], tr[5]);
                     invalidateHandles();
                 }
@@ -100,7 +109,7 @@ public class JHotDrawInteractiveDisplay2D<T> extends InteractiveDrawingView
                 handler.setCanvasSize( w, h, true );
                 for ( final OverlayRenderer or : overlayRenderers )
                     or.setCanvasSize( w, h );
-                
+
                 //setBounds(0,0,w,h);
 //				enableEvents( AWTEvent.MOUSE_MOTION_EVENT_MASK );
             }
@@ -125,38 +134,38 @@ public class JHotDrawInteractiveDisplay2D<T> extends InteractiveDrawingView
 
     protected Dimension imageDim;
 
-    public void setImageDim(Dimension dim)
+    public void setImageDim(final Dimension dim)
     {
         imageDim = dim;
     }
 
     public void resetTransform()
     {
-        AffineTransform2D reset = new AffineTransform2D();
+        final AffineTransform2D reset = new AffineTransform2D();
         handler.setTransform((T) reset);
         handler.setCanvasSize( imageDim.width, imageDim.height, false );
 
-        final int w = getWidth();
-        final int h = getHeight();
+		final int w = Math.max( getWidth(), imageDim.width );
+		final int h = Math.max( getHeight(), imageDim.height );
 
         handler.setCanvasSize( w, h, true );
         for ( final OverlayRenderer or : overlayRenderers )
             or.setCanvasSize( w, h );
     }
 
-    public void updateTransform(T trf)
+    public void updateTransform(final T trf)
     {
         if(trf != null)
         {
-            AffineTransform2D trsf = (AffineTransform2D)trf;
-            double[] tr = trsf.getRowPackedCopy();
+            final AffineTransform2D trsf = (AffineTransform2D)trf;
+            final double[] tr = trsf.getRowPackedCopy();
             this.originTransform = new AffineTransform(tr[0], tr[3], tr[1], tr[4], tr[2], tr[5]);
 
             handler.setTransform((T) trsf);
             handler.setCanvasSize( imageDim.width, imageDim.height, false );
 
-            final int w = getWidth();
-            final int h = getHeight();
+			final int w = Math.max( getWidth(), imageDim.width );
+			final int h = Math.max( getHeight(), imageDim.height );
 
             handler.setCanvasSize( w, h, true );
             for ( final OverlayRenderer or : overlayRenderers )
@@ -175,7 +184,7 @@ public class JHotDrawInteractiveDisplay2D<T> extends InteractiveDrawingView
     }
 
     @Override
-    public void drawImage(Graphics2D g) {
+    public void drawImage(final Graphics2D g) {
         final BufferedImage bi;
         synchronized ( this )
         {
@@ -197,7 +206,7 @@ public class JHotDrawInteractiveDisplay2D<T> extends InteractiveDrawingView
     }
 
 
-    public Point2D.Double viewToOrigin(Point2D.Double p) {
+    public Point2D.Double viewToOrigin(final Point2D.Double p) {
         Point2D point = null;
 
         if(originTransform != null)
@@ -205,7 +214,7 @@ public class JHotDrawInteractiveDisplay2D<T> extends InteractiveDrawingView
             try {
 
                 point = originTransform.inverseTransform(p, null);
-            } catch (NoninvertibleTransformException e) {
+            } catch (final NoninvertibleTransformException e) {
                 e.printStackTrace();
             }
         }
@@ -213,8 +222,8 @@ public class JHotDrawInteractiveDisplay2D<T> extends InteractiveDrawingView
         return (Point2D.Double) point;
     }
 
-    public Point2D.Double originToView(double x, double y) {
-        Point2D.Double p = new Point2D.Double(x, y);
+    public Point2D.Double originToView(final double x, final double y) {
+        final Point2D.Double p = new Point2D.Double(x, y);
         Point2D point = null;
 
         if(originTransform != null)
@@ -225,15 +234,15 @@ public class JHotDrawInteractiveDisplay2D<T> extends InteractiveDrawingView
         return (Point2D.Double) point;
     }
 
-    public Rectangle2D.Double viewToOrigin(Rectangle2D.Double r) {
-        double[] drawing = {r.x, r.y, r.x + r.width, r.y, r.x + r.width, r.y + r.height, r.x, r.y + r.height};
-        double[] view = new double[8];
+    public Rectangle2D.Double viewToOrigin(final Rectangle2D.Double r) {
+        final double[] drawing = {r.x, r.y, r.x + r.width, r.y, r.x + r.width, r.y + r.height, r.x, r.y + r.height};
+        final double[] view = new double[8];
 
         if(originTransform != null)
         {
             try {
                 originTransform.inverseTransform(drawing, 0, view, 0, 4);
-            } catch (NoninvertibleTransformException e) {
+            } catch (final NoninvertibleTransformException e) {
                 e.printStackTrace();
             }
         }
@@ -241,10 +250,10 @@ public class JHotDrawInteractiveDisplay2D<T> extends InteractiveDrawingView
         return new Rectangle2D.Double(view[0], view[1], view[2] - view[0], view[5] - view[1]);
     }
 
-    public Rectangle2D.Double originToView(Rectangle2D.Double r)
+    public Rectangle2D.Double originToView(final Rectangle2D.Double r)
     {
-        double[] drawing = {r.x, r.y, r.x + r.width, r.y, r.x + r.width, r.y + r.height, r.x, r.y + r.height};
-        double[] view = new double[8];
+        final double[] drawing = {r.x, r.y, r.x + r.width, r.y, r.x + r.width, r.y + r.height, r.x, r.y + r.height};
+        final double[] view = new double[8];
         preTransform.transform(drawing, 0, view, 0, 4);
 
         return new Rectangle2D.Double(drawing[0], drawing[1], drawing[2] - drawing[0], drawing[5] - drawing[1]);
@@ -265,7 +274,8 @@ public class JHotDrawInteractiveDisplay2D<T> extends InteractiveDrawingView
      *
      * @param renderer overlay renderer to add.
      */
-    public void addOverlayRenderer( final OverlayRenderer renderer )
+    @Override
+	public void addOverlayRenderer( final OverlayRenderer renderer )
     {
         overlayRenderers.add( renderer );
         renderer.setCanvasSize( getWidth(), getHeight() );
@@ -276,7 +286,8 @@ public class JHotDrawInteractiveDisplay2D<T> extends InteractiveDrawingView
      *
      * @param renderer overlay renderer to remove.
      */
-    public void removeOverlayRenderer( final OverlayRenderer renderer )
+    @Override
+	public void removeOverlayRenderer( final OverlayRenderer renderer )
     {
         overlayRenderers.remove( renderer );
     }
@@ -286,7 +297,8 @@ public class JHotDrawInteractiveDisplay2D<T> extends InteractiveDrawingView
      *
      * @param listener the transform listener to add.
      */
-    public void addTransformListener( final TransformListener< T > listener )
+    @Override
+	public void addTransformListener( final TransformListener< T > listener )
     {
         transformListeners.add( listener );
     }
@@ -296,7 +308,8 @@ public class JHotDrawInteractiveDisplay2D<T> extends InteractiveDrawingView
      *
      * @param listener the transform listener to remove.
      */
-    public void removeTransformListener( final TransformListener< T > listener )
+    @Override
+	public void removeTransformListener( final TransformListener< T > listener )
     {
         transformListeners.remove( listener );
     }
@@ -308,7 +321,8 @@ public class JHotDrawInteractiveDisplay2D<T> extends InteractiveDrawingView
      * {@link Component#addMouseMotionListener(MouseMotionListener)},
      * {@link Component#addMouseWheelListener(MouseWheelListener)}.
      */
-    public void addHandler( final Object handler )
+    @Override
+	public void addHandler( final Object handler )
     {
         if ( KeyListener.class.isInstance( handler ) )
             addKeyListener( ( KeyListener ) handler );
@@ -331,7 +345,8 @@ public class JHotDrawInteractiveDisplay2D<T> extends InteractiveDrawingView
      * {@link Component#removeMouseMotionListener(MouseMotionListener)},
      * {@link Component#removeMouseWheelListener(MouseWheelListener)}.
      */
-    public void removeHandler( final Object handler )
+    @Override
+	public void removeHandler( final Object handler )
     {
         if ( KeyListener.class.isInstance( handler ) )
             removeKeyListener( ( KeyListener ) handler );
@@ -352,7 +367,8 @@ public class JHotDrawInteractiveDisplay2D<T> extends InteractiveDrawingView
      *
      * @return handles mouse and key events to update the view transform.
      */
-    public TransformEventHandler< T > getTransformEventHandler()
+    @Override
+	public TransformEventHandler< T > getTransformEventHandler()
     {
         return handler;
     }
@@ -363,7 +379,8 @@ public class JHotDrawInteractiveDisplay2D<T> extends InteractiveDrawingView
      *
      * @param transformEventHandler mouse and key events to update the view transform
      */
-    public synchronized void setTransformEventHandler( final TransformEventHandler< T > transformEventHandler )
+    @Override
+	public synchronized void setTransformEventHandler( final TransformEventHandler< T > transformEventHandler )
     {
         removeHandler( handler );
         handler = transformEventHandler;
@@ -385,7 +402,7 @@ public class JHotDrawInteractiveDisplay2D<T> extends InteractiveDrawingView
     }
 
     @Override
-    public void setPreferredSize( Dimension dim )
+    public void setPreferredSize( final Dimension dim )
     {
         super.setPreferredSize(dim);
         setImageDim(dim);
